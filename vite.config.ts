@@ -6,6 +6,8 @@ import { serviceWorker } from './vite-sw.ts';
 const proxy = buildProxy(process.env.PAPERMINT_API_TARGET);
 
 export default defineConfig({
+  /** PAPERMINT_BASE serves the app under a sub-path, like `/demo/`. The API stays at `/api/`. */
+  base: process.env.PAPERMINT_BASE ?? '/',
   plugins: [preact(), serviceWorker()],
   server: {
     host: '127.0.0.1',

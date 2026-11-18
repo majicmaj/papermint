@@ -11,6 +11,8 @@ npm ci
 npm run build
 ```
 
+To serve Papermint under a sub-path, set `PAPERMINT_BASE` when you build, for example `PAPERMINT_BASE=/docs/ npm run build`. Copy `dist/` to that path. The app, its service worker, and `config.json` then live under `/docs/`. The Paperless API stays at `/api/` on the same origin.
+
 The default configuration works with an existing archive. To customize it, copy `config.example.json` beside the deployed `index.html` as `config.json`. Keep this file in your deployment and copy it into each release. Reload the page to apply changes.
 
 | Setting          | Default           | Purpose                                                                                   |

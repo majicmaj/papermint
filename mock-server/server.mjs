@@ -22,6 +22,7 @@ import {
   makeTags,
   uploadedDoc,
 } from './data.mjs';
+import { appPath, landing } from './landing.mjs';
 import { loadSamples } from './samples/load.mjs';
 
 const PORT = Number(process.env.PORT ?? 4673);
@@ -280,7 +281,7 @@ const PUBLIC_FILES = new Set([
   '/robots.txt',
 ]);
 
-function allowPublic(req, res, url) {
+function allowPublic(req, res, url, path) {
   if (url.pathname.startsWith('/__')) {
     send(res, 404, { detail: 'Not found' });
     return false;
@@ -294,11 +295,11 @@ function allowPublic(req, res, url) {
     return false;
   }
   if (
-    url.pathname === '/config.json' ||
+    path === '/config.json' ||
     url.pathname.startsWith('/api/') ||
-    PUBLIC_ROUTE.test(url.pathname) ||
-    PUBLIC_ASSET.test(url.pathname) ||
-    PUBLIC_FILES.has(url.pathname)
+    PUBLIC_ROUTE.test(path) ||
+    PUBLIC_ASSET.test(path) ||
+    PUBLIC_FILES.has(path)
   )
     return true;
   send(res, 404, { detail: 'Not found' });
@@ -307,13 +308,17 @@ function allowPublic(req, res, url) {
 
 async function handle(req, res) {
   const url = new URL(req.url, 'http://localhost');
+  const root = /^\/(?:api|__)\//.test(url.pathname);
+  // The path inside the app. The API and the test controls stay at the root of the origin.
+  const path = root ? url.pathname : appPath(url.pathname);
   if (PUBLIC) {
     res.setHeader('x-content-type-options', 'nosniff');
     res.setHeader('referrer-policy', 'same-origin');
     res.setHeader('cache-control', 'no-store');
-    if (!allowPublic(req, res, url)) return;
   }
-  if (url.pathname === '/config.json') {
+  if (path === null) return landing(req, res, url);
+  if (PUBLIC && !allowPublic(req, res, url, path)) return;
+  if (path === '/config.json') {
     const config = PUBLIC ? { readOnly: true } : demoConfig;
     return send(res, 200, config, { 'cache-control': 'no-store' });
   }
@@ -323,13 +328,13 @@ async function handle(req, res) {
     state.log.push({ method: req.method, path: url.pathname + url.search });
     if (state.latency && url.pathname.startsWith('/api/'))
       await new Promise((r) => setTimeout(r, state.latency));
-    if (secrets(req, res, url.pathname) !== false) return undefined;
+    if (secrets(req, res, path) !== false) return undefined;
   }
   if (url.pathname.startsWith('/api/')) {
     res.setHeader('cache-control', 'no-store');
     return api(req, res, url, body);
   }
-  return staticFile(res, url.pathname);
+  return staticFile(res, path);
 }
 
 async function readBody(req) {

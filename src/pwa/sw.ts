@@ -7,6 +7,7 @@ import { classify, type RequestInfo } from './policy';
 
 declare const __PRECACHE__: { url: string }[];
 declare const __BUILD_ID__: string;
+declare const __BASE__: string;
 
 interface WorkerEvent extends Event {
   waitUntil(promise: Promise<unknown>): void;
@@ -28,7 +29,7 @@ interface Scope {
 
 const sw = self as unknown as Scope;
 const PRECACHE = `precache-${__BUILD_ID__}`;
-const SHELL = '/index.html';
+const SHELL = `${__BASE__}index.html`;
 
 // A new build takes over as soon as its files are stored. It never waits for old pages to close:
 // an old page cannot hold an update back. Open pages keep their running build until they reload
@@ -55,6 +56,7 @@ sw.addEventListener('fetch', (event: FetchEvent) => {
     method: request.method,
     mode: request.mode,
     origin: sw.location.origin,
+    base: __BASE__,
   };
   if (classify(info) === 'shell') event.respondWith(shell(request, info));
 });

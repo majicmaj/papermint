@@ -1,3 +1,4 @@
+import { withBase } from '../base';
 import type { RecoveryFile } from '../config/config';
 import { runtimeConfig } from '../config/runtime';
 
@@ -16,5 +17,5 @@ export function recoveryFile(
 
 /** App route that opens the file in a pane. The download itself stays under a proxy route. */
 export function filePath(key: string): string {
-  return `/f/${encodeURIComponent(key)}`;
+  return withBase(`/f/${encodeURIComponent(key)}`);
 }

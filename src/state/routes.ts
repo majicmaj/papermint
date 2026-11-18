@@ -3,6 +3,7 @@ import type { SwapKind } from '../motion/transition';
 import type { AppConfig } from '../config/config';
 import { runtimeConfig } from '../config/runtime';
 import { recoveryFile } from '../shell/recovery-files';
+import { withBase, withoutBase } from '../base';
 
 export type Route =
   | { name: ViewName }
@@ -18,7 +19,8 @@ export function parseRoute(
   const hasRecovery = config.recoveryFiles.length > 0;
   const from = source === 'pending' ? 'records' : source;
   const back = from === 'recovery' && !hasRecovery ? null : from;
-  const trimmed = path.length > 1 ? path.replace(/\/+$/, '') : path;
+  const local = withoutBase(path) ?? '/';
+  const trimmed = local.length > 1 ? local.replace(/\/+$/, '') : local;
   const record = /^\/r\/(\d+)$/.exec(trimmed);
   if (record) {
     const version = new URLSearchParams(search).get('v');
@@ -37,7 +39,7 @@ export function parseRoute(
 }
 
 export function recordPath(id: number, version: number | null = null): string {
-  return `/r/${id}${version ? `?v=${version}` : ''}`;
+  return withBase(`/r/${id}${version ? `?v=${version}` : ''}`);
 }
 
 const showsPane = (route: Route) => route.name === 'record' || route.name === 'file';

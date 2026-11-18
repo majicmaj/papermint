@@ -1,3 +1,4 @@
+import { withBase, withoutBase } from '../base';
 import { VIEW_PATH, type ViewName } from '../domain/views';
 import { isMobileViewport } from '../mobile/viewport';
 import { swap } from '../motion/transition';
@@ -21,8 +22,8 @@ export function currentRoute(): Route {
 export const routeStore = createStore<{ route: Route }>({ route: readLocation() });
 
 export function refreshRoute(): void {
-  if (/^\/pending\/*$/.test(location.pathname)) {
-    history.replaceState(history.state, '', `/${location.search}${location.hash}`);
+  if (/^\/pending\/*$/.test(withoutBase(location.pathname) ?? '')) {
+    history.replaceState(history.state, '', `${withBase('/')}${location.search}${location.hash}`);
   }
   routeStore.set({ route: readLocation() });
 }

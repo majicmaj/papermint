@@ -1,4 +1,5 @@
 import { writesInFlight } from '../api/http';
+import { BASE, withBase } from '../base';
 import { appStore } from '../state/app';
 import { anyLayerOpen } from '../state/modal';
 import { mayApply, reloadAllowed, type Activity } from './update-policy';
@@ -34,7 +35,7 @@ export function registerServiceWorker(): void {
   }
   const register = () => {
     navigator.serviceWorker
-      .register('/sw.js', { scope: '/' })
+      .register(withBase('/sw.js'), { scope: BASE })
       .then(watchForUpdates)
       .catch(() => undefined);
   };

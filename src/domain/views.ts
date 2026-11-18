@@ -1,3 +1,4 @@
+import { withBase } from '../base';
 import { runtimeConfig } from '../config/runtime';
 import type { Doc } from '../api/types';
 import type { TagModel } from './tags';
@@ -10,8 +11,8 @@ export const VIEW_LABEL: Record<ViewName, string> = {
 };
 
 export const VIEW_PATH: Record<ViewName, string> = {
-  records: '/',
-  recovery: '/recovery',
+  records: withBase('/'),
+  recovery: withBase('/recovery'),
 };
 
 /** Recovery entries come from configuration, not tagged Paperless documents. */

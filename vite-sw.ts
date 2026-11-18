@@ -10,7 +10,10 @@ function walk(dir: string): string[] {
 }
 
 /** Every built file the worker keeps for offline use, and an id that changes with any of them. */
-export function precacheList(outDir: string): { entries: { url: string }[]; id: string } {
+export function precacheList(
+  outDir: string,
+  base = '/',
+): { entries: { url: string }[]; id: string } {
   const files = walk(outDir)
     .map((file) => relative(outDir, file))
     .filter((file) => file !== 'sw.js' && file !== 'config.json' && !file.endsWith('.map'))
@@ -18,7 +21,7 @@ export function precacheList(outDir: string): { entries: { url: string }[]; id: 
   const hash = createHash('sha256');
   for (const file of files) hash.update(file).update(readFileSync(join(outDir, file)));
   return {
-    entries: files.map((file) => ({ url: `/${file}` })),
+    entries: files.map((file) => ({ url: `${base}${file}` })),
     id: hash.digest('hex').slice(0, 12),
   };
 }
@@ -37,13 +40,17 @@ export function serviceWorker(): Plugin {
     },
     async closeBundle() {
       const outDir = resolve(config.root, config.build.outDir);
-      const { entries, id } = precacheList(outDir);
+      const { entries, id } = precacheList(outDir, config.base);
       await build({
         configFile: false,
         logLevel: 'warn',
         root: config.root,
         publicDir: false,
-        define: { __PRECACHE__: JSON.stringify(entries), __BUILD_ID__: JSON.stringify(id) },
+        define: {
+          __PRECACHE__: JSON.stringify(entries),
+          __BUILD_ID__: JSON.stringify(id),
+          __BASE__: JSON.stringify(config.base),
+        },
         build: {
           outDir,
           emptyOutDir: false,

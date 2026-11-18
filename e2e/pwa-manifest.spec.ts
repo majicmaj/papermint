@@ -10,8 +10,9 @@ test('the manifest describes an installable app', async ({ page, request }) => {
   expect(manifest).toMatchObject({
     name: 'Papermint',
     short_name: 'Papermint',
-    start_url: '/',
-    scope: '/',
+    // Relative, so the same manifest works under a sub-path such as /demo/.
+    start_url: './',
+    scope: './',
     display: 'standalone',
   });
   expect(manifest.display_override).toEqual(['window-controls-overlay', 'standalone']);
@@ -20,7 +21,7 @@ test('the manifest describes an installable app', async ({ page, request }) => {
   );
   expect(sizes).toEqual(expect.arrayContaining(['192x192:any', '512x512:any', '512x512:maskable']));
   for (const icon of manifest.icons) {
-    const response = await request.get(icon.src);
+    const response = await request.get(`/${icon.src}`);
     expect(response.status(), icon.src).toBe(200);
     expect(response.headers()['content-type']).toBe('image/png');
   }

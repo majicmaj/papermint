@@ -1,3 +1,4 @@
+import { withBase } from '../base';
 import { DEFAULT_CONFIG, parseConfig, type AppConfig } from './config';
 
 let config = DEFAULT_CONFIG;
@@ -11,7 +12,7 @@ export async function loadConfig(): Promise<void> {
   const abort = new AbortController();
   const timeout = setTimeout(() => abort.abort(), 1200);
   try {
-    const response = await fetch('/config.json', {
+    const response = await fetch(withBase('/config.json'), {
       cache: 'no-store',
       mode: 'same-origin',
       credentials: 'same-origin',

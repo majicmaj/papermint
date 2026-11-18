@@ -18,7 +18,7 @@ Papermint gives your documents a focused workspace. Search from the keyboard, re
 
 ## Try the demo
 
-[Open the live demo](https://papermint.hobbyhood.app/). Browse, search, filter, and download sample records in a read-only archive that updates from the `main` branch.
+[Open the live demo](https://papermint.hobbyhood.app/demo/). Browse, search, filter, and download sample records in a read-only archive that updates from the `main` branch.
 
 ## Try it locally
 
@@ -31,7 +31,7 @@ npm run demo
 
 Open [http://127.0.0.1:4673](http://127.0.0.1:4673). The demo serves a sample archive of 50 fictional records: invoices, bank statements, bills, receipts, agreements, and notes for an invented freelancer and their studio. It keeps changes in memory. Restart it to reset the archive.
 
-The sample files live in `mock-server/samples`. After you edit `catalog.mjs`, run `npm run samples` to render them again.
+The public site at [papermint.hobbyhood.app](https://papermint.hobbyhood.app/) serves the page in `landing/` at `/` and the demo at `/demo/`. The sample files live in `mock-server/samples`. After you edit `catalog.mjs`, run `npm run samples` to render them again.
 
 ## Connect your archive
 

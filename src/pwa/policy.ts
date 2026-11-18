@@ -3,6 +3,8 @@
  * to the server goes straight to the network and is never stored, so no record, no list,
  * no preview and no setting can end up in Cache Storage.
  */
+import { withoutBase } from '../base';
+
 export type Strategy =
   | 'network' // not ours: the browser handles it, nothing is stored
   | 'shell'; // the app itself, from the precache
@@ -12,6 +14,8 @@ export interface RequestInfo {
   method: string;
   mode: string;
   origin: string;
+  /** The path the app is served under, like `/` or `/demo/`. */
+  base?: string;
 }
 
 /** Paths Nginx serves as files, or that never belong to the app. The worker leaves them alone. */
@@ -23,8 +27,10 @@ export function classify(request: RequestInfo): Strategy {
   const { url } = request;
   if (request.method !== 'GET') return 'network';
   if (url.origin !== request.origin) return 'network';
-  if (NEVER.test(url.pathname) || url.pathname === '/config.json') return 'network';
   if (url.pathname.startsWith('/api/')) return 'network';
+  const path = withoutBase(url.pathname, request.base ?? '/');
+  if (path === null) return 'network';
+  if (NEVER.test(path) || path === '/config.json') return 'network';
   if (request.mode === 'navigate') return 'shell';
-  return STATIC.test(url.pathname) ? 'shell' : 'network';
+  return STATIC.test(path) ? 'shell' : 'network';
 }

@@ -1,3 +1,4 @@
+import { withBase } from '../base';
 import { runtimeConfig } from '../config/runtime';
 import { RailBar } from '../shell/RailBar';
 import { Favorites } from './Favorites';
@@ -23,7 +24,7 @@ export const VIEW_ICON: Record<ViewName, IconName> = {
 export function Brand() {
   return (
     <div class="brand">
-      <img class="brand-mark" src="/favicon.png" width="24" height="24" alt="" />
+      <img class="brand-mark" src={withBase('/favicon.png')} width="24" height="24" alt="" />
       <span class="brand-name">Papermint</span>
     </div>
   );
