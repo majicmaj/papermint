@@ -63,16 +63,31 @@
   font-weight: 500;
 }
 
+/* One row, one surface: the fill spans the whole row like a nav item, and the edit button
+ * takes the count's place on hover, so a chosen row never looks cut short. */
 .tag-row {
+  position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 28px;
+  grid-template-columns: minmax(0, 1fr);
   align-items: center;
+  margin-bottom: 2px;
   border-radius: var(--radius-1);
 }
 
-.tag-row:hover,
-.tag-row:focus-within {
+.tag-row:hover {
+  background: var(--mw-gray-3);
+}
+
+.tag-row:has(.tag-toggle[aria-pressed='true']) {
   background: var(--mw-gray-4);
+}
+
+.tag-row:has(.tag-toggle[aria-pressed='true']):hover {
+  background: var(--mw-gray-5);
+}
+
+.tag-row:has(.tag-toggle:focus-visible) {
+  box-shadow: 0 0 0 2px var(--mw-indigo-8);
 }
 
 .tag-toggle {
@@ -81,15 +96,19 @@
   gap: 8px;
   min-width: 0;
   height: 32px;
-  padding: 0 4px 0 8px;
+  padding: 0 8px;
   border-radius: var(--radius-1);
   color: var(--mw-gray-11);
   text-align: left;
 }
 
+.tag-toggle:focus-visible {
+  outline: none;
+}
+
 .tag-toggle[aria-pressed='true'] {
-  background: var(--surface-selected);
-  color: var(--on-selected);
+  color: var(--mw-gray-12);
+  font-weight: 500;
 }
 
 .tag-name {
@@ -103,6 +122,7 @@
 .tag-count {
   min-width: 20px;
   font-size: 12px;
+  font-weight: 400;
   font-variant-numeric: tabular-nums;
   text-align: right;
 }
@@ -116,6 +136,9 @@
 }
 
 .tag-more {
+  position: absolute;
+  top: 2px;
+  right: 2px;
   display: grid;
   place-items: center;
   width: 28px;
@@ -131,8 +154,15 @@
   opacity: 1;
 }
 
+/* The count steps aside for the edit button. */
+.tag-row:hover .tag-count,
+.tag-row:has(.tag-more:focus-visible) .tag-count,
+.tag-row:has(.tag-more[aria-expanded='true']) .tag-count {
+  visibility: hidden;
+}
+
 .tag-more:hover {
-  background: var(--mw-gray-5);
+  background: var(--mw-gray-6);
   color: var(--mw-gray-12);
 }
 
@@ -155,9 +185,15 @@
   }
 
   .tag-more {
+    position: static;
     width: 44px;
     height: 44px;
     opacity: 1;
+  }
+
+  .tag-row .tag-count,
+  .tag-row:hover .tag-count {
+    visibility: visible;
   }
 
   .tag-head {

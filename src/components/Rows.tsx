@@ -10,7 +10,7 @@ import { Icon } from '../icons/Icon';
 import { useApp } from '../state/app';
 import { navigate, recordPath } from '../state/router';
 import { rowIntent } from '../pwa/prefetch';
-import { TopicDots, StatusPill } from './Pill';
+import { TopicDots, TopicLabels, StatusPill } from './Pill';
 import { Badges } from './RecordMarks';
 
 interface RowProps {
@@ -70,7 +70,10 @@ export function Row({ doc, model, view, selectedId, field }: RowProps) {
               <SupersededBy doc={doc} />
             </>
           ) : (
-            <TopicDots tags={topics.length > 0 ? topics : areasOf(doc, model)} />
+            <>
+              <TopicDots tags={topics.length > 0 ? topics : areasOf(doc, model)} />
+              <TopicLabels tags={topics.length > 0 ? topics : areasOf(doc, model)} />
+            </>
           )}
           {doc.versions.length > 1 && (
             <span class="row-versions" title="Versions">

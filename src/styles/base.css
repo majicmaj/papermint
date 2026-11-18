@@ -234,6 +234,10 @@ html[data-rail-collapsed] .shell {
   background: var(--mw-gray-9);
 }
 
+.dot[data-shape='area'] {
+  border-radius: 2px;
+}
+
 .dots {
   display: inline-flex;
   gap: 4px;

@@ -14,7 +14,8 @@ test('the demo fills the viewport and folding the sidebar lets rows use its widt
   const list = page.locator('.desktop-records');
   const before = (await scroller.boundingBox())!;
   expect(before.y + before.height).toBe(900);
-  expect((await list.boundingBox())!.width).toBeLessThan(before.width);
+  // The list always uses the whole width beside the sidebar.
+  expect((await list.boundingBox())!.width).toBe(await scroller.evaluate((el) => el.clientWidth));
   await page.getByRole('button', { name: 'Collapse sidebar' }).click();
   const after = (await scroller.boundingBox())!;
   expect(after.x).toBe(0);

@@ -10,17 +10,30 @@
   padding-top: 12px;
 }
 
-/* A row: the same shape as an area or topic row in the rail. */
+/* A row: the same one-surface shape as an area or topic row (taxonomy.css). */
 .fav-row {
+  position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 28px;
+  grid-template-columns: minmax(0, 1fr);
   align-items: center;
+  margin-bottom: 2px;
   border-radius: var(--radius-1);
 }
 
-.fav-row:hover,
-.fav-row:focus-within {
+.fav-row:hover {
+  background: var(--mw-gray-3);
+}
+
+.fav-row:has(.fav-toggle[aria-pressed='true']) {
   background: var(--mw-gray-4);
+}
+
+.fav-row:has(.fav-toggle[aria-pressed='true']):hover {
+  background: var(--mw-gray-5);
+}
+
+.fav-row:has(.fav-toggle:focus-visible) {
+  box-shadow: 0 0 0 2px var(--mw-indigo-8);
 }
 
 .fav-toggle {
@@ -29,15 +42,19 @@
   gap: 8px;
   min-width: 0;
   height: 32px;
-  padding: 0 4px 0 8px;
+  padding: 0 8px;
   border-radius: var(--radius-1);
   color: var(--mw-gray-11);
   text-align: left;
 }
 
+.fav-toggle:focus-visible {
+  outline: none;
+}
+
 .fav-toggle[aria-pressed='true'] {
-  background: var(--surface-selected);
-  color: var(--on-selected);
+  color: var(--mw-gray-12);
+  font-weight: 500;
 }
 
 .fav-label {
@@ -51,11 +68,15 @@
 .fav-count {
   min-width: 20px;
   font-size: 12px;
+  font-weight: 400;
   font-variant-numeric: tabular-nums;
   text-align: right;
 }
 
 .fav-more {
+  position: absolute;
+  top: 2px;
+  right: 2px;
   display: grid;
   place-items: center;
   width: 28px;
@@ -71,8 +92,14 @@
   opacity: 1;
 }
 
+.fav-row:hover .fav-count,
+.fav-row:has(.fav-more:focus-visible) .fav-count,
+.fav-row:has(.fav-more[aria-expanded='true']) .fav-count {
+  visibility: hidden;
+}
+
 .fav-more:hover {
-  background: var(--mw-gray-5);
+  background: var(--mw-gray-6);
   color: var(--mw-gray-12);
 }
 
@@ -220,9 +247,15 @@
   }
 
   .fav-more {
+    position: static;
     width: 44px;
     height: 44px;
     opacity: 1;
+  }
+
+  .fav-row .fav-count,
+  .fav-row:hover .fav-count {
+    visibility: visible;
   }
 
   .fav-current {

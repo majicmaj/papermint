@@ -16,6 +16,7 @@ import { useGrouping } from '../state/grouping';
 import { useMobile } from '../mobile/viewport';
 import { Recovery } from './Recovery';
 import { DesktopList } from './DesktopList';
+import { ListEmpty } from './ListEmpty';
 import { useListPosition } from './useListPosition';
 
 const ROWS_KEY = 'majin.rows';
@@ -184,9 +185,7 @@ export function RecordList({ view, route }: Props) {
           band={band}
         />
         {phase === 'ready' && rows.length === 0 && view !== 'recovery' && (
-          <div class="list-empty" key={`${band}e`}>
-            {activeFilters > 0 ? 'No records match' : 'No records'}
-          </div>
+          <ListEmpty key={`${band}e`} filtered={activeFilters > 0} />
         )}
       </div>
     </>

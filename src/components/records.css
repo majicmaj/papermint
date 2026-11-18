@@ -14,14 +14,45 @@
   font-weight: 600;
 }
 
+/* The list uses the whole width. Wide lists name the topics; narrow ones show their dots. */
 .desktop-records {
   --row: 40px;
-  max-width: 900px;
   container: archive / inline-size;
 }
 
-html[data-rail-collapsed] .desktop-records {
-  max-width: none;
+.topic-labels {
+  display: none;
+  gap: 6px;
+}
+
+.topic-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 160px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 11px;
+  box-shadow: inset 0 0 0 1px var(--mw-gray-6);
+  color: var(--mw-gray-11);
+  font-size: 12px;
+}
+
+.topic-label-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@container archive (min-width: 720px) {
+  .archive-row .topic-labels {
+    display: inline-flex;
+  }
+
+  .archive-row .dots {
+    display: none;
+  }
 }
 
 .desktop-records .archive-row {

@@ -19,7 +19,10 @@ test('date sorts group compact title-first rows and title sorting removes the he
   const date = (await row.locator('.row-date').boundingBox())!;
   expect(frame.height).toBe(40);
   expect(date.x - title.x).toBeGreaterThan(0);
-  expect(date.x + date.width - title.x).toBeLessThanOrEqual(900);
+  // The row spans the list, the date ends it, and a wide list names the topics.
+  expect(Math.round(date.x + date.width)).toBe(Math.round(frame.x + frame.width - 16));
+  await expect(row.locator('.topic-labels')).toBeVisible();
+  await expect(row.locator('.dots')).toBeHidden();
   await page.getByRole('button', { name: 'Sort', exact: true }).click();
   await page.getByRole('menuitemradio', { name: 'Title', exact: true }).click();
   await expect(months).toHaveCount(0);
