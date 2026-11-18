@@ -23,6 +23,8 @@ function chromiumPath(): string | undefined {
   return builds.map((name) => join(cache, name, app)).find((path) => existsSync(path));
 }
 
+const executablePath = chromiumPath();
+
 export default defineConfig({
   testDir: './e2e',
   outputDir: process.env.PAPERMINT_RESULTS ?? 'test-results',
@@ -33,7 +35,9 @@ export default defineConfig({
     baseURL: `http://127.0.0.1:${PORT}`,
     // Specs route requests with page.route, which a service worker would bypass.
     serviceWorkers: 'block',
-    launchOptions: { executablePath: chromiumPath() },
+    // PDF previews need the full browser and its PDF viewer.
+    channel: executablePath ? undefined : 'chromium',
+    launchOptions: { executablePath },
   },
   projects: [
     {

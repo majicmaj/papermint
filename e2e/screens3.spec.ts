@@ -2,11 +2,6 @@ import { expect, test } from './test';
 import { mockRecoveryFiles } from './recovery-mocks';
 import { isMobile, openPalette } from './helpers';
 
-test.afterEach(async ({ page }) => {
-  // Let in-flight requests finish before the page closes.
-  await page.waitForLoadState('networkidle').catch(() => undefined);
-});
-
 /** Screenshots of the layout round: scrim, wide list, recovery files. Recovery files are mocked. */
 for (const scheme of ['light', 'dark'] as const) {
   test(`layout states in ${scheme}`, async ({ page }, info) => {

@@ -165,13 +165,14 @@ test.describe('terminal states', () => {
 test.describe('first paint', () => {
   test('the record shell is there before the data arrives', async ({ page }, info) => {
     const doc = (await apiDocs(page))[0]!;
-    await page.route('**/api/documents/?**', async (route) => {
-      await new Promise((r) => setTimeout(r, 1500));
+    let release!: () => void;
+    const dataReady = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    await page.route(/\/api\/documents\/(?:\d+\/)?(?:\?|$)/, async (route) => {
+      await dataReady;
       await route.fallback();
     });
-    await page.goto(`/r/${doc.id}`);
-    await page.evaluate(() => localStorage.clear());
-    await page.reload();
     const shell = () =>
       page.evaluate(() => {
         const box = (s: string) => document.querySelector(s)?.getBoundingClientRect().height ?? -1;
@@ -184,11 +185,19 @@ test.describe('first paint', () => {
           bar: bar?.getBoundingClientRect().height ?? 0,
         };
       });
-    await settled(page);
-    const early = await shell();
-    expect(early.head).toBeGreaterThan(0);
-    expect(early.body).toBeGreaterThan(0);
-    expect(early.bar).toBeGreaterThan(0);
+    let early: Awaited<ReturnType<typeof shell>>;
+    try {
+      await page.goto(`/r/${doc.id}`);
+      await expect(page.locator('.pane-head')).toBeVisible();
+      await expect(page.locator('.pane-title .pane-skeleton')).toBeAttached();
+      await settled(page);
+      early = await shell();
+      expect(early.head).toBeGreaterThan(0);
+      expect(early.body).toBeGreaterThan(0);
+      expect(early.bar).toBeGreaterThan(0);
+    } finally {
+      release();
+    }
     await expect(page.locator('.pane-title h1')).toBeVisible();
     await settled(page);
     expect(await shell()).toEqual(early);

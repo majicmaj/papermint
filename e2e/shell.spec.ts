@@ -9,12 +9,6 @@ test.beforeEach(async ({ page }) => {
   await trackCls(page);
 });
 
-// Let in-flight index requests finish before the page closes, so the Sensitive filter's
-// route handler never runs against a closed page.
-test.afterEach(async ({ page }) => {
-  await page.waitForLoadState('networkidle').catch(() => undefined);
-});
-
 /** Parse a computed color: rgb(), rgba() or color(srgb …). Channels 0–255, alpha 0–1. */
 function parseColor(value: string): { r: number; g: number; b: number; a: number } {
   const nums = (value.match(/-?[\d.]+(?:e-?\d+)?/g) ?? []).map(Number);

@@ -5,7 +5,11 @@ import { excludeSensitive } from './live';
 export const test = base.extend({
   page: async ({ page }, use) => {
     await excludeSensitive(page);
-    await use(page);
+    try {
+      await use(page);
+    } finally {
+      await page.unrouteAll({ behavior: 'ignoreErrors' });
+    }
   },
 });
 export { expect };
