@@ -1,5 +1,5 @@
 import type { ComponentChildren } from 'preact';
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import type { Command, Item, PaletteState, Range } from '../palette';
 import { Icon } from '../icons/Icon';
 import { palette } from '../state/actions';
@@ -194,7 +194,7 @@ export function PaletteView() {
   const panel = useRef<HTMLDivElement>(null);
   useVisualHeight(panel, state.open);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (state.open) input.current?.focus();
   }, [state.open, state.nested]);
 
