@@ -16,7 +16,7 @@
   width: min(580px, calc(100vw - 24px));
   height: min(472px, calc(100dvh - 24px));
   border-radius: var(--radius-3);
-  background: var(--mw-gray-1);
+  background: var(--surface-popover);
   box-shadow: var(--shadow);
   overflow: hidden;
 }
@@ -28,7 +28,7 @@
   flex: none;
   height: 52px;
   padding: 0 16px;
-  border-bottom: 1px solid var(--mw-gray-6);
+  background: var(--surface-workspace);
   color: var(--mw-gray-11);
 }
 
@@ -84,7 +84,7 @@
 }
 
 .palette-command[aria-selected='true'] {
-  background: var(--mw-indigo-4);
+  background: var(--surface-selected);
 }
 
 .palette-command-label {
@@ -117,7 +117,7 @@
 }
 
 .result[aria-selected='true'] {
-  background: var(--mw-indigo-4);
+  background: var(--surface-selected);
 }
 
 .result-title,

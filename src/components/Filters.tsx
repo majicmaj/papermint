@@ -1,3 +1,4 @@
+import { runtimeConfig } from '../config/runtime';
 import { useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { filterChips, type Filters } from '../domain/filters';
 import { visibleSelection } from '../domain/taxonomy';
@@ -12,6 +13,7 @@ import { updateFilters, useFilters, useFilterTags } from '../state/filters';
 import { selectTaxonomy, selectTopics, useTopics } from '../state/topics';
 import { FilterPanel } from './FilterPanel';
 import { Menu } from './Menu';
+import { GroupMenu } from './GroupMenu';
 import { SortRows, type SortProps } from './SortRows';
 
 function SortMenu(props: SortProps) {
@@ -69,6 +71,7 @@ function MobileFilters({
   const { areas, selected } = useTopics();
   return (
     <>
+      {runtimeConfig().readOnly && <div class="demo-label">Demo · Read only</div>}
       <TopBar
         view={view}
         chips={chips}
@@ -103,6 +106,7 @@ function DesktopFilterControls({
         {() => <FilterPanel filters={filters} update={updateFilters} mimes={mimes} {...sort} />}
       </Menu>
       <SortMenu {...sort} />
+      <GroupMenu />
     </>
   );
 }
@@ -117,6 +121,11 @@ export function FiltersBar({ view, split, title, count, filters, mimes, ...sortP
         {title}
         <span class="list-count">{count > 0 ? count : ''}</span>
       </span>
+      {runtimeConfig().readOnly && (
+        <span class="demo-label" title="Read-only demo">
+          Demo
+        </span>
+      )}
       {view === 'records' && (
         <DesktopFilterControls
           key={split ? 'split' : 'wide'}

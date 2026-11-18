@@ -2,8 +2,7 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-  background: var(--mw-gray-2);
-  border-right: 1px solid var(--mw-gray-6);
+  background: var(--surface-sidebar);
 }
 
 .brand {
@@ -40,13 +39,12 @@
   margin: 8px 8px 12px;
   padding: 0 8px 0 10px;
   border-radius: var(--radius-1);
-  background: var(--mw-gray-1);
-  box-shadow: 0 0 0 1px var(--mw-gray-6);
+  background: var(--surface-toolbar);
   color: var(--mw-gray-11);
 }
 
 .search-field:hover {
-  box-shadow: 0 0 0 1px var(--mw-gray-7);
+  background: var(--mw-gray-4);
 }
 
 .search-label {
@@ -78,8 +76,8 @@
 }
 
 .nav-item[aria-current='page'] {
-  background: var(--mw-gray-5);
-  color: var(--mw-gray-12);
+  background: var(--surface-selected);
+  color: var(--on-selected);
 }
 
 .nav-label {
@@ -97,4 +95,16 @@
 .rail-foot {
   margin-top: auto;
   padding: 8px;
+}
+
+.appearance-host {
+  margin-left: auto;
+}
+
+.appearance-host .menu {
+  min-width: 132px;
+}
+
+.appearance-option > span {
+  flex: 1;
 }

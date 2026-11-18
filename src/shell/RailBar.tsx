@@ -1,3 +1,4 @@
+import { AppearanceMenu } from '../components/AppearanceMenu';
 import { Icon } from '../icons/Icon';
 import { toggleRail, useLayout } from './layout-store';
 import { SyncDot } from './SyncDot';
@@ -20,6 +21,7 @@ export function RailBar() {
         <Icon name="panel_left" />
       </button>
       <SyncDot />
+      {!collapsed && <AppearanceMenu />}
     </div>
   );
 }

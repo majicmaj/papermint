@@ -13,7 +13,7 @@
   user-select: none;
 }
 
-.rail-bar :is(button, a, input, select, textarea, [role='button']),
+.rail-bar :is(button, a, input, select, textarea, [role='button'], .menu),
 .list-head :is(button, a, input, select, textarea, [role='button'], .menu),
 .pane-head :is(button, a, input, select, textarea, [role='button'], .menu) {
   app-region: no-drag;

@@ -8,7 +8,7 @@
   height: 32px;
   margin: 0;
   padding: 3px 16px 0;
-  background: var(--mw-gray-2);
+  background: var(--surface-section);
   color: var(--mw-gray-11);
   font-size: 12px;
   font-weight: 600;
@@ -18,6 +18,10 @@
   --row: 40px;
   max-width: 900px;
   container: archive / inline-size;
+}
+
+html[data-rail-collapsed] .desktop-records {
+  max-width: none;
 }
 
 .desktop-records .archive-row {

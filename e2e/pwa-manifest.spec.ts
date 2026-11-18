@@ -29,7 +29,10 @@ test('the manifest describes an installable app', async ({ page, request }) => {
     'href',
     '/manifest.webmanifest',
   );
-  await expect(page.locator('meta[name="theme-color"]')).toHaveCount(2);
+  await expect(
+    page.locator('meta[name="theme-color"][media^="(prefers-color-scheme:"]'),
+  ).toHaveCount(2);
+  await expect(page.locator('#theme-override')).toHaveAttribute('media', 'not all');
   await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveCount(1);
 });
 

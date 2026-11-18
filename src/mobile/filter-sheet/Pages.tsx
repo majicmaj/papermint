@@ -1,3 +1,5 @@
+import { GROUPING_OPTIONS } from '../../domain/list-groups';
+import { setGrouping, useGrouping } from '../../state/grouping';
 import { typeName, type Filters } from '../../domain/filters';
 import { SORTS, type SortProps } from '../../components/SortRows';
 import { loadSizes } from '../../state/sizes';
@@ -104,6 +106,7 @@ export function TypeBody({ filters, update, mimes }: FilterProps & { mimes: stri
 
 /** The sort keys, then the direction. The same state as the desktop Sort menu. */
 export function SortBody({ sort, setSort, ascending, setAscending }: SortProps) {
+  const grouping = useGrouping();
   return (
     <>
       <Group role="radiogroup" label="Sort">
@@ -123,6 +126,17 @@ export function SortBody({ sort, setSort, ascending, setAscending }: SortProps) 
       <Group role="radiogroup" label="Order">
         <ChoiceRow label="Descending" checked={!ascending} onChoose={() => setAscending(false)} />
         <ChoiceRow label="Ascending" checked={ascending} onChoose={() => setAscending(true)} />
+      </Group>
+      <Label>Group by</Label>
+      <Group role="radiogroup" label="Group by">
+        {GROUPING_OPTIONS.map(([key, name]) => (
+          <ChoiceRow
+            key={key}
+            label={name}
+            checked={grouping === key}
+            onChoose={() => setGrouping(key)}
+          />
+        ))}
       </Group>
     </>
   );

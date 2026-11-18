@@ -6,8 +6,8 @@ import {
   PHONE_ROW,
   dateFieldFor,
   groupField,
+  groupRecords,
   listItems,
-  monthLabel,
   shortDate,
 } from './list-groups';
 
@@ -33,9 +33,12 @@ describe('phone dates', () => {
   });
 
   it('names the month of a day and of a timestamp', () => {
-    expect(monthLabel('2026-11-01')).toBe('November 2026');
-    expect(monthLabel('2026-03-15T12:00:00Z')).toBe('March 2026');
-    expect(monthLabel(undefined)).toBe('No date');
+    const rows = [doc(1, '2026-11-01'), doc(2, '2026-03-15', '2026-03-15T12:00:00Z')];
+    expect(groupRecords(rows, 'created', 'month')[0]?.label).toBe('November 2026');
+    expect(groupRecords(rows, 'modified', 'month').map(({ label }) => label)).toEqual([
+      'No date',
+      'March 2026',
+    ]);
   });
 
   it('shows the sorted date, else the view date', () => {
@@ -48,10 +51,21 @@ describe('phone dates', () => {
 });
 
 describe('listItems', () => {
+  it('preserves title order within explicitly grouped years', () => {
+    const rows = [doc(1, '2025-04-16'), doc(2, '2026-02-16'), doc(3, '2025-10-30')];
+    const groups = groupRecords(rows, 'title', 'year');
+    expect(groups.map(({ label }) => label)).toEqual(['2026', '2025']);
+    expect(groups.flatMap((group) => group.rows.map(({ id }) => id))).toEqual([2, 1, 3]);
+    expect(groupRecords(rows, 'created', 'none')).toEqual([{ label: null, rows }]);
+  });
+
   it('puts a header before each month and gives every item its offset', () => {
     const items = listItems(
-      [doc(1, '2026-11-16'), doc(2, '2026-11-02'), doc(3, '2026-10-30')],
-      'created',
+      groupRecords(
+        [doc(1, '2026-11-16'), doc(2, '2026-11-02'), doc(3, '2026-10-30')],
+        'created',
+        'auto',
+      ),
     );
     expect(items.map((item) => (item.kind === 'head' ? item.label : item.doc.id))).toEqual([
       'November 2026',
@@ -70,13 +84,17 @@ describe('listItems', () => {
   });
 
   it('is one flat list without a date sort', () => {
-    const items = listItems([doc(1, '2026-11-16'), doc(2, '2025-01-01')], null);
+    const items = listItems(
+      groupRecords([doc(1, '2026-11-16'), doc(2, '2025-01-01')], 'title', 'auto'),
+    );
     expect(items.every((item) => item.kind === 'row')).toBe(true);
     expect(items.map((item) => item.y)).toEqual([LIST_TOP, LIST_TOP + PHONE_ROW]);
   });
 
   it('groups records without the date under one header', () => {
-    const items = listItems([doc(1, '2026-11-16'), doc(2, '2026-11-15')], 'modified');
+    const items = listItems(
+      groupRecords([doc(1, '2026-11-16'), doc(2, '2026-11-15')], 'modified', 'auto'),
+    );
     expect(items.filter((item) => item.kind === 'head')).toHaveLength(1);
   });
 });

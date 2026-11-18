@@ -1,6 +1,16 @@
-/* Layout constants. Colors come only from the Radix tokens in styles/radix. */
+/* Layout and surface roles. The neutral aliases use Radix Slate. */
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
+  --surface-workspace: var(--mw-gray-1);
+  --surface-sidebar: var(--mw-gray-3);
+  --surface-toolbar: var(--mw-gray-2);
+  --surface-section: var(--mw-gray-2);
+  --surface-preview: var(--mw-gray-2);
+  --surface-popover: var(--mw-gray-2);
+  --surface-selected: var(--mw-indigo-4);
+  --on-selected: var(--mw-indigo-12);
+  --focus-ring: var(--mw-indigo-9);
+  --primary-hover: color-mix(in srgb, var(--mw-indigo-9) 80%, var(--mw-indigo-10));
   --rail: 216px;
   --list: 440px;
   --head: 52px;
@@ -25,23 +35,24 @@
   --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   /* Light: a dark veil over a light page. Dark scheme overrides below. */
   --scrim: color-mix(in srgb, var(--mw-gray-12) 38%, transparent);
-  --shadow:
-    0 8px 28px color-mix(in srgb, var(--mw-gray-12) 18%, transparent), 0 0 0 1px var(--mw-gray-6);
+  --shadow: 0 8px 28px color-mix(in srgb, var(--mw-gray-12) 18%, transparent);
   --ease: cubic-bezier(0.2, 0, 0, 1);
 }
 
 /* Dark: gray-1 is near black, so the veil darkens the page instead of washing it out. */
 html[data-bs-theme='dark'] {
+  color-scheme: dark;
+  --focus-ring: var(--mw-indigo-11);
   --scrim: color-mix(in srgb, var(--mw-gray-1) 72%, transparent);
-  --shadow:
-    0 12px 32px color-mix(in srgb, var(--mw-gray-1) 80%, transparent), 0 0 0 1px var(--mw-gray-6);
+  --shadow: 0 12px 32px color-mix(in srgb, var(--mw-gray-1) 80%, transparent);
 }
 
 @media (prefers-color-scheme: dark) {
   html:not([data-bs-theme='light']) {
+    color-scheme: dark;
+    --focus-ring: var(--mw-indigo-11);
     --scrim: color-mix(in srgb, var(--mw-gray-1) 72%, transparent);
-    --shadow:
-      0 12px 32px color-mix(in srgb, var(--mw-gray-1) 80%, transparent), 0 0 0 1px var(--mw-gray-6);
+    --shadow: 0 12px 32px color-mix(in srgb, var(--mw-gray-1) 80%, transparent);
   }
 }
 
@@ -60,7 +71,7 @@ body,
 body {
   margin: 0;
   overflow: hidden;
-  background: var(--mw-gray-1);
+  background: var(--surface-workspace);
   color: var(--mw-gray-12);
   font: 400 14px/20px var(--font);
   -webkit-font-smoothing: antialiased;
@@ -88,7 +99,7 @@ button {
 }
 
 :focus-visible {
-  outline: 2px solid var(--mw-indigo-8);
+  outline: 2px solid var(--focus-ring);
   outline-offset: -2px;
 }
 
@@ -163,11 +174,11 @@ html[data-rail-collapsed] .shell {
 }
 
 .btn--primary:hover {
-  background: var(--mw-indigo-10);
+  background: var(--primary-hover);
 }
 
 .btn--primary:active {
-  background: var(--mw-indigo-10);
+  background: var(--primary-hover);
 }
 
 .btn--ghost {

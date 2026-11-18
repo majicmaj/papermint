@@ -1,4 +1,5 @@
 import { recoveryFiles } from '../shell/recovery-files';
+import { AppearanceItems } from '../components/AppearanceMenu';
 import { Menu } from '../components/Menu';
 import { VIEW_LABEL, VIEW_PATH, type ViewName } from '../domain/views';
 import { Icon } from '../icons/Icon';
@@ -52,6 +53,9 @@ export function HeaderMenu({ view, superseded, onSuperseded }: Props) {
             Superseded
             <span class="menu-switch" aria-hidden="true" />
           </button>
+          <div class="menu-sep" />
+          <div class="menu-label">Appearance</div>
+          <AppearanceItems close={close} />
         </>
       )}
     </Menu>

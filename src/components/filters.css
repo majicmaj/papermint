@@ -2,17 +2,12 @@
   margin-left: auto;
 }
 
-.list-head .menu {
-  transform-origin: top right;
-}
-
 .filter-host .menu {
   width: 304px;
   max-height: none;
   overflow: visible;
   padding: 0;
-  border: 1px solid var(--mw-gray-6);
-  background: var(--mw-gray-2);
+  background: var(--surface-popover);
 }
 
 .filter-panel {
@@ -30,7 +25,6 @@
   height: auto;
   margin: 0;
   padding: 6px;
-  border-bottom: 1px solid var(--mw-gray-5);
 }
 
 .filter-panel .fs-search {
@@ -117,7 +111,6 @@
   height: 36px;
   gap: 6px;
   padding: 0 6px;
-  border-bottom: 1px solid var(--mw-gray-5);
 }
 
 .filter-panel .fs-title {
@@ -193,7 +186,7 @@
 }
 
 .chips .chip--active {
-  background: var(--mw-indigo-3);
+  background: var(--surface-selected);
   color: var(--mw-gray-12);
 }
 
@@ -203,8 +196,7 @@
   top: 0;
   height: 38px;
   padding: 0 16px;
-  border-bottom: 1px solid var(--mw-gray-6);
-  background: var(--mw-gray-1);
+  background: var(--surface-section);
 }
 
 .desktop-filter-strip .chip {

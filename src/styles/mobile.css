@@ -27,7 +27,6 @@
   .list-col,
   .pane-col {
     grid-area: 1 / 1;
-    border-right: 0;
   }
 
   .pane-head {
@@ -48,8 +47,7 @@
     height: calc(var(--action-bar) + env(safe-area-inset-bottom));
     padding: 0 12px env(safe-area-inset-bottom);
     gap: 8px;
-    background: var(--mw-gray-1);
-    border-top: 1px solid var(--mw-gray-6);
+    background: var(--surface-sidebar);
   }
 
   .pane-actions--mobile .btn {

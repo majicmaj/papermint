@@ -48,7 +48,7 @@ test.describe('one toolbar row', () => {
     await expectStable(page, 'toolbar row', 600);
   });
 
-  test('the view name and count are on the left, with Filter and Sort at the right', async ({
+  test('the view name and count lead, with Filter, Sort, and Group at the right', async ({
     page,
   }) => {
     await boot(page, '/');
@@ -59,9 +59,9 @@ test.describe('one toolbar row', () => {
     const order = await head
       .locator('.list-title, button')
       .evaluateAll((els) =>
-        els.slice(0, 3).map((el) => el.textContent?.replace(/\d+$/, '').trim()),
+        els.slice(0, 4).map((el) => el.textContent?.replace(/\d+$/, '').trim()),
       );
-    expect(order).toEqual(['Records', 'Filter', 'Sort']);
+    expect(order).toEqual(['Records', 'Filter', 'Sort', 'Group']);
     const end = await box(page, '.list-head > .menu-host:last-child');
     const toolbar = await box(page, '.list-head');
     expect(toolbar.x + toolbar.w - end.x - end.w).toBe(12);
@@ -141,7 +141,7 @@ test.describe('installed window', () => {
     await titleBar(page, '78px', 'calc(100vw - 78px)');
     expect((await box(page, '.rail-bar button')).x).toBeGreaterThanOrEqual(78);
     // Folded, the button and the list's title both clear them.
-    await page.locator('.rail-bar button').click();
+    await page.getByRole('button', { name: 'Collapse sidebar' }).click();
     const bar = await box(page, '.rail-bar button');
     expect(bar.x).toBeGreaterThanOrEqual(78);
     expect((await box(page, '.list-title')).x).toBeGreaterThan(bar.x + bar.w);

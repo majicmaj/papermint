@@ -62,7 +62,6 @@
   .list-head,
   .pane-head {
     height: var(--bar);
-    border-bottom: 1px solid var(--mw-gray-6);
   }
 
   .rail-bar {
@@ -72,8 +71,7 @@
     gap: 4px;
     min-width: 0;
     padding: 0 8px 0 calc(var(--tb-x) + 8px);
-    background: var(--mw-gray-2);
-    border-right: 1px solid var(--mw-gray-6);
+    background: var(--surface-sidebar);
   }
 
   .rail-body {
@@ -82,16 +80,15 @@
     flex-direction: column;
     min-width: 0;
     min-height: 0;
-    background: var(--mw-gray-2);
-    border-right: 1px solid var(--mw-gray-6);
+    background: var(--surface-sidebar);
   }
 
   .list-head {
     grid-area: 1 / 2;
     padding-top: 0;
     padding-bottom: 0;
-    background: var(--mw-gray-1);
-    border-right: 1px solid var(--mw-gray-6);
+    container: list-toolbar / inline-size;
+    background: var(--surface-toolbar);
   }
 
   .list-title {
@@ -99,7 +96,6 @@
     flex: none;
     align-items: baseline;
     gap: 8px;
-    width: 124px;
     padding-left: 4px;
     font-weight: 600;
   }
@@ -114,7 +110,6 @@
 
   .list-scroll {
     grid-area: 2 / 2;
-    border-right: 1px solid var(--mw-gray-6);
   }
 
   .pane-head {
@@ -129,11 +124,6 @@
   /* The last cell of the toolbar keeps clear of the window buttons on the right. */
   .shell[data-pane='list'] .list-head {
     padding-right: calc(12px + var(--tb-right));
-    border-right: 0;
-  }
-
-  .shell[data-pane='list'] .list-scroll {
-    border-right: 0;
   }
 
   /* Handles never cover the toolbar: empty toolbar space only drags, and double-click does nothing. */
@@ -175,10 +165,6 @@
 
   .shell[data-pane='list'] .pane-col {
     display: none;
-  }
-
-  .shell[data-pane='list'] .list-col {
-    border-right: 0;
   }
 }
 

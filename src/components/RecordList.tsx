@@ -1,4 +1,3 @@
-import { runtimeConfig } from '../config/runtime';
 import './filters.css';
 import { ActiveFilters, FiltersBar } from './Filters';
 import {
@@ -19,7 +18,8 @@ import { currentRoute, navigate, recordPath, type Route } from '../state/router'
 import { useTopics } from '../state/topics';
 import { useActiveFilterCount, useFilters } from '../state/filters';
 import { PhoneList, PhoneSkeleton } from '../mobile/PhoneList';
-import { PHONE_ROW } from '../domain/list-groups';
+import { PHONE_ROW, groupField, groupRecords, type RecordGroup } from '../domain/list-groups';
+import { useGrouping } from '../state/grouping';
 import { useMobile } from '../mobile/viewport';
 import { Recovery } from './Recovery';
 import { DesktopList } from './DesktopList';
@@ -115,7 +115,8 @@ interface Props {
 }
 
 interface RowsProps {
-  rows: DetailedDoc[];
+  groups: readonly RecordGroup[];
+  grouping: string;
   view: ViewName;
   sort: SortKey;
   selectedId: number | null;
@@ -124,14 +125,14 @@ interface RowsProps {
 }
 
 /** The desktop and phone share the same sorted records and date grouping. */
-function ListRows({ rows, view, sort, selectedId, band }: RowsProps) {
+function ListRows({ groups, grouping, view, sort, selectedId, band }: RowsProps) {
   const model = useApp((s) => s.model);
   const phase = useApp((s) => s.phase);
   const mobile = useMobile();
   if (view === 'recovery') return null;
-  if (!mobile) return <DesktopList {...{ rows, view, sort, selectedId, band }} />;
+  if (!mobile) return <DesktopList {...{ groups, grouping, view, sort, selectedId, band }} />;
   if (phase === 'loading') return <PhoneSkeleton count={skeletonCount(PHONE_ROW)} />;
-  return <PhoneList {...{ rows, model, view, sort, selectedId, band }} />;
+  return <PhoneList {...{ groups, model, view, sort, selectedId }} band={`${band}:${grouping}`} />;
 }
 
 export function RecordList({ view, route }: Props) {
@@ -143,7 +144,10 @@ export function RecordList({ view, route }: Props) {
   const [ascending, setAscending] = useState(false);
   const scroller = useRef<HTMLDivElement>(null);
   const rows = useRows(view, filters, sort, ascending);
-  const ids = useMemo(() => rows.map((d) => d.id), [rows]);
+  const grouping = useGrouping();
+  const groups = useMemo(() => groupRecords(rows, sort, grouping), [rows, sort, grouping]);
+  const ids = useMemo(() => groups.flatMap((group) => group.rows.map((doc) => doc.id)), [groups]);
+  const groupingKey = `${grouping}:${groupField(sort) ?? 'flat'}`;
   const selectedId = route.name === 'record' ? route.id : null;
   const mobile = useMobile();
 
@@ -174,7 +178,6 @@ export function RecordList({ view, route }: Props) {
   );
   return (
     <>
-      {runtimeConfig().readOnly && <div class="demo-label">Demo · Read only</div>}
       {/* On a phone the header scrolls with the list. */}
       {!mobile && bar}
       <div class="list-scroll" ref={scroller}>
@@ -188,7 +191,14 @@ export function RecordList({ view, route }: Props) {
             </button>
           </div>
         )}
-        <ListRows rows={rows} view={view} sort={sort} selectedId={selectedId} band={band} />
+        <ListRows
+          groups={groups}
+          grouping={groupingKey}
+          view={view}
+          sort={sort}
+          selectedId={selectedId}
+          band={band}
+        />
         {phase === 'ready' && rows.length === 0 && view !== 'recovery' && (
           <div class="list-empty" key={`${band}e`}>
             {activeFilters > 0 ? 'No records match' : 'No records'}

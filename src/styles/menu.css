@@ -19,7 +19,7 @@
   overflow-y: auto;
   padding: 4px;
   border-radius: var(--radius-2);
-  background: var(--mw-gray-1);
+  background: var(--surface-popover);
   box-shadow: var(--shadow);
 }
 

@@ -11,10 +11,10 @@ import { useApp } from '../state/app';
 import { recordPath } from '../state/router';
 import {
   dateFieldFor,
-  groupField,
   listItems,
   shortDate,
   type DateField,
+  type RecordGroup,
 } from '../domain/list-groups';
 
 /**
@@ -99,7 +99,7 @@ function PhoneRow({ doc, model, view, selected, field }: RowProps) {
 }
 
 interface ListProps {
-  rows: readonly DetailedDoc[];
+  groups: readonly RecordGroup[];
   model: TagModel;
   view: ViewName;
   sort: SortKey;
@@ -114,12 +114,12 @@ interface ListProps {
  * land somewhere new is a new node. So a change of filter, sort or grouping redraws the list
  * without moving any box.
  */
-export function PhoneList({ rows, model, view, sort, selectedId, band }: ListProps) {
+export function PhoneList({ groups, model, view, sort, selectedId, band }: ListProps) {
   const tags = useApp((state) => state.tags);
   const field = dateFieldFor(sort);
   return (
     <>
-      {listItems(rows, groupField(sort)).map((item) =>
+      {listItems(groups).map((item) =>
         item.kind === 'head' ? (
           <h2 key={`${band}h${item.y}`} class="prow-head">
             {item.label}

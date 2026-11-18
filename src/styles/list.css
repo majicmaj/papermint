@@ -3,7 +3,6 @@
   flex-direction: column;
   min-width: 0;
   min-height: 0;
-  border-right: 1px solid var(--mw-gray-6);
 }
 
 .list-head {
@@ -15,7 +14,6 @@
   padding: 0 12px;
   overflow: visible;
   white-space: nowrap;
-  border-bottom: 1px solid var(--mw-gray-6);
 }
 
 .list-head::-webkit-scrollbar {
@@ -42,8 +40,8 @@
 }
 
 .chip[aria-pressed='true'] {
-  background: var(--mw-indigo-4);
-  color: var(--mw-gray-12);
+  background: var(--surface-selected);
+  color: var(--on-selected);
 }
 
 .list-scroll {
@@ -77,11 +75,11 @@
 }
 
 .row[aria-current='true'] {
-  background: var(--mw-indigo-3);
+  background: var(--surface-selected);
 }
 
 .row[aria-current='true'] .pill {
-  background: var(--mw-indigo-1);
+  background: var(--surface-workspace);
 }
 
 .row-title {
@@ -202,9 +200,22 @@
 
 .demo-label {
   flex: none;
-  padding: 5px 16px;
   color: var(--mw-gray-11);
-  background: var(--mw-gray-2);
-  border-bottom: 1px solid var(--line);
+  background: var(--mw-gray-3);
   font-size: 12px;
+}
+
+.list-head .demo-label {
+  padding: 0 7px;
+  border-radius: var(--radius-1);
+}
+
+.list-scroll > .demo-label {
+  padding: 4px 20px;
+}
+
+@container list-toolbar (max-width: 340px) {
+  .list-head .demo-label {
+    display: none;
+  }
 }

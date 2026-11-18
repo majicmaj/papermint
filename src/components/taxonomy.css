@@ -88,8 +88,8 @@
 }
 
 .tag-toggle[aria-pressed='true'] {
-  background: var(--mw-gray-5);
-  color: var(--mw-gray-12);
+  background: var(--surface-selected);
+  color: var(--on-selected);
 }
 
 .tag-name {

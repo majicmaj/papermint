@@ -1,7 +1,6 @@
 import { useEffect, useMemo } from 'preact/hooks';
 import type { SortKey } from '../domain/filters';
-import { dateFieldFor, groupField, listItems } from '../domain/list-groups';
-import type { DetailedDoc } from '../domain/record-details';
+import { dateFieldFor, listItems, type RecordGroup } from '../domain/list-groups';
 import type { ViewName } from '../domain/views';
 import { useApp } from '../state/app';
 import { Row, SkeletonRows } from './Rows';
@@ -20,18 +19,18 @@ function skeleton(): string {
 }
 
 interface Props {
-  rows: readonly DetailedDoc[];
+  groups: readonly RecordGroup[];
+  grouping: string;
   view: ViewName;
   sort: SortKey;
   selectedId: number | null;
   band: string;
 }
 
-export function DesktopList({ rows, view, sort, selectedId, band }: Props) {
+export function DesktopList({ groups, grouping, view, sort, selectedId, band }: Props) {
   const model = useApp((state) => state.model);
   const phase = useApp((state) => state.phase);
-  const group = groupField(sort);
-  const items = useMemo(() => listItems(rows, group, GEOMETRY), [rows, group]);
+  const items = useMemo(() => listItems(groups, GEOMETRY), [groups]);
   useEffect(() => {
     if (phase !== 'ready' || items.length === 0) return;
     try {
@@ -48,7 +47,7 @@ export function DesktopList({ rows, view, sort, selectedId, band }: Props) {
   }, [phase, items]);
   const field = dateFieldFor(sort);
   return (
-    <div class="desktop-records" key={`${band}:${group ?? 'flat'}`}>
+    <div class="desktop-records" key={`${band}:${grouping}`}>
       {phase === 'loading' && <SkeletonRows layout={skeleton()} />}
       {items.map((item) =>
         item.kind === 'head' ? (
