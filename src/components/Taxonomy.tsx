@@ -59,19 +59,15 @@ function TagRow({ tag, count, pressed, onToggle, onAct }: RowProps) {
 interface HeadProps {
   title: string;
   kind: TagKind;
-  onAll: () => void;
   onNone: () => void;
   parent?: number | null;
   onAct: Act;
 }
 
-function Head({ title, kind, onAll, onNone, parent, onAct }: HeadProps) {
+function Head({ title, kind, onNone, parent, onAct }: HeadProps) {
   return (
     <div class="tag-head">
       <span class="tag-head-title">{title}</span>
-      <button type="button" class="tag-head-action" onClick={onAll}>
-        Select all
-      </button>
       <button type="button" class="tag-head-action" onClick={onNone}>
         Clear all
       </button>
@@ -107,7 +103,6 @@ export function Taxonomy({ onAct }: { onAct?: () => void }) {
   const groups = shown
     .map((area) => ({ area, topics: topicsIn(model, [area.id]) }))
     .filter((group) => group.topics.length > 0);
-  const topicIds = groups.flatMap((group) => group.topics.map((topic) => topic.id));
   const entries: ({ sub: string } | { tag: Tag })[] = groups.flatMap(({ area, topics }) => [
     ...(groups.length > 1 ? [{ sub: area.name }] : []),
     ...topics.map((tag) => ({ tag })),
@@ -120,13 +115,7 @@ export function Taxonomy({ onAct }: { onAct?: () => void }) {
   if (!ready && model.areas.length === 0) return null;
   return (
     <div class="taxonomy">
-      <Head
-        title="Areas"
-        kind="area"
-        onAct={onAct}
-        onAll={() => pickAreas(model.areas.map((tag) => tag.id))}
-        onNone={() => pickAreas([])}
-      />
+      <Head title="Areas" kind="area" onAct={onAct} onNone={() => pickAreas([])} />
       {model.areas.map((tag) => (
         <TagRow
           key={tag.id}
@@ -142,7 +131,6 @@ export function Taxonomy({ onAct }: { onAct?: () => void }) {
         kind="topic"
         onAct={onAct}
         parent={shown.length === 1 ? shown[0]!.id : null}
-        onAll={() => selectTopics(topicIds)}
         onNone={() => selectTopics([])}
       />
       {entries.map((entry, index) =>

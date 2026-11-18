@@ -88,7 +88,7 @@ test('areas and topics: OR inside a group, AND between groups', async ({ page },
   await expectStable(page, `${info.project.name} areas and topics`, 600);
 });
 
-test('Select all and Clear all, and the selection survives a reload', async ({ page }, info) => {
+test('Clear all resets filters, and selections survive a reload', async ({ page }, info) => {
   await boot(page);
   // The rail has a head per group; a page of the phone's sheet has one group.
   const head = async (kind: 'areas' | 'topics') => {
@@ -99,14 +99,18 @@ test('Select all and Clear all, and the selection survives a reload', async ({ p
       .nth(mobile || kind === 'areas' ? 0 : 1);
   };
   const pressed = '.tag-toggle[aria-pressed="true"], .fs-tag-toggle[aria-pressed="true"]';
-  await (await head('areas')).getByRole('button', { name: 'Select all' }).click();
   let tax = await taxonomy(page, info);
-  await expect(tax.locator(pressed)).toHaveCount(2);
+  if (!isMobile(info)) await expect(tax.getByRole('button', { name: 'Select all' })).toHaveCount(0);
+  await press(tagToggle(tax, 'LLC'), info);
+  await expect(tax.locator(pressed)).toHaveCount(1);
   await (await head('areas')).getByRole('button', { name: 'Clear all' }).click();
   await expect(tax.locator(pressed)).toHaveCount(0);
+  await expect(rowTitles(page)).toHaveText(ALL);
 
   await press(tagToggle(tax, 'LLC'), info);
-  await (await head('topics')).getByRole('button', { name: 'Select all' }).click();
+  tax = await taxonomy(page, info, 'topics');
+  await press(tagToggle(tax, 'Tax'), info);
+  await press(tagToggle(tax, 'Banking'), info);
   await expect(rowTitles(page)).toHaveText([
     'Joint tax return',
     'Bank statement',
@@ -133,7 +137,7 @@ test('Select all and Clear all, and the selection survives a reload', async ({ p
   await (await head('areas')).getByRole('button', { name: 'Clear all' }).click();
   await expect(rowTitles(page)).toHaveText(ALL);
   await closeTaxonomy(page, info);
-  await expectStable(page, `${info.project.name} select all and reload`, 600);
+  await expectStable(page, `${info.project.name} clear all and reload`, 600);
 });
 
 test('tag icons show in place of the dot and every target is 44px on touch', async ({
