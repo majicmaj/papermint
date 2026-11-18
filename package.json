@@ -15,7 +15,8 @@
     "test": "vitest run",
     "check": "npm run typecheck && npm run lint && npm run format:check && npm run test",
     "test:e2e": "playwright test",
-    "demo": "npm run build && node mock-server/server.mjs"
+    "demo": "npm run build && PAPERMINT_SAMPLES=1 node mock-server/server.mjs",
+    "samples": "node mock-server/samples/build.mjs"
   },
   "dependencies": {
     "preact": "11.2.0"

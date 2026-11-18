@@ -2,6 +2,9 @@
  * Serve a built app and a fake Paperless API on one origin, so a service worker can be tested
  * against it. Usage: DIST=dist PORT=4673 node mock-server/server.mjs
  *
+ * PAPERMINT_SAMPLES=1 (and the public demo) serves the rendered sample archive in
+ * mock-server/samples: real PDFs, pictures and notes. Tests use the small generated archive.
+ *
  * Control: POST /__control {docs, latency, swVersion, sensitive:[ids]}; GET /__log; POST /__reset.
  */
 import { createServer } from 'node:http';
@@ -19,10 +22,13 @@ import {
   makeTags,
   uploadedDoc,
 } from './data.mjs';
+import { loadSamples } from './samples/load.mjs';
 
 const PORT = Number(process.env.PORT ?? 4673);
 const DIST = process.env.DIST ?? 'dist';
 const PUBLIC = process.env.PAPERMINT_PUBLIC_DEMO === '1';
+const samples = PUBLIC || process.env.PAPERMINT_SAMPLES === '1' ? loadSamples() : null;
+const EXT = { 'application/pdf': 'pdf', 'image/jpeg': 'jpg', 'text/plain': 'txt' };
 const TYPES = {
   '.html': 'text/html',
   '.js': 'text/javascript',
@@ -35,14 +41,14 @@ const TYPES = {
 };
 
 const state = {
-  docs: makeDocs(Number(process.env.DOCS ?? 40)),
+  docs: samples ? structuredClone(samples.docs) : makeDocs(Number(process.env.DOCS ?? 40)),
   latency: Number(process.env.LATENCY ?? 0),
   swVersion: 1,
   log: [],
   patches: [],
   posts: [],
 };
-const tags = makeTags();
+const tags = samples ? samples.tags : makeTags();
 
 const send = (res, status, body, headers = {}) => {
   const isJson = typeof body === 'object' && !Buffer.isBuffer(body);
@@ -120,11 +126,19 @@ function fileOf(doc, kind, versionId) {
   return { type: 'text/plain', bytes: `mock ${kind} of ${doc.id} ${versionId ?? ''}`, ext: 'txt' };
 }
 
-function files(res, doc, kind, version) {
+/** A rendered sample file, or null for a record that has none (or for a thumbnail). */
+async function sampleFile(doc, kind, versionId) {
+  if (!samples || kind === 'thumb') return null;
+  const bytes = await samples.fileOf(doc.id, versionId);
+  return bytes ? { type: doc.mime_type, bytes, ext: EXT[doc.mime_type] ?? 'bin' } : null;
+}
+
+async function files(res, doc, kind, version) {
   const wanted = version === null ? null : Number(version);
   const known = [doc.id, ...doc.versions.map((v) => v.id)];
   if (wanted !== null && !known.includes(wanted)) return send(res, 404, { detail: 'Not found.' });
-  const file = fileOf(doc, kind, wanted ?? doc.versions[0]?.id);
+  const versionId = wanted ?? doc.versions[0]?.id;
+  const file = (await sampleFile(doc, kind, versionId)) ?? fileOf(doc, kind, versionId);
   const headers = { 'content-type': file.type };
   if (kind === 'download')
     headers['content-disposition'] =
@@ -172,6 +186,7 @@ function lists(res, url) {
   }
   if (path === '/api/tags/') return send(res, 200, page(tags));
   if (path === '/api/custom_fields/') {
+    if (samples) return send(res, 200, page(samples.fields));
     return send(
       res,
       200,
@@ -200,7 +215,8 @@ function documentApi(req, res, url, body) {
     Object.assign(doc, patch);
     return send(res, 200, {});
   }
-  if (m[2] === 'metadata') return send(res, 200, { original_size: id * 1000 });
+  if (m[2] === 'metadata')
+    return send(res, 200, { original_size: samples?.sizeOf(id) ?? id * 1000 });
   if (m[2]) return files(res, doc, m[2], url.searchParams.get('version'));
   return send(res, 200, doc);
 }
@@ -213,7 +229,8 @@ function api(req, res, url, body) {
   }
   if ((req.method === 'GET' || req.method === 'HEAD') && lists(res, url) !== false)
     return undefined;
-  if (documentApi(req, res, url, body) !== false) return undefined;
+  const answered = documentApi(req, res, url, body);
+  if (answered !== false) return answered;
   return send(res, 404, {});
 }
 

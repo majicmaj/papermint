@@ -1,0 +1,1773 @@
+{
+ "tags": [
+  {
+   "id": 1,
+   "name": "Current",
+   "slug": "current",
+   "color": "#2e7d32",
+   "parent": null,
+   "children": []
+  },
+  {
+   "id": 2,
+   "name": "Superseded",
+   "slug": "superseded",
+   "color": "#8d8d8d",
+   "parent": null,
+   "children": []
+  },
+  {
+   "id": 3,
+   "name": "Signed",
+   "slug": "signed",
+   "color": "#3e63dd",
+   "parent": null,
+   "children": []
+  },
+  {
+   "id": 10,
+   "name": "Fernhill Studio",
+   "slug": "fernhill-studio",
+   "color": "#8e4ec6",
+   "parent": null,
+   "children": [
+    20,
+    21,
+    22,
+    23,
+    24
+   ]
+  },
+  {
+   "id": 11,
+   "name": "Personal",
+   "slug": "personal",
+   "color": "#0090ff",
+   "parent": null,
+   "children": [
+    30,
+    31,
+    32,
+    33,
+    34
+   ]
+  },
+  {
+   "id": 12,
+   "name": "Home",
+   "slug": "home",
+   "color": "#f76b15",
+   "parent": null,
+   "children": [
+    40,
+    41,
+    42
+   ]
+  },
+  {
+   "id": 20,
+   "name": "Company",
+   "slug": "company",
+   "color": "#6e56cf",
+   "parent": 10,
+   "children": []
+  },
+  {
+   "id": 21,
+   "name": "Clients",
+   "slug": "clients",
+   "color": "#12a594",
+   "parent": 10,
+   "children": []
+  },
+  {
+   "id": 22,
+   "name": "Business banking",
+   "slug": "business-banking",
+   "color": "#0d74ce",
+   "parent": 10,
+   "children": []
+  },
+  {
+   "id": 23,
+   "name": "Expenses",
+   "slug": "expenses",
+   "color": "#ffb224",
+   "parent": 10,
+   "children": []
+  },
+  {
+   "id": 24,
+   "name": "Business tax",
+   "slug": "business-tax",
+   "color": "#e5484d",
+   "parent": 10,
+   "children": []
+  },
+  {
+   "id": 30,
+   "name": "Taxes",
+   "slug": "taxes",
+   "color": "#dc3e42",
+   "parent": 11,
+   "children": []
+  },
+  {
+   "id": 31,
+   "name": "Health",
+   "slug": "health",
+   "color": "#e93d82",
+   "parent": 11,
+   "children": []
+  },
+  {
+   "id": 32,
+   "name": "Insurance",
+   "slug": "insurance",
+   "color": "#3e63dd",
+   "parent": 11,
+   "children": []
+  },
+  {
+   "id": 33,
+   "name": "Vehicle",
+   "slug": "vehicle",
+   "color": "#978365",
+   "parent": 11,
+   "children": []
+  },
+  {
+   "id": 34,
+   "name": "Identity",
+   "slug": "identity",
+   "color": "#7c66dc",
+   "parent": 11,
+   "children": []
+  },
+  {
+   "id": 40,
+   "name": "Lease",
+   "slug": "lease",
+   "color": "#f76b15",
+   "parent": 12,
+   "children": []
+  },
+  {
+   "id": 41,
+   "name": "Utilities",
+   "slug": "utilities",
+   "color": "#ffc53d",
+   "parent": 12,
+   "children": []
+  },
+  {
+   "id": 42,
+   "name": "Appliances",
+   "slug": "appliances",
+   "color": "#46a758",
+   "parent": 12,
+   "children": []
+  }
+ ],
+ "fields": [
+  {
+   "id": 1,
+   "name": "Superseded by",
+   "data_type": "documentlink"
+  }
+ ],
+ "docs": [
+  {
+   "id": 101,
+   "title": "Articles of organization",
+   "tags": [
+    1,
+    10,
+    20
+   ],
+   "created": "2024-02-12",
+   "added": "2024-02-12T15:45:00Z",
+   "modified": "2024-02-12T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 101,
+     "added": "2024-02-12T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Office of the Secretary of State\nCorporation Division\n255 Capitol Way\nSalem Grove, OR 97002\nArticles of Organization — Limited Liability Company\nEntity name\tFernhill Studio LLC\nRegistry number\t2024-118430\nPrincipal office\t418 Alder Street, Apt 3B, Maple Falls, OR 97000\nRegistered agent\tRiley Chen, 418 Alder Street, Apt 3B, Maple Falls, OR 97000\nManagement\tMember-managed\nDuration\tPerpetual\nPurpose\tGraphic design, branding and illustration services\nOrganizer\tRiley Chen\nFiled\tFebruary 12, 2024\nFiling fee\t$100.00 (paid)\nThis filing is accepted and recorded. Keep this copy with the company records.",
+   "notes": [],
+   "files": {
+    "101": "101.pdf"
+   },
+   "sizes": {
+    "101": 43199
+   }
+  },
+  {
+   "id": 102,
+   "title": "EIN assignment notice",
+   "tags": [
+    1,
+    10,
+    20
+   ],
+   "created": "2024-02-20",
+   "added": "2024-02-20T15:45:00Z",
+   "modified": "2024-02-20T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 102,
+     "added": "2024-02-20T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Fernhill Studio LLC\n418 Alder Street, Apt 3B\nMaple Falls, OR 97000\nFebruary 20, 2024\n\nFernhill Studio LLC\n418 Alder Street, Apt 3B\nMaple Falls, OR 97000\n\nEmployer identification number: 00-0000417\n\nThis notice records the employer identification number assigned to Fernhill Studio LLC. Use this number on federal tax forms, bank applications and contractor forms.\n\nThe company files as a single-member LLC. The owner reports the business income on the personal return, on the schedule for self-employment income.\n\nKeep this notice with the articles of organization. Banks and clients may ask for a copy.\n\nSincerely,\n\nRiley Chen",
+   "notes": [],
+   "files": {
+    "102": "102.pdf"
+   },
+   "sizes": {
+    "102": 44803
+   }
+  },
+  {
+   "id": 103,
+   "title": "Operating agreement",
+   "tags": [
+    1,
+    10,
+    20,
+    3
+   ],
+   "created": "2024-03-04",
+   "added": "2024-03-04T15:45:00Z",
+   "modified": "2024-03-04T17:59:00Z",
+   "page_count": 2,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 1031,
+     "added": "2024-03-04T16:52:00Z",
+     "version_label": "Signed copy",
+     "is_root": false
+    },
+    {
+     "id": 103,
+     "added": "2024-03-04T15:45:00Z",
+     "version_label": "Draft",
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Fernhill Studio LLC\n418 Alder Street, Apt 3B\nMaple Falls, OR 97000\nOperating Agreement of Fernhill Studio LLC\n\nThis Operating Agreement is made on March 4, 2024, by Riley Chen, the sole member of Fernhill Studio LLC, a limited liability company.\n\n1. Formation\n\nThe company was formed by filing articles of organization on February 12, 2024. The member agrees to the terms of this agreement for the operation of the company.\n\nThe name of the company is Fernhill Studio LLC. The company may do business under that name and under any other name that the member selects.\n\n2. Purpose\n\nThe company provides graphic design, branding and illustration services, and may do any other lawful business that the member selects.\n\n3. Member and capital\n\nRiley Chen is the only member and holds 100% of the membership interest.\n\nThe member made an initial capital contribution of $2,500.00 in cash and equipment. The member does not have to make more contributions.\n\nThe company keeps a capital account for the member. Contributions increase the account. Distributions and losses decrease it.\n\n4. Management\n\nThe member manages the company. The member may sign contracts, open bank accounts, hire contractors and take any other action for the company.\n\nThe company keeps its money in accounts in the name of the company. The member does not mix company money with personal money.\n\n5. Distributions\n\nThe member decides when the company makes distributions and how much. The company makes no distribution that leaves it unable to pay its debts.\n\n6. Taxes and records\n\nFor federal income tax, the company is a disregarded entity. The member reports the income and the expenses of the company on the personal return.\n\nThe company keeps complete books and records at its principal office. The fiscal year is the calendar year.\n\n7. Liability and indemnification\n\nThe member is not personally liable for the debts or the obligations of the company only because the member is a member.\n\nThe company indemnifies the member for any loss that the member suffers while acting in good faith for the company.\n\n8. Dissolution\n\nThe company dissolves when the member decides in writing, or when the law requires it. After dissolution the company pays its debts and then distributes the remaining assets to the member.\n\n9. General\n\nThis agreement is the complete agreement of the member about the company. The member may change it in writing at any time.\n\nIf a court finds a part of this agreement invalid, the other parts stay in effect.\n\nRiley Chen\nRiley Chen\nSole member",
+   "notes": [],
+   "files": {
+    "103": "103.pdf",
+    "1031": "1031.pdf"
+   },
+   "sizes": {
+    "103": 63597,
+    "1031": 65316
+   }
+  },
+  {
+   "id": 104,
+   "title": "Annual report 2025",
+   "tags": [
+    1,
+    10,
+    20
+   ],
+   "created": "2025-02-03",
+   "added": "2025-02-03T15:45:00Z",
+   "modified": "2025-02-03T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 104,
+     "added": "2025-02-03T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Office of the Secretary of State\nCorporation Division\n255 Capitol Way\nSalem Grove, OR 97002\nAnnual Report — Limited Liability Company\nEntity name\tFernhill Studio LLC\nRegistry number\t2024-118430\nReport year\t2025\nStatus\tActive\nPrincipal office\t418 Alder Street, Apt 3B, Maple Falls, OR 97000\nMember\tRiley Chen\nFee\t$100.00 (paid)\nThe next annual report is due on the anniversary of the filing date.",
+   "notes": [],
+   "files": {
+    "104": "104.pdf"
+   },
+   "sizes": {
+    "104": 41963
+   }
+  },
+  {
+   "id": 105,
+   "title": "Annual report 2026",
+   "tags": [
+    1,
+    10,
+    20
+   ],
+   "created": "2026-02-09",
+   "added": "2026-02-09T15:45:00Z",
+   "modified": "2026-02-09T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 105,
+     "added": "2026-02-09T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Office of the Secretary of State\nCorporation Division\n255 Capitol Way\nSalem Grove, OR 97002\nAnnual Report — Limited Liability Company\nEntity name\tFernhill Studio LLC\nRegistry number\t2024-118430\nReport year\t2026\nStatus\tActive\nPrincipal office\t418 Alder Street, Apt 3B, Maple Falls, OR 97000\nMember\tRiley Chen\nFee\t$100.00 (paid)\nThe next annual report is due on the anniversary of the filing date.",
+   "notes": [],
+   "files": {
+    "105": "105.pdf"
+   },
+   "sizes": {
+    "105": 41948
+   }
+  },
+  {
+   "id": 106,
+   "title": "General liability certificate",
+   "tags": [
+    1,
+    10,
+    20
+   ],
+   "created": "2026-01-15",
+   "added": "2026-01-15T15:45:00Z",
+   "modified": "2026-01-15T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 106,
+     "added": "2026-01-15T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Hearthstone Insurance\n820 Commerce Drive\nSalem Grove, OR 97002\n(555) 010-8820\nCertificate of Liability Insurance\nInsured\tFernhill Studio LLC\nPolicy number\tHS-GL-55-20817\nCoverage\tCommercial general liability\nEach occurrence\t$1,000,000\nGeneral aggregate\t$2,000,000\nPolicy period\tJan 15, 2026 – Jan 15, 2027\nCertificate holder\tLarkspur Coffee Co.\nThis certificate is for information only. It does not change the policy terms.",
+   "notes": [],
+   "files": {
+    "106": "106.pdf"
+   },
+   "sizes": {
+    "106": 40006
+   }
+  },
+  {
+   "id": 111,
+   "title": "Services agreement — Larkspur Coffee",
+   "tags": [
+    1,
+    10,
+    21,
+    3
+   ],
+   "created": "2026-01-20",
+   "added": "2026-01-20T15:45:00Z",
+   "modified": "2026-01-20T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 111,
+     "added": "2026-01-20T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Fernhill Studio LLC\n418 Alder Street, Apt 3B\nMaple Falls, OR 97000\nDesign Services Agreement\n\nThis agreement starts on January 20, 2026, between Fernhill Studio LLC (\"Studio\") and Larkspur Coffee Co. (\"Client\").\n\n1. Services\n\nStudio provides design work that Client requests in writing: menu boards, packaging labels, cup sleeves, signs and social media graphics.\n\nFor each request, Studio sends an estimate. Work starts when Client approves the estimate by email.\n\n2. Fees and payment\n\nStudio charges the fees in each approved estimate. Extra revisions cost $85.00 an hour.\n\nStudio sends an invoice at the end of each month. Client pays each invoice within 30 days.\n\n3. Ownership\n\nWhen Client pays in full, Client owns the final designs. Studio keeps the right to show the work in its portfolio.\n\nSketches and files that Client did not select stay the property of Studio.\n\n4. Term and ending\n\nThis agreement continues until one party ends it with 30 days written notice. Client pays for all work done before the end date.\n\n5. Liability\n\nThe liability of Studio under this agreement is never more than the fees that Client paid in the 12 months before the claim.\n\nRiley Chen\nRiley Chen\nMember, Fernhill Studio LLC\nPriya Natarajan\nPriya Natarajan\nOwner, Larkspur Coffee Co.",
+   "notes": [],
+   "files": {
+    "111": "111.pdf"
+   },
+   "sizes": {
+    "111": 63107
+   }
+  },
+  {
+   "id": 112,
+   "title": "Statement of work — Orchard Street Books",
+   "tags": [
+    1,
+    10,
+    21,
+    3
+   ],
+   "created": "2026-05-06",
+   "added": "2026-05-06T15:45:00Z",
+   "modified": "2026-05-06T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 112,
+     "added": "2026-05-06T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Fernhill Studio LLC\n418 Alder Street, Apt 3B\nMaple Falls, OR 97000\nStatement of Work — Identity Refresh\n\nThis statement of work is made on May 6, 2026, between Fernhill Studio LLC and Orchard Street Books.\n\n1. Scope\n\nStudio designs a new logo and visual identity for the bookshop, and these items: six shelf talker templates, an event poster template and a gift card.\n\n2. Timeline\n\nLogo sketches: May 22, 2026. Final logo: June 12, 2026. Templates and gift card: September 25, 2026.\n\n3. Fees\n\nThe identity costs $4,800.00. Client pays 50% when the logo is final and 50% when all items are delivered. Templates and the gift card cost extra, as shown in each invoice.\n\n4. Approvals\n\nClient has two rounds of revisions at each stage. More rounds cost $85.00 an hour.\n\nRiley Chen\nRiley Chen\nMember, Fernhill Studio LLC\nDana Whitfield\nDana Whitfield\nOwner, Orchard Street Books",
+   "notes": [],
+   "files": {
+    "112": "112.pdf"
+   },
+   "sizes": {
+    "112": 61777
+   }
+  },
+  {
+   "id": 113,
+   "title": "Kickoff notes — Orchard Street Books",
+   "tags": [
+    1,
+    10,
+    21
+   ],
+   "created": "2026-05-08",
+   "added": "2026-05-08T15:45:00Z",
+   "modified": "2026-05-08T17:59:00Z",
+   "page_count": null,
+   "mime_type": "text/plain",
+   "versions": [
+    {
+     "id": 113,
+     "added": "2026-05-08T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Kickoff — Orchard Street Books\nMay 8, 2026, at the shop\n\nPeople: Dana (owner), Marcus (events), Riley\n\n- They want the new look before the summer reading program (June 20).\n- Keep the green. The old fox drawing goes.\n- Deliverables: logo, shelf talkers, event poster template, gift card.\n- Dana sends photos of the shop front by Friday.\n- First round of logo sketches: May 22.\n\nNext: send the moodboard on Monday.",
+   "notes": [],
+   "files": {
+    "113": "113.txt"
+   },
+   "sizes": {
+    "113": 416
+   }
+  },
+  {
+   "id": 114,
+   "title": "Invoice FS-2026-014 — Larkspur Coffee",
+   "tags": [
+    1,
+    10,
+    21
+   ],
+   "created": "2026-06-30",
+   "added": "2026-06-30T15:45:00Z",
+   "modified": "2026-06-30T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 114,
+     "added": "2026-06-30T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Fernhill Studio LLC\n418 Alder Street, Apt 3B\nMaple Falls, OR 97000\nInvoice FS-2026-014\nJune 30, 2026\nDue: July 30, 2026\nBill to\n\nLarkspur Coffee Co.\n77 Harbor Road\nPort Wren, OR 97001\n\nDESCRIPTION\tQTY\tRATE\tAMOUNT\nSeasonal menu boards (3 designs)\t3\t$420.00\t$1,260.00\nCup sleeve illustration\t1\t$650.00\t$650.00\nRevisions (hours)\t4\t$85.00\t$340.00\nTotal\t$2,250.00\nPay by bank transfer to Fernhill Studio LLC, account ••••2093, or by check. Thank you for your business.",
+   "notes": [],
+   "files": {
+    "114": "114.pdf"
+   },
+   "sizes": {
+    "114": 52060
+   }
+  },
+  {
+   "id": 115,
+   "title": "Invoice FS-2026-015 — Orchard Street Books",
+   "tags": [
+    1,
+    10,
+    21
+   ],
+   "created": "2026-07-15",
+   "added": "2026-07-15T15:45:00Z",
+   "modified": "2026-07-15T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 115,
+     "added": "2026-07-15T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Fernhill Studio LLC\n418 Alder Street, Apt 3B\nMaple Falls, OR 97000\nInvoice FS-2026-015\nJuly 15, 2026\nDue: August 14, 2026\nBill to\n\nOrchard Street Books\n12 Orchard Street\nMaple Falls, OR 97000\n\nDESCRIPTION\tQTY\tRATE\tAMOUNT\nLogo and identity — phase 1 (50%)\t1\t$2,400.00\t$2,400.00\nShelf talker templates\t6\t$75.00\t$450.00\nTotal\t$2,850.00\nPay by bank transfer to Fernhill Studio LLC, account ••••2093, or by check. Thank you for your business.",
+   "notes": [],
+   "files": {
+    "115": "115.pdf"
+   },
+   "sizes": {
+    "115": 52641
+   }
+  },
+  {
+   "id": 116,
+   "title": "Invoice FS-2026-018 — Tidewater Yoga",
+   "tags": [
+    1,
+    10,
+    21
+   ],
+   "created": "2026-08-29",
+   "added": "2026-08-29T15:45:00Z",
+   "modified": "2026-08-29T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 116,
+     "added": "2026-08-29T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Fernhill Studio LLC\n418 Alder Street, Apt 3B\nMaple Falls, OR 97000\nInvoice FS-2026-018\nAugust 29, 2026\nDue: September 28, 2026\nBill to\n\nTidewater Yoga\n904 Beach Loop\nPort Wren, OR 97001\n\nDESCRIPTION\tQTY\tRATE\tAMOUNT\nClass schedule poster\t1\t$380.00\t$380.00\nSocial media templates\t8\t$60.00\t$480.00\nPhoto retouching (hours)\t3\t$85.00\t$255.00\nTotal\t$1,115.00\nPay by bank transfer to Fernhill Studio LLC, account ••••2093, or by check. Thank you for your business.",
+   "notes": [],
+   "files": {
+    "116": "116.pdf"
+   },
+   "sizes": {
+    "116": 52255
+   }
+  },
+  {
+   "id": 117,
+   "title": "Invoice FS-2026-021 — Orchard Street Books",
+   "tags": [
+    1,
+    10,
+    21
+   ],
+   "created": "2026-09-30",
+   "added": "2026-09-30T15:45:00Z",
+   "modified": "2026-09-30T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 117,
+     "added": "2026-09-30T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Fernhill Studio LLC\n418 Alder Street, Apt 3B\nMaple Falls, OR 97000\nInvoice FS-2026-021\nSeptember 30, 2026\nDue: October 30, 2026\nBill to\n\nOrchard Street Books\n12 Orchard Street\nMaple Falls, OR 97000\n\nDESCRIPTION\tQTY\tRATE\tAMOUNT\nLogo and identity — phase 2 (50%)\t1\t$2,400.00\t$2,400.00\nEvent poster template\t1\t$450.00\t$450.00\nGift card design\t1\t$300.00\t$300.00\nTotal\t$3,150.00\nPay by bank transfer to Fernhill Studio LLC, account ••••2093, or by check. Thank you for your business.",
+   "notes": [],
+   "files": {
+    "117": "117.pdf"
+   },
+   "sizes": {
+    "117": 52174
+   }
+  },
+  {
+   "id": 118,
+   "title": "Invoice FS-2026-024 — Larkspur Coffee",
+   "tags": [
+    1,
+    10,
+    21
+   ],
+   "created": "2026-10-31",
+   "added": "2026-10-31T15:45:00Z",
+   "modified": "2026-10-31T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 118,
+     "added": "2026-10-31T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Fernhill Studio LLC\n418 Alder Street, Apt 3B\nMaple Falls, OR 97000\nInvoice FS-2026-024\nOctober 31, 2026\nDue: November 30, 2026\nBill to\n\nLarkspur Coffee Co.\n77 Harbor Road\nPort Wren, OR 97001\n\nDESCRIPTION\tQTY\tRATE\tAMOUNT\nHoliday packaging labels\t4\t$310.00\t$1,240.00\nGift box illustration\t1\t$720.00\t$720.00\nTotal\t$1,960.00\nPay by bank transfer to Fernhill Studio LLC, account ••••2093, or by check. Thank you for your business.",
+   "notes": [],
+   "files": {
+    "118": "118.pdf"
+   },
+   "sizes": {
+    "118": 51337
+   }
+  },
+  {
+   "id": 121,
+   "title": "Business checking statement — June 2026",
+   "tags": [
+    1,
+    10,
+    22
+   ],
+   "created": "2026-06-30",
+   "added": "2026-06-30T15:45:00Z",
+   "modified": "2026-06-30T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 121,
+     "added": "2026-06-30T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Cedar Valley Credit Union\n200 Main Street\nMaple Falls, OR 97000\n(555) 010-2200\nStatement\nJune 2026\n\nFernhill Studio LLC\n418 Alder Street, Apt 3B\nMaple Falls, OR 97000\n\nAccount\tBusiness checking ••••2093\nOpening balance\t$6,420.18\nDeposits\t$1,240.00\nWithdrawals\t−$1,968.79\nClosing balance\t$5,691.39\nDATE\tDESCRIPTION\tAMOUNT\tBALANCE\n06/01\tThe Loft Coworking — membership\t−$185.00\t$6,235.18\n06/02\tInkwell Cloud Tools — monthly storage\t−$9.99\t$6,225.19\n06/04\tCard purchase — Mill Street Print Shop\t−$67.45\t$6,157.74\n06/09\tCard purchase — Postal Center\t−$32.45\t$6,125.29\n06/12\tDeposit — Tidewater Yoga\t$1,240.00\t$7,365.29\n06/15\tTransfer to owner — Fernhill draw\t−$1,500.00\t$5,865.29\n06/16\tPinecrest Auto Insurance — business use rider\t−$18.00\t$5,847.29\n06/25\tCard purchase — Postal Center\t−$95.45\t$5,751.84\n06/28\tCard purchase — Harbor Cafe (client meeting)\t−$60.45\t$5,691.39",
+   "notes": [],
+   "files": {
+    "121": "121.pdf"
+   },
+   "sizes": {
+    "121": 52843
+   }
+  },
+  {
+   "id": 122,
+   "title": "Business checking statement — July 2026",
+   "tags": [
+    1,
+    10,
+    22
+   ],
+   "created": "2026-07-31",
+   "added": "2026-07-31T15:45:00Z",
+   "modified": "2026-07-31T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 122,
+     "added": "2026-07-31T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Cedar Valley Credit Union\n200 Main Street\nMaple Falls, OR 97000\n(555) 010-2200\nStatement\nJuly 2026\n\nFernhill Studio LLC\n418 Alder Street, Apt 3B\nMaple Falls, OR 97000\n\nAccount\tBusiness checking ••••2093\nOpening balance\t$5,691.39\nDeposits\t$2,250.00\nWithdrawals\t−$1,981.79\nClosing balance\t$5,959.60\nDATE\tDESCRIPTION\tAMOUNT\tBALANCE\n07/01\tThe Loft Coworking — membership\t−$185.00\t$5,506.39\n07/02\tInkwell Cloud Tools — monthly storage\t−$9.99\t$5,496.40\n07/12\tCard purchase — Mill Street Print Shop\t−$84.45\t$5,411.95\n07/15\tTransfer to owner — Fernhill draw\t−$1,500.00\t$3,911.95\n07/16\tPinecrest Auto Insurance — business use rider\t−$18.00\t$3,893.95\n07/16\tCard purchase — Paper & Ink Supply\t−$24.45\t$3,869.50\n07/17\tCard purchase — Harbor Cafe (client meeting)\t−$76.45\t$3,793.05\n07/28\tDeposit — Larkspur Coffee Co.\t$2,250.00\t$6,043.05\n07/28\tCard purchase — Mill Street Print Shop\t−$83.45\t$5,959.60",
+   "notes": [],
+   "files": {
+    "122": "122.pdf"
+   },
+   "sizes": {
+    "122": 53404
+   }
+  },
+  {
+   "id": 123,
+   "title": "Business checking statement — August 2026",
+   "tags": [
+    1,
+    10,
+    22
+   ],
+   "created": "2026-08-31",
+   "added": "2026-08-31T15:45:00Z",
+   "modified": "2026-08-31T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 123,
+     "added": "2026-08-31T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Cedar Valley Credit Union\n200 Main Street\nMaple Falls, OR 97000\n(555) 010-2200\nStatement\nAugust 2026\n\nFernhill Studio LLC\n418 Alder Street, Apt 3B\nMaple Falls, OR 97000\n\nAccount\tBusiness checking ••••2093\nOpening balance\t$5,959.60\nDeposits\t$2,850.00\nWithdrawals\t−$1,971.79\nClosing balance\t$6,837.81\nDATE\tDESCRIPTION\tAMOUNT\tBALANCE\n08/01\tThe Loft Coworking — membership\t−$185.00\t$5,774.60\n08/02\tInkwell Cloud Tools — monthly storage\t−$9.99\t$5,764.61\n08/03\tCard purchase — Harbor Cafe (client meeting)\t−$78.45\t$5,686.16\n08/05\tCard purchase — Mill Street Print Shop\t−$90.45\t$5,595.71\n08/11\tDeposit — Orchard Street Books\t$2,850.00\t$8,445.71\n08/15\tTransfer to owner — Fernhill draw\t−$1,500.00\t$6,945.71\n08/16\tPinecrest Auto Insurance — business use rider\t−$18.00\t$6,927.71\n08/21\tCard purchase — Fontstand Online\t−$46.45\t$6,881.26\n08/28\tCard purchase — Postal Center\t−$43.45\t$6,837.81",
+   "notes": [],
+   "files": {
+    "123": "123.pdf"
+   },
+   "sizes": {
+    "123": 53092
+   }
+  },
+  {
+   "id": 124,
+   "title": "Business checking statement — September 2026",
+   "tags": [
+    1,
+    10,
+    22
+   ],
+   "created": "2026-09-30",
+   "added": "2026-09-30T15:45:00Z",
+   "modified": "2026-09-30T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 124,
+     "added": "2026-09-30T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Cedar Valley Credit Union\n200 Main Street\nMaple Falls, OR 97000\n(555) 010-2200\nStatement\nSeptember 2026\n\nFernhill Studio LLC\n418 Alder Street, Apt 3B\nMaple Falls, OR 97000\n\nAccount\tBusiness checking ••••2093\nOpening balance\t$6,837.81\nDeposits\t$1,115.00\nWithdrawals\t−$1,931.79\nClosing balance\t$6,021.02\nDATE\tDESCRIPTION\tAMOUNT\tBALANCE\n09/01\tThe Loft Coworking — membership\t−$185.00\t$6,652.81\n09/02\tInkwell Cloud Tools — monthly storage\t−$9.99\t$6,642.82\n09/03\tCard purchase — Stock Photo Library\t−$12.45\t$6,630.37\n09/04\tCard purchase — Stock Photo Library\t−$55.45\t$6,574.92\n09/15\tTransfer to owner — Fernhill draw\t−$1,500.00\t$5,074.92\n09/15\tCard purchase — Fontstand Online\t−$68.45\t$5,006.47\n09/16\tPinecrest Auto Insurance — business use rider\t−$18.00\t$4,988.47\n09/16\tCard purchase — Brightline Electronics\t−$82.45\t$4,906.02\n09/24\tDeposit — Tidewater Yoga\t$1,115.00\t$6,021.02",
+   "notes": [],
+   "files": {
+    "124": "124.pdf"
+   },
+   "sizes": {
+    "124": 52281
+   }
+  },
+  {
+   "id": 125,
+   "title": "Business checking statement — October 2026",
+   "tags": [
+    1,
+    10,
+    22
+   ],
+   "created": "2026-10-31",
+   "added": "2026-10-31T15:45:00Z",
+   "modified": "2026-10-31T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 125,
+     "added": "2026-10-31T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Cedar Valley Credit Union\n200 Main Street\nMaple Falls, OR 97000\n(555) 010-2200\nStatement\nOctober 2026\n\nFernhill Studio LLC\n418 Alder Street, Apt 3B\nMaple Falls, OR 97000\n\nAccount\tBusiness checking ••••2093\nOpening balance\t$6,021.02\nDeposits\t$6,750.00\nWithdrawals\t−$1,977.79\nClosing balance\t$10,793.23\nDATE\tDESCRIPTION\tAMOUNT\tBALANCE\n10/01\tThe Loft Coworking — membership\t−$185.00\t$5,836.02\n10/02\tInkwell Cloud Tools — monthly storage\t−$9.99\t$5,826.03\n10/04\tCard purchase — Harbor Cafe (client meeting)\t−$76.45\t$5,749.58\n10/04\tCard purchase — Stock Photo Library\t−$43.45\t$5,706.13\n10/09\tDeposit — Larkspur Coffee Co.\t$3,600.00\t$9,306.13\n10/15\tTransfer to owner — Fernhill draw\t−$1,500.00\t$7,806.13\n10/16\tPinecrest Auto Insurance — business use rider\t−$18.00\t$7,788.13\n10/20\tCard purchase — Brightline Electronics\t−$47.45\t$7,740.68\n10/24\tCard purchase — Stock Photo Library\t−$97.45\t$7,643.23\n10/27\tDeposit — Orchard Street Books\t$3,150.00\t$10,793.23",
+   "notes": [],
+   "files": {
+    "125": "125.pdf"
+   },
+   "sizes": {
+    "125": 53408
+   }
+  },
+  {
+   "id": 131,
+   "title": "Receipt — studio monitor",
+   "tags": [
+    1,
+    10,
+    23
+   ],
+   "created": "2026-03-14",
+   "added": "2026-03-14T15:45:00Z",
+   "modified": "2026-03-14T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "image/jpeg",
+   "versions": [
+    {
+     "id": 131,
+     "added": "2026-03-14T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "BRIGHTLINE ELECTRONICS\n880 Market Street\nMaple Falls, OR 97000\n03/14/2026 14:22\n27\" 4K monitor\n$429.99\nMonitor arm\n$89.00\nUSB-C cable 2 m\n$19.99\nSUBTOTAL\n$538.98\nTAX\n$0.00\nTOTAL\n$538.98\nVISA ****4417 APPROVED\nTHANK YOU\nSample receipt · fictional data",
+   "notes": [],
+   "files": {
+    "131": "131.jpg"
+   },
+   "sizes": {
+    "131": 44771
+   }
+  },
+  {
+   "id": 132,
+   "title": "Coworking membership — October",
+   "tags": [
+    1,
+    10,
+    23
+   ],
+   "created": "2026-10-01",
+   "added": "2026-10-01T15:45:00Z",
+   "modified": "2026-10-01T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 132,
+     "added": "2026-10-01T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "The Loft Coworking\n21 Mill Street, 2nd floor\nMaple Falls, OR 97000\nInvoice LOFT-10-2026-0388\nOctober 1, 2026\nDue: Paid by card on file\nBill to\n\nFernhill Studio LLC\n418 Alder Street, Apt 3B\nMaple Falls, OR 97000\n\nDESCRIPTION\tQTY\tRATE\tAMOUNT\nFlex desk membership — October\t1\t$185.00\t$185.00\nMeeting room (hours)\t2\t$15.00\t$30.00\nTotal\t$215.00",
+   "notes": [],
+   "files": {
+    "132": "132.pdf"
+   },
+   "sizes": {
+    "132": 50108
+   }
+  },
+  {
+   "id": 133,
+   "title": "Design software — annual plan",
+   "tags": [
+    1,
+    10,
+    23
+   ],
+   "created": "2026-04-02",
+   "added": "2026-04-02T15:45:00Z",
+   "modified": "2026-04-02T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 133,
+     "added": "2026-04-02T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Inkwell Cloud Tools\n500 Example Avenue\nSan Mateo Bay, CA 94000\nInvoice VCT-778120\nApril 2, 2026\nDue: Paid by card on file\nBill to\n\nFernhill Studio LLC\n418 Alder Street, Apt 3B\nMaple Falls, OR 97000\n\nDESCRIPTION\tQTY\tRATE\tAMOUNT\nCreative suite — annual, 1 seat\t1\t$659.88\t$659.88\nFont library add-on\t1\t$96.00\t$96.00\nTotal\t$755.88",
+   "notes": [],
+   "files": {
+    "133": "133.pdf"
+   },
+   "sizes": {
+    "133": 48741
+   }
+  },
+  {
+   "id": 134,
+   "title": "Receipt — printing proofs",
+   "tags": [
+    1,
+    10,
+    23
+   ],
+   "created": "2026-09-12",
+   "added": "2026-09-12T15:45:00Z",
+   "modified": "2026-09-12T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "image/jpeg",
+   "versions": [
+    {
+     "id": 134,
+     "added": "2026-09-12T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "MILL STREET PRINT SHOP\n19 Mill Street\nMaple Falls, OR 97000\n09/12/2026 10:05\nPoster proof 18x24\n$24.00\nCard stock samples\n$12.50\nGift card proofs (10)\n$18.00\nSUBTOTAL\n$54.50\nTAX\n$0.00\nTOTAL\n$54.50\nDebit ****0921 APPROVED\nTHANK YOU\nSample receipt · fictional data",
+   "notes": [],
+   "files": {
+    "134": "134.jpg"
+   },
+   "sizes": {
+    "134": 46119
+   }
+  },
+  {
+   "id": 141,
+   "title": "Form 1099-NEC — Larkspur Coffee (2025)",
+   "tags": [
+    1,
+    10,
+    24
+   ],
+   "created": "2026-01-28",
+   "added": "2026-01-28T15:45:00Z",
+   "modified": "2026-01-28T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 141,
+     "added": "2026-01-28T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Larkspur Coffee Co.\n77 Harbor Road\nPort Wren, OR 97001\nNonemployee compensation — 2025 (recipient copy)\nPayer\tLarkspur Coffee Co.\nRecipient\tFernhill Studio LLC\nRecipient TIN\tXX-XXX0417\nNonemployee compensation\t$8,640.00\nFederal income tax withheld\t$0.00\nTax year\t2025\nReport this income on your tax return. The payer also files this information.",
+   "notes": [],
+   "files": {
+    "141": "141.pdf"
+   },
+   "sizes": {
+    "141": 39264
+   }
+  },
+  {
+   "id": 142,
+   "title": "Estimated tax payment — Q3 2026",
+   "tags": [
+    1,
+    10,
+    24
+   ],
+   "created": "2026-09-15",
+   "added": "2026-09-15T15:45:00Z",
+   "modified": "2026-09-15T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 142,
+     "added": "2026-09-15T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Greenleaf Tax Services\n31 Willow Lane, Suite 2\nMaple Falls, OR 97000\n(555) 010-3131\nEstimated tax payment confirmation\nTaxpayer\tRiley Chen\nPeriod\tThird quarter 2026\nFederal payment\t$2,150.00\nState payment\t$640.00\nPaid on\tSeptember 15, 2026\nConfirmation\tGL-Q3-26-58172\nThe next payment is due January 15, 2027.",
+   "notes": [],
+   "files": {
+    "142": "142.pdf"
+   },
+   "sizes": {
+    "142": 39954
+   }
+  },
+  {
+   "id": 143,
+   "title": "Quarterly profit and loss — Q3 2026",
+   "tags": [
+    1,
+    10,
+    24
+   ],
+   "created": "2026-10-06",
+   "added": "2026-10-06T15:45:00Z",
+   "modified": "2026-10-06T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 143,
+     "added": "2026-10-06T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Fernhill Studio LLC\n418 Alder Street, Apt 3B\nMaple Falls, OR 97000\nProfit and loss — July to September 2026\nClient income\t$14,860.00\nSoftware and subscriptions\t−$271.16\nCoworking\t−$615.00\nPrinting and supplies\t−$212.40\nEquipment\t−$0.00\nInsurance\t−$94.00\nNet profit\t$13,667.44\nPrepared from the business checking account. Not audited.",
+   "notes": [],
+   "files": {
+    "143": "143.pdf"
+   },
+   "sizes": {
+    "143": 41162
+   }
+  },
+  {
+   "id": 201,
+   "title": "2025 tax return summary",
+   "tags": [
+    1,
+    11,
+    30,
+    3
+   ],
+   "created": "2026-04-08",
+   "added": "2026-04-08T15:45:00Z",
+   "modified": "2026-04-08T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 201,
+     "added": "2026-04-08T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Greenleaf Tax Services\n31 Willow Lane, Suite 2\nMaple Falls, OR 97000\n(555) 010-3131\n2025 individual tax return — summary\nTaxpayer\tRiley Chen\nFiling status\tSingle\nBusiness income (net)\t$54,912.00\nSelf-employment tax\t$7,758.00\nStudent loan interest deduction\t$612.00\nTaxable income\t$37,904.00\nTotal federal tax\t$12,140.00\nEstimated payments made\t$11,600.00\nBalance due\t$540.00\nState balance due\t$118.00\nE-filed\tApril 8, 2026 — accepted\nPrepared by Greenleaf Tax Services. Keep this summary and the full return for at least seven years.",
+   "notes": [],
+   "files": {
+    "201": "201.pdf"
+   },
+   "sizes": {
+    "201": 41847
+   }
+  },
+  {
+   "id": 202,
+   "title": "Student loan interest statement (2025)",
+   "tags": [
+    1,
+    11,
+    30
+   ],
+   "created": "2026-01-24",
+   "added": "2026-01-24T15:45:00Z",
+   "modified": "2026-01-24T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 202,
+     "added": "2026-01-24T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Summit Student Loans\nPO Box 7400\nLakeport, NV 89000\nStudent loan interest statement — 2025\nBorrower\tRiley Chen\nAccount\t••••5530\nInterest received in 2025\t$612.48\nPrincipal balance at year end\t$9,884.10\nYou may be able to deduct this interest. Ask your tax preparer.",
+   "notes": [],
+   "files": {
+    "202": "202.pdf"
+   },
+   "sizes": {
+    "202": 39301
+   }
+  },
+  {
+   "id": 211,
+   "title": "Annual physical — visit summary",
+   "tags": [
+    1,
+    11,
+    31
+   ],
+   "created": "2026-03-03",
+   "added": "2026-03-03T15:45:00Z",
+   "modified": "2026-03-03T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 211,
+     "added": "2026-03-03T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Maple Falls Family Clinic\n55 Birch Avenue\nMaple Falls, OR 97000\n(555) 010-3355\nMarch 3, 2026\n\nRiley Chen\n418 Alder Street, Apt 3B\nMaple Falls, OR 97000\n\nAfter-visit summary\n\nThank you for your visit today with Dr. Amara Osei for your yearly physical.\n\nVitals: blood pressure 118/76, pulse 64, weight 152 lb. Your exam was normal.\n\nWe ordered routine blood tests. Results will be in your patient portal in 3 to 5 days.\n\nNext steps: a tetanus booster is due next year. Come back for your next physical in 12 months.\n\nSincerely,\n\nMaple Falls Family Clinic",
+   "notes": [],
+   "files": {
+    "211": "211.pdf"
+   },
+   "sizes": {
+    "211": 44457
+   }
+  },
+  {
+   "id": 212,
+   "title": "Lab results — lipid panel",
+   "tags": [
+    1,
+    11,
+    31
+   ],
+   "created": "2026-03-07",
+   "added": "2026-03-07T15:45:00Z",
+   "modified": "2026-03-07T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 212,
+     "added": "2026-03-07T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Maple Falls Family Clinic\n55 Birch Avenue\nMaple Falls, OR 97000\n(555) 010-3355\nLaboratory report\nPatient\tRiley Chen\nCollected\tMarch 4, 2026\nTotal cholesterol\t182 mg/dL (under 200)\nHDL\t61 mg/dL (40 or more)\nLDL\t104 mg/dL (under 130)\nTriglycerides\t86 mg/dL (under 150)\nGlucose, fasting\t88 mg/dL (70–99)\nAll results are in the reference range.",
+   "notes": [],
+   "files": {
+    "212": "212.pdf"
+   },
+   "sizes": {
+    "212": 38729
+   }
+  },
+  {
+   "id": 213,
+   "title": "Dental cleaning — explanation of benefits",
+   "tags": [
+    1,
+    11,
+    31
+   ],
+   "created": "2026-05-19",
+   "added": "2026-05-19T15:45:00Z",
+   "modified": "2026-05-19T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 213,
+     "added": "2026-05-19T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Bluebird Mutual Health\nPO Box 3300\nSalem Grove, OR 97002\n(555) 010-3300\nExplanation of benefits — this is not a bill\nMember\tRiley Chen\nProvider\tBirch Avenue Dental\nService date\tMay 2, 2026\nBilled\t$245.00\nPlan discount\t−$61.00\nPlan paid\t−$184.00\nYou owe\t$0.00\nPreventive dental care is covered at 100% in network.",
+   "notes": [],
+   "files": {
+    "213": "213.pdf"
+   },
+   "sizes": {
+    "213": 39508
+   }
+  },
+  {
+   "id": 214,
+   "title": "Eyeglass prescription",
+   "tags": [
+    1,
+    11,
+    31
+   ],
+   "created": "2026-08-11",
+   "added": "2026-08-11T15:45:00Z",
+   "modified": "2026-08-11T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 214,
+     "added": "2026-08-11T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Clearview Optometry\n8 Birch Avenue\nMaple Falls, OR 97000\nSpectacle prescription\nPatient\tRiley Chen\nRight eye (OD)\tSPH −1.75 CYL −0.50 AXIS 180\nLeft eye (OS)\tSPH −1.50 CYL −0.25 AXIS 170\nPupil distance\t62 mm\nValid until\tAugust 11, 2028\nDr. Lena Park, OD",
+   "notes": [],
+   "files": {
+    "214": "214.pdf"
+   },
+   "sizes": {
+    "214": 38400
+   }
+  },
+  {
+   "id": 215,
+   "title": "Vaccination record",
+   "tags": [
+    1,
+    11,
+    31
+   ],
+   "created": "2025-10-21",
+   "added": "2025-10-21T15:45:00Z",
+   "modified": "2025-10-21T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 215,
+     "added": "2025-10-21T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Maple Falls Family Clinic\n55 Birch Avenue\nMaple Falls, OR 97000\n(555) 010-3355\nImmunization record\nPatient\tRiley Chen\nInfluenza\tOct 21, 2025\nCOVID-19 (2025–26)\tOct 21, 2025\nTdap\tJun 4, 2017\nHepatitis B series\tComplete\nMMR\tComplete\nBring this record to your next visit.",
+   "notes": [],
+   "files": {
+    "215": "215.pdf"
+   },
+   "sizes": {
+    "215": 39098
+   }
+  },
+  {
+   "id": 221,
+   "title": "Health plan — summary of benefits 2026",
+   "tags": [
+    1,
+    11,
+    32
+   ],
+   "created": "2025-12-02",
+   "added": "2025-12-02T15:45:00Z",
+   "modified": "2025-12-02T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 221,
+     "added": "2025-12-02T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Bluebird Mutual Health\nPO Box 3300\nSalem Grove, OR 97002\n(555) 010-3300\nSummary of benefits — Bluebird Silver 2500\nMember\tRiley Chen\nMember ID\tBBM-448-21907\nPlan year\tJan 1 – Dec 31, 2026\nDeductible\t$2,500\nOut-of-pocket maximum\t$7,000\nPrimary care visit\t$30 copay\nSpecialist visit\t$60 copay\nGeneric drugs\t$10 copay\nThis summary is not a contract. The policy has the full terms.",
+   "notes": [],
+   "files": {
+    "221": "221.pdf"
+   },
+   "sizes": {
+    "221": 42195
+   }
+  },
+  {
+   "id": 222,
+   "title": "Renter's insurance policy 2025",
+   "tags": [
+    2,
+    11,
+    32
+   ],
+   "created": "2025-04-01",
+   "added": "2025-04-01T15:45:00Z",
+   "modified": "2025-04-01T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 222,
+     "added": "2025-04-01T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [
+    {
+     "field": 1,
+     "value": [
+      223
+     ]
+    }
+   ],
+   "content": "Hearthstone Insurance\n820 Commerce Drive\nSalem Grove, OR 97002\n(555) 010-8820\nRenter's insurance — declarations page\nNamed insured\tRiley Chen\nPolicy number\tHS-R-30-11842\nPolicy period\tApr 1, 2025 – Apr 1, 2026\nPersonal property\t$25,000\nLiability\t$100,000\nDeductible\t$500\nPremium\t$168.00 a year\nLocation: 418 Alder Street, Apt 3B.",
+   "notes": [],
+   "files": {
+    "222": "222.pdf"
+   },
+   "sizes": {
+    "222": 39622
+   }
+  },
+  {
+   "id": 223,
+   "title": "Renter's insurance policy 2026",
+   "tags": [
+    1,
+    11,
+    32
+   ],
+   "created": "2026-03-28",
+   "added": "2026-03-28T15:45:00Z",
+   "modified": "2026-03-28T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 223,
+     "added": "2026-03-28T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [
+    {
+     "field": 1,
+     "value": [
+      222
+     ]
+    }
+   ],
+   "content": "Hearthstone Insurance\n820 Commerce Drive\nSalem Grove, OR 97002\n(555) 010-8820\nRenter's insurance — declarations page\nNamed insured\tRiley Chen\nPolicy number\tHS-R-30-11842\nPolicy period\tApr 1, 2026 – Apr 1, 2027\nPersonal property\t$30,000\nLiability\t$100,000\nDeductible\t$500\nPremium\t$184.00 a year\nLocation: 418 Alder Street, Apt 3B. Personal property limit raised at renewal.",
+   "notes": [],
+   "files": {
+    "223": "223.pdf"
+   },
+   "sizes": {
+    "223": 39905
+   }
+  },
+  {
+   "id": 231,
+   "title": "Auto insurance ID card",
+   "tags": [
+    1,
+    11,
+    33
+   ],
+   "created": "2026-06-01",
+   "added": "2026-06-01T15:45:00Z",
+   "modified": "2026-06-01T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "image/jpeg",
+   "versions": [
+    {
+     "id": 231,
+     "added": "2026-06-01T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Pinecrest Auto Insurance\nProof of insurance · PO Box 610 · Salem Grove, OR 97002 · (555) 010-0610\nInsured\tRiley Chen\nPolicy\tPC-A-77-30451\nVehicle\t2019 Subaru Crosstrek\nVIN\tJF2GT0000K0000417\nEffective\tJun 1, 2026 – Dec 1, 2026\nKeep this card in the vehicle. Sample card · fictional data.",
+   "notes": [],
+   "files": {
+    "231": "231.jpg"
+   },
+   "sizes": {
+    "231": 54843
+   }
+  },
+  {
+   "id": 232,
+   "title": "Vehicle registration renewal",
+   "tags": [
+    1,
+    11,
+    33
+   ],
+   "created": "2026-07-09",
+   "added": "2026-07-09T15:45:00Z",
+   "modified": "2026-07-09T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 232,
+     "added": "2026-07-09T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Motor Vehicle Services\n1905 Lana Avenue\nSalem Grove, OR 97002\nRegistration renewal receipt\nOwner\tRiley Chen\nPlate\tFERN 417\nVehicle\t2019 Subaru Crosstrek\nValid until\tJuly 31, 2028\nFee\t$186.00 (paid)\nPut the new sticker on the rear plate.",
+   "notes": [],
+   "files": {
+    "232": "232.pdf"
+   },
+   "sizes": {
+    "232": 38218
+   }
+  },
+  {
+   "id": 233,
+   "title": "Service record — 60,000 mile",
+   "tags": [
+    1,
+    11,
+    33
+   ],
+   "created": "2026-09-22",
+   "added": "2026-09-22T15:45:00Z",
+   "modified": "2026-09-22T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 233,
+     "added": "2026-09-22T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Northgate Auto Care\n1500 North Road\nMaple Falls, OR 97000\n(555) 010-1500\nInvoice RO-48821\nSeptember 22, 2026\nDue: Paid\nBill to\n\nRiley Chen\n418 Alder Street, Apt 3B\nMaple Falls, OR 97000\n\nDESCRIPTION\tQTY\tRATE\tAMOUNT\nOil and filter change\t1\t$79.95\t$79.95\nTire rotation\t1\t$29.95\t$29.95\nEngine air filter\t1\t$34.50\t$34.50\nBrake inspection\t1\t$0.00\t$0.00\nTotal\t$144.40\n\nOdometer: 60,212 mi. Next service at 66,000 mi.",
+   "notes": [],
+   "files": {
+    "233": "233.pdf"
+   },
+   "sizes": {
+    "233": 49322
+   }
+  },
+  {
+   "id": 241,
+   "title": "Passport renewal receipt",
+   "tags": [
+    1,
+    11,
+    34
+   ],
+   "created": "2025-08-18",
+   "added": "2025-08-18T15:45:00Z",
+   "modified": "2025-08-18T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 241,
+     "added": "2025-08-18T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Passport Services\nApplication acceptance receipt\nPassport renewal — application received\nApplicant\tRiley Chen\nApplication locator\tR-25-0081774\nService\tRoutine, by mail\nFee\t$130.00 (check 1204)\nReceived\tAugust 18, 2025\nTrack the status online with the application locator.",
+   "notes": [],
+   "files": {
+    "241": "241.pdf"
+   },
+   "sizes": {
+    "241": 36399
+   }
+  },
+  {
+   "id": 301,
+   "title": "Apartment lease 2025–2026",
+   "tags": [
+    2,
+    12,
+    40,
+    3
+   ],
+   "created": "2025-05-20",
+   "added": "2025-05-20T15:45:00Z",
+   "modified": "2025-05-20T17:59:00Z",
+   "page_count": 2,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 301,
+     "added": "2025-05-20T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [
+    {
+     "field": 1,
+     "value": [
+      302
+     ]
+    }
+   ],
+   "content": "Alder Court Properties\n400 Alder Street, Office 1\nMaple Falls, OR 97000\n(555) 010-4400\nResidential Lease Agreement\n\nThis lease is made on May 20, 2025, between Alder Court Properties and Riley Chen.\n\n1. Premises\n\nAlder Court Properties (\"Landlord\") rents to Riley Chen (\"Tenant\") the apartment at 418 Alder Street, Apt 3B, Maple Falls, OR 97000, with one parking space (number 14) and one storage locker.\n\n2. Term\n\nThe lease starts on June 1, 2025 and ends on May 31, 2026.\n\n3. Rent\n\nRent is $1,600.00 a month, due on the first day of each month. Rent paid after the fifth day has a late fee of $50.00.\n\nTenant pays rent through the online portal or by check to the office.\n\n4. Security deposit\n\nTenant paid a security deposit of $1,600.00. Landlord returns the deposit, less any amount for damage beyond normal wear, within 31 days after Tenant moves out.\n\n5. Utilities\n\nLandlord pays water, sewer and trash. Tenant pays electricity and internet and puts these accounts in the name of Tenant.\n\n6. Use and care\n\nTenant uses the apartment only as a home. Tenant keeps it clean and tells Landlord about any damage or leak promptly.\n\nTenant does not paint or make changes without written consent from Landlord.\n\nSmoking is not allowed in the apartment or on the balcony.\n\n7. Pets\n\nTenant may keep one cat. No other pets are allowed without written consent from Landlord.\n\n8. Entry\n\nLandlord may enter the apartment for repairs or inspections after 24 hours of notice, or at any time in an emergency.\n\n9. Ending the lease\n\nAt the end of the term the lease changes to month to month, unless either party gives 30 days written notice, or the parties sign a renewal.\n\n10. Notices\n\nNotices to Landlord go to 400 Alder Street, Office 1, Maple Falls, OR 97000, (555) 010-4400. Notices to Tenant go to the apartment or to riley@example.com.\n\nRiley Chen\nRiley Chen\nTenant\nJordan Ellis\nJordan Ellis\nProperty manager, Alder Court Properties",
+   "notes": [],
+   "files": {
+    "301": "301.pdf"
+   },
+   "sizes": {
+    "301": 69886
+   }
+  },
+  {
+   "id": 302,
+   "title": "Lease renewal 2026–2027",
+   "tags": [
+    1,
+    12,
+    40,
+    3
+   ],
+   "created": "2026-05-18",
+   "added": "2026-05-18T15:45:00Z",
+   "modified": "2026-05-18T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 302,
+     "added": "2026-05-18T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [
+    {
+     "field": 1,
+     "value": [
+      301
+     ]
+    }
+   ],
+   "content": "Alder Court Properties\n400 Alder Street, Office 1\nMaple Falls, OR 97000\n(555) 010-4400\nLease Renewal Agreement\n\nThis renewal is made on May 18, 2026, between Alder Court Properties and Riley Chen. It continues the lease of May 20, 2025, with the changes below. All other terms stay the same.\n\n1. Premises\n\nAlder Court Properties (\"Landlord\") rents to Riley Chen (\"Tenant\") the apartment at 418 Alder Street, Apt 3B, Maple Falls, OR 97000, with one parking space (number 14) and one storage locker.\n\n2. Term\n\nThe lease starts on June 1, 2026 and ends on May 31, 2027.\n\n3. Rent\n\nRent is $1,665.00 a month, due on the first day of each month. Rent paid after the fifth day has a late fee of $50.00.\n\nTenant pays rent through the online portal or by check to the office.\n\n4. Pets\n\nTenant may keep one cat. No other pets are allowed without written consent from Landlord.\n\n5. Ending the lease\n\nAt the end of the term the lease changes to month to month, unless either party gives 30 days written notice, or the parties sign a renewal.\n\nRiley Chen\nRiley Chen\nTenant\nJordan Ellis\nJordan Ellis\nProperty manager, Alder Court Properties",
+   "notes": [],
+   "files": {
+    "302": "302.pdf"
+   },
+   "sizes": {
+    "302": 64724
+   }
+  },
+  {
+   "id": 303,
+   "title": "Move-in inspection checklist",
+   "tags": [
+    1,
+    12,
+    40
+   ],
+   "created": "2025-06-01",
+   "added": "2025-06-01T15:45:00Z",
+   "modified": "2025-06-01T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 303,
+     "added": "2025-06-01T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Alder Court Properties\n400 Alder Street, Office 1\nMaple Falls, OR 97000\n(555) 010-4400\nMove-in condition report — 418 Alder Street, Apt 3B\nEntry and hall\tGood. Small scuff by the door.\nKitchen\tGood. Oven and dishwasher work.\nLiving room\tGood. Blinds complete.\nBedroom\tGood. Nail holes on the west wall.\nBathroom\tGood. Grout stain near the tub.\nSmoke detectors\tTested. Both work.\nKeys given\t2 door keys, 1 mailbox key\nSigned by Riley Chen (tenant) and Jordan Ellis (manager), June 1, 2025.",
+   "notes": [],
+   "files": {
+    "303": "303.pdf"
+   },
+   "sizes": {
+    "303": 41417
+   }
+  },
+  {
+   "id": 311,
+   "title": "Electric bill — August 2026",
+   "tags": [
+    1,
+    12,
+    41
+   ],
+   "created": "2026-08-24",
+   "added": "2026-08-24T15:45:00Z",
+   "modified": "2026-08-24T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 311,
+     "added": "2026-08-24T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Maple Falls Power & Light\nPO Box 1180\nMaple Falls, OR 97000\n(555) 010-1180\nAccount 30-11842-02\nAugust 2026\n\nRiley Chen\n418 Alder Street, Apt 3B\nMaple Falls, OR 97000\n\nAmount due\n$58.34\nDue by\nSeptember 14, 2026\nUsage: 412 kWh\nCHARGE\tAMOUNT\nBasic charge\t$11.25\nEnergy (412 kWh)\t$44.99\nPublic purpose charge\t$2.10\nTotal\t$58.34\n\nAutopay is on for this account. We will charge your card on file on the due date.",
+   "notes": [],
+   "files": {
+    "311": "311.pdf"
+   },
+   "sizes": {
+    "311": 57598
+   }
+  },
+  {
+   "id": 312,
+   "title": "Electric bill — September 2026",
+   "tags": [
+    1,
+    12,
+    41
+   ],
+   "created": "2026-09-24",
+   "added": "2026-09-24T15:45:00Z",
+   "modified": "2026-09-24T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 312,
+     "added": "2026-09-24T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Maple Falls Power & Light\nPO Box 1180\nMaple Falls, OR 97000\n(555) 010-1180\nAccount 30-11842-02\nSeptember 2026\n\nRiley Chen\n418 Alder Street, Apt 3B\nMaple Falls, OR 97000\n\nAmount due\n$52.91\nDue by\nOctober 15, 2026\nUsage: 368 kWh\nCHARGE\tAMOUNT\nBasic charge\t$11.25\nEnergy (368 kWh)\t$39.56\nPublic purpose charge\t$2.10\nTotal\t$52.91\n\nAutopay is on for this account. We will charge your card on file on the due date.",
+   "notes": [],
+   "files": {
+    "312": "312.pdf"
+   },
+   "sizes": {
+    "312": 57484
+   }
+  },
+  {
+   "id": 313,
+   "title": "Electric bill — October 2026",
+   "tags": [
+    1,
+    12,
+    41
+   ],
+   "created": "2026-10-24",
+   "added": "2026-10-24T15:45:00Z",
+   "modified": "2026-10-24T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 313,
+     "added": "2026-10-24T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Maple Falls Power & Light\nPO Box 1180\nMaple Falls, OR 97000\n(555) 010-1180\nAccount 30-11842-02\nOctober 2026\n\nRiley Chen\n418 Alder Street, Apt 3B\nMaple Falls, OR 97000\n\nAmount due\n$63.70\nDue by\nNovember 14, 2026\nUsage: 455 kWh\nCHARGE\tAMOUNT\nBasic charge\t$11.25\nEnergy (455 kWh)\t$50.35\nPublic purpose charge\t$2.10\nTotal\t$63.70\n\nAutopay is on for this account. We will charge your card on file on the due date.",
+   "notes": [],
+   "files": {
+    "313": "313.pdf"
+   },
+   "sizes": {
+    "313": 57233
+   }
+  },
+  {
+   "id": 314,
+   "title": "Internet bill — October 2026",
+   "tags": [
+    1,
+    12,
+    41
+   ],
+   "created": "2026-10-05",
+   "added": "2026-10-05T15:45:00Z",
+   "modified": "2026-10-05T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 314,
+     "added": "2026-10-05T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Riverline Fiber\n1 Riverline Way\nPort Wren, OR 97001\n(555) 010-7700\nAccount RF-0071-4471\nOctober 2026\n\nRiley Chen\n418 Alder Street, Apt 3B\nMaple Falls, OR 97000\n\nAmount due\n$50.00\nDue by\nOctober 25, 2026\nUsage: Fiber 500\nCHARGE\tAMOUNT\nFiber 500 Mbps\t$55.00\nRouter rental\t$0.00\nPaperless billing credit\t−$5.00\nTotal\t$50.00\n\nAutopay is on for this account. We will charge your card on file on the due date.",
+   "notes": [],
+   "files": {
+    "314": "314.pdf"
+   },
+   "sizes": {
+    "314": 53086
+   }
+  },
+  {
+   "id": 315,
+   "title": "Wi-Fi and router notes",
+   "tags": [
+    1,
+    12,
+    41
+   ],
+   "created": "2025-06-03",
+   "added": "2025-06-03T15:45:00Z",
+   "modified": "2025-06-03T17:59:00Z",
+   "page_count": null,
+   "mime_type": "text/plain",
+   "versions": [
+    {
+     "id": 315,
+     "added": "2025-06-03T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Home network\n\nRouter: in the hall closet, top shelf.\nNetwork name: alder-3b (the password is in the password manager, not here).\nAdmin page: http://192.168.1.1\nSupport: Riverline Fiber, (555) 010-7700, account RF-0071-4471.\n\nIf the internet stops:\n1. Unplug the router for 30 seconds.\n2. Check the green light on the fiber box in the closet.\n3. Call support if the light is red.",
+   "notes": [],
+   "files": {
+    "315": "315.txt"
+   },
+   "sizes": {
+    "315": 379
+   }
+  },
+  {
+   "id": 321,
+   "title": "Dishwasher warranty registration",
+   "tags": [
+    1,
+    12,
+    42
+   ],
+   "created": "2025-11-29",
+   "added": "2025-11-29T15:45:00Z",
+   "modified": "2025-11-29T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "application/pdf",
+   "versions": [
+    {
+     "id": 321,
+     "added": "2025-11-29T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "Kestrel Home Appliances\nCustomer care\n(555) 010-9090\nProduct registration confirmation\nOwner\tRiley Chen\nModel\tKDW-450 Quiet Series\nSerial number\tKH25-118-90441\nPurchased\tNovember 28, 2025\nWarranty\t2 years parts and labor\nEnds\tNovember 28, 2027\nKeep the purchase receipt with this registration.",
+   "notes": [],
+   "files": {
+    "321": "321.pdf"
+   },
+   "sizes": {
+    "321": 38371
+   }
+  },
+  {
+   "id": 322,
+   "title": "Receipt — dishwasher",
+   "tags": [
+    1,
+    12,
+    42
+   ],
+   "created": "2025-11-28",
+   "added": "2025-11-28T15:45:00Z",
+   "modified": "2025-11-28T17:59:00Z",
+   "page_count": 1,
+   "mime_type": "image/jpeg",
+   "versions": [
+    {
+     "id": 322,
+     "added": "2025-11-28T15:45:00Z",
+     "version_label": null,
+     "is_root": true
+    }
+   ],
+   "custom_fields": [],
+   "content": "HARBOR HOME SUPPLY\n3400 Harbor Road\nPort Wren, OR 97001\n11/28/2025 16:48\nDishwasher KDW-450\n$649.00\nDelivery and install\n$99.00\nHaul-away of old unit\n$25.00\nSUBTOTAL\n$773.00\nTAX\n$0.00\nTOTAL\n$773.00\nVISA ****4417 APPROVED\nTHANK YOU\nSample receipt · fictional data",
+   "notes": [],
+   "files": {
+    "322": "322.jpg"
+   },
+   "sizes": {
+    "322": 45687
+   }
+  }
+ ]
+}

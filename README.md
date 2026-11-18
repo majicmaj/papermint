@@ -29,7 +29,9 @@ npm ci
 npm run demo
 ```
 
-Open [http://127.0.0.1:4673](http://127.0.0.1:4673). The demo uses synthetic documents and keeps changes in memory. Restart it to reset the sample archive.
+Open [http://127.0.0.1:4673](http://127.0.0.1:4673). The demo serves a sample archive of 50 fictional records: invoices, bank statements, bills, receipts, agreements, and notes for an invented freelancer and their studio. It keeps changes in memory. Restart it to reset the archive.
+
+The sample files live in `mock-server/samples`. After you edit `catalog.mjs`, run `npm run samples` to render them again.
 
 ## Connect your archive
 

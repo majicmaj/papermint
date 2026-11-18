@@ -8,3 +8,7 @@ test-results-*
 
 config.json
 public/config.json
+
+# Rendered by mock-server/samples/build.mjs.
+mock-server/samples/index.json
+mock-server/samples/files

@@ -14,5 +14,8 @@ export default defineConfig({
   },
   preview: { host: '127.0.0.1', port: 4173, proxy },
   build: { target: 'es2022', sourcemap: false, cssCodeSplit: false, assetsInlineLimit: 0 },
-  test: { include: ['src/**/*.test.ts', '*.test.ts'], environment: 'node' },
+  test: {
+    include: ['src/**/*.test.ts', '*.test.ts', 'mock-server/**/*.test.mjs'],
+    environment: 'node',
+  },
 });

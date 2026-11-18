@@ -1,0 +1,11 @@
+Home network
+
+Router: in the hall closet, top shelf.
+Network name: alder-3b (the password is in the password manager, not here).
+Admin page: http://192.168.1.1
+Support: Riverline Fiber, (555) 010-7700, account RF-0071-4471.
+
+If the internet stops:
+1. Unplug the router for 30 seconds.
+2. Check the green light on the fiber box in the closet.
+3. Call support if the light is red.
