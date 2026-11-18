@@ -75,6 +75,9 @@ test.describe('one toolbar row', () => {
     expect(await page.locator('.rail-body > *').first().getAttribute('class')).toContain(
       'search-field',
     );
+    const toolbar = await box(page, '.rail-bar');
+    const search = await box(page, '.search-field');
+    expect(search.y - (toolbar.y + toolbar.h)).toBe(8);
     await expect(
       page.locator('.rail-bar').getByRole('button', { name: 'Collapse sidebar' }),
     ).toBeVisible();
