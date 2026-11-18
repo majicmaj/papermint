@@ -1,3 +1,4 @@
+import { runtimeConfig } from '../config/runtime';
 import { searchFullText, downloadUrl } from '../api/documents';
 import { formatDate } from '../domain/format';
 import { statusTag } from '../domain/tags';
@@ -46,6 +47,7 @@ export const palette = new PaletteController({
 });
 
 export function pickFiles(): void {
+  if (runtimeConfig().readOnly) return;
   const input = document.createElement('input');
   input.type = 'file';
   input.multiple = true;

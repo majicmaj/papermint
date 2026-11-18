@@ -1,3 +1,4 @@
+import { runtimeConfig } from '../config/runtime';
 import './filters.css';
 import { FiltersBar } from './Filters';
 import {
@@ -212,6 +213,7 @@ export function RecordList({ view, route }: Props) {
   );
   return (
     <>
+      {runtimeConfig().readOnly && <div class="demo-label">Demo · Read only</div>}
       {/* On a phone the header scrolls with the list. */}
       {!mobile && bar}
       <div class="list-scroll" ref={scroller}>

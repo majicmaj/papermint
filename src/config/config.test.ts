@@ -19,11 +19,17 @@ describe('runtime config', () => {
   it('accepts deployment preferences and keeps the first record for each key', () => {
     expect(
       parseConfig({
+        readOnly: true,
         untaggedStatus: 'draft',
         successorField: '  Replaced by  ',
         recoveryFiles: [sample, { ...sample, title: 'Duplicate' }],
       }),
-    ).toEqual({ untaggedStatus: 'draft', successorField: 'Replaced by', recoveryFiles: [sample] });
+    ).toEqual({
+      readOnly: true,
+      untaggedStatus: 'draft',
+      successorField: 'Replaced by',
+      recoveryFiles: [sample],
+    });
   });
 
   it.each([

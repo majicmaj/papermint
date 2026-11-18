@@ -2,7 +2,7 @@ import './tag-editor.css';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import type { Tag } from '../api/types';
 import { DEFAULT_TAG_COLOR } from '../domain/tag-palette';
-import { useOffline } from '../pwa/connectivity';
+import { useWriteDisabled } from '../pwa/connectivity';
 import { useApp } from '../state/app';
 import {
   closeTagEditor,
@@ -58,7 +58,7 @@ function Form({ editor }: { editor: EditorState }) {
   const [input, setInput] = useState(() =>
     startingInput(editor, tag, tag ? (icons[String(tag.id)] ?? null) : null, only),
   );
-  const offline = useOffline();
+  const writeDisabled = useWriteDisabled();
   const [busy, setBusy] = useState(false);
   const root = useRef<HTMLFormElement>(null);
   useEffect(() => focusFor(root.current, editor.focus), [editor.focus]);
@@ -66,7 +66,7 @@ function Form({ editor }: { editor: EditorState }) {
   const set = (patch: Partial<TagInput>) => setInput((current) => ({ ...current, ...patch }));
   const submit = async (event: Event) => {
     event.preventDefault();
-    if (!valid || busy || offline) return;
+    if (!valid || busy || writeDisabled) return;
     setBusy(true);
     const next = { ...input, name: input.name.trim() };
     const ok = tag ? await updateTagFrom(tag, next) : await createTagFrom(next, editor.recordId);
@@ -119,7 +119,7 @@ function Form({ editor }: { editor: EditorState }) {
       <Swatches color={input.color} onChange={(color) => set({ color })} />
       <IconGrid icon={input.icon} color={input.color} onChange={(icon) => set({ icon })} />
       <div class="editor-foot">
-        <button type="submit" class="btn btn--primary" disabled={!valid || busy || offline}>
+        <button type="submit" class="btn btn--primary" disabled={!valid || busy || writeDisabled}>
           {tag ? 'Save' : 'Create'}
         </button>
       </div>

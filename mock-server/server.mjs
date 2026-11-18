@@ -22,6 +22,7 @@ import {
 
 const PORT = Number(process.env.PORT ?? 4673);
 const DIST = process.env.DIST ?? 'dist';
+const PUBLIC = process.env.PAPERMINT_PUBLIC_DEMO === '1';
 const TYPES = {
   '.html': 'text/html',
   '.js': 'text/javascript',
@@ -211,7 +212,8 @@ function api(req, res, url, body) {
     if (!state.docs.some((d) => d.id === UPLOADED_ID)) state.docs.push(uploadedDoc());
     return send(res, 200, JSON.stringify('mock-task'), { 'content-type': 'application/json' });
   }
-  if (req.method === 'GET' && lists(res, url) !== false) return undefined;
+  if ((req.method === 'GET' || req.method === 'HEAD') && lists(res, url) !== false)
+    return undefined;
   if (documentApi(req, res, url, body) !== false) return undefined;
   return send(res, 404, {});
 }
@@ -252,32 +254,89 @@ async function staticFile(res, path) {
   res.end(out);
 }
 
-createServer(async (req, res) => {
-  const url = new URL(req.url, `http://${req.headers.host}`);
-  const chunks = [];
-  for await (const chunk of req) chunks.push(chunk);
-  const body = Buffer.concat(chunks).toString();
-  if (url.pathname === '/config.json')
-    return send(res, 200, demoConfig, { 'cache-control': 'no-store' });
+const PUBLIC_ASSET = /^\/(?:assets|icons)\/[a-zA-Z0-9_-]+\.(?:js|css|png|svg|woff2)$/;
+const PUBLIC_ROUTE = /^\/(?:pending|r\/\d+)?\/?$/;
+const PUBLIC_FILES = new Set([
+  '/index.html',
+  '/sw.js',
+  '/favicon.png',
+  '/manifest.webmanifest',
+  '/robots.txt',
+]);
+
+function allowPublic(req, res, url) {
   if (url.pathname.startsWith('/__')) {
-    if (url.pathname === '/__log')
-      return send(res, 200, { log: state.log, patches: state.patches, posts: state.posts });
-    if (url.pathname === '/__reset') {
-      state.log = [];
-      state.patches = [];
-      state.posts = [];
-      return send(res, 200, { ok: true });
-    }
-    return control(req, res, body);
+    send(res, 404, { detail: 'Not found' });
+    return false;
   }
-  state.log.push({ method: req.method, path: url.pathname + url.search });
-  if (state.latency && url.pathname.startsWith('/api/'))
-    await new Promise((r) => setTimeout(r, state.latency));
-  if (secrets(req, res, url.pathname) !== false) return undefined;
+  if (
+    !['GET', 'HEAD'].includes(req.method) ||
+    req.headers['transfer-encoding'] ||
+    Number(req.headers['content-length'] ?? 0) > 0
+  ) {
+    send(res, 405, { detail: 'Demo is read only' }, { Allow: 'GET, HEAD' });
+    return false;
+  }
+  if (
+    url.pathname === '/config.json' ||
+    url.pathname.startsWith('/api/') ||
+    PUBLIC_ROUTE.test(url.pathname) ||
+    PUBLIC_ASSET.test(url.pathname) ||
+    PUBLIC_FILES.has(url.pathname)
+  )
+    return true;
+  send(res, 404, { detail: 'Not found' });
+  return false;
+}
+
+async function handle(req, res) {
+  const url = new URL(req.url, 'http://localhost');
+  if (PUBLIC) {
+    res.setHeader('x-content-type-options', 'nosniff');
+    res.setHeader('referrer-policy', 'same-origin');
+    res.setHeader('cache-control', 'no-store');
+    if (!allowPublic(req, res, url)) return;
+  }
+  if (url.pathname === '/config.json') {
+    const config = PUBLIC ? { readOnly: true, untaggedStatus: 'draft' } : demoConfig;
+    return send(res, 200, config, { 'cache-control': 'no-store' });
+  }
+  const body = PUBLIC ? '' : await readBody(req);
+  if (url.pathname.startsWith('/__')) return testControl(req, res, url, body);
+  if (!PUBLIC) {
+    state.log.push({ method: req.method, path: url.pathname + url.search });
+    if (state.latency && url.pathname.startsWith('/api/'))
+      await new Promise((r) => setTimeout(r, state.latency));
+    if (secrets(req, res, url.pathname) !== false) return undefined;
+  }
   if (url.pathname.startsWith('/api/')) {
-    // Like production: the proxy forbids any cache from keeping an API answer.
     res.setHeader('cache-control', 'no-store');
     return api(req, res, url, body);
   }
   return staticFile(res, url.pathname);
+}
+
+async function readBody(req) {
+  const chunks = [];
+  for await (const chunk of req) chunks.push(chunk);
+  return Buffer.concat(chunks).toString();
+}
+
+function testControl(req, res, url, body) {
+  if (url.pathname === '/__log')
+    return send(res, 200, { log: state.log, patches: state.patches, posts: state.posts });
+  if (url.pathname === '/__reset') {
+    state.log = [];
+    state.patches = [];
+    state.posts = [];
+    return send(res, 200, { ok: true });
+  }
+  return control(req, res, body);
+}
+
+createServer((req, res) => {
+  void handle(req, res).catch(() => {
+    if (!res.headersSent) send(res, 500, { detail: 'Request failed' });
+    else res.destroy();
+  });
 }).listen(PORT, '127.0.0.1', () => console.log(`mock server on ${PORT}`));

@@ -1,3 +1,4 @@
+import { runtimeConfig } from '../config/runtime';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { modality } from '../motion/modality';
 import { exitDelay, usePresence } from '../motion/presence';
@@ -20,6 +21,7 @@ export function DropZone() {
     const enter = (e: DragEvent) => {
       if (!hasFiles(e)) return;
       e.preventDefault();
+      if (runtimeConfig().readOnly) return;
       depth += 1;
       setActive(true);
     };
@@ -32,6 +34,7 @@ export function DropZone() {
     const drop = (e: DragEvent) => {
       if (!hasFiles(e)) return;
       e.preventDefault();
+      if (runtimeConfig().readOnly) return;
       depth = 0;
       setActive(false);
       const files = Array.from(e.dataTransfer?.files ?? []);

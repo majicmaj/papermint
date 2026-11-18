@@ -1,3 +1,4 @@
+import { runtimeConfig } from '../config/runtime';
 import { RailBar } from '../shell/RailBar';
 import { Taxonomy } from './Taxonomy';
 import { VIEW_LABEL, VIEW_PATH, viewCount, visibleViews, type ViewName } from '../domain/views';
@@ -63,7 +64,12 @@ export function Rail({ active }: { active: ViewName }) {
           <Taxonomy />
         </section>
         <div class="rail-foot">
-          <button type="button" class="btn btn--ghost btn--block" onClick={pickFiles}>
+          <button
+            type="button"
+            class="btn btn--ghost btn--block"
+            disabled={runtimeConfig().readOnly}
+            onClick={pickFiles}
+          >
             <Icon name="upload" />
             Upload
           </button>

@@ -1,4 +1,4 @@
-import { useOffline } from '../pwa/connectivity';
+import { useWriteDisabled } from '../pwa/connectivity';
 import { useMemo, useState } from 'preact/hooks';
 import type { Doc } from '../api/types';
 import { Icon } from '../icons/Icon';
@@ -160,14 +160,14 @@ function Head({ item, position }: { item: UploadItem; position: string }) {
 export function IntakePanel() {
   const hasAreas = useApp((s) => s.model.areas.length > 0);
   const uploads = useApp((s) => s.uploads);
-  const offline = useOffline();
+  const writeDisabled = useWriteDisabled();
   const item = uploads[0];
   if (!item) return null;
   const filed = !hasAreas || item.areaIds.length > 0 || item.targetId !== null;
   // Offline, Confirm stays off. A file that was dropped offline waits here; when the network is
   // back Confirm turns on, and only Confirm sends it.
   const confirmable = item.phase === 'ready' || item.phase === 'waiting';
-  const ready = confirmable && item.title.trim().length > 0 && filed && !offline;
+  const ready = confirmable && item.title.trim().length > 0 && filed && !writeDisabled;
   const position = uploads.length > 1 ? `1/${uploads.length}` : '';
   return (
     <aside class="intake" aria-label="Upload" key={item.key}>

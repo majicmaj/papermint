@@ -15,6 +15,10 @@ Papermint gives your documents a focused workspace. Search from the keyboard, re
 - **Keep track of versions.** Separate drafts from current records and follow links to replacements. Download originals directly from Paperless.
 - **Install it.** Add Papermint to your home screen or desktop. A limited document index remains available offline.
 
+## Try the demo
+
+[Open the live demo](https://papermint.hobbyhood.app/). Browse, search, filter, and download sample records in a read-only archive that updates from the `main` branch.
+
 ## Try it locally
 
 With Node.js 24 LTS and npm installed, run these commands from the repository root.

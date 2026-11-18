@@ -12,7 +12,7 @@ import { Icon } from '../icons/Icon';
 import { Dot, StatusPill } from './Pill';
 import { Menu } from './Menu';
 import { useHeldHeight } from './useHeld';
-import { useOffline } from '../pwa/connectivity';
+import { useWriteDisabled } from '../pwa/connectivity';
 import { copyLink } from '../shell/copy-link';
 import { VersionItems } from './VersionsMenu';
 
@@ -31,7 +31,7 @@ function CheckSlot({ on }: { on: boolean }) {
 export function StatusItems({ doc, model, close, pick }: ItemsProps) {
   const current = statusTag(doc, model)?.id ?? null;
   const hasSuccessorField = useApp((s) => s.successorField !== null);
-  const offline = useOffline();
+  const writeDisabled = useWriteDisabled();
   const [own, setOwn] = useState<number | null>(null);
   const height = useHeldHeight();
   if (own !== null) {
@@ -55,7 +55,7 @@ export function StatusItems({ doc, model, close, pick }: ItemsProps) {
           type="button"
           role="menuitemradio"
           aria-checked={tag.id === current}
-          disabled={offline}
+          disabled={writeDisabled}
           class="menu-item"
           onClick={() => {
             if (tag.id === current) {
@@ -88,7 +88,7 @@ interface TagItemsProps {
 }
 
 function TagItems({ doc, tags, toggle, keep }: TagItemsProps) {
-  const offline = useOffline();
+  const writeDisabled = useWriteDisabled();
   return (
     <>
       {tags.map((tag) => {
@@ -99,7 +99,7 @@ function TagItems({ doc, tags, toggle, keep }: TagItemsProps) {
             type="button"
             role="menuitemcheckbox"
             aria-checked={on}
-            disabled={offline || keep === tag.id}
+            disabled={writeDisabled || keep === tag.id}
             class="menu-item"
             onClick={() => void toggle(doc, tag.id)}
           >
@@ -124,13 +124,13 @@ function NewTag({
   parent: number | null;
   close: () => void;
 }) {
-  const offline = useOffline();
+  const writeDisabled = useWriteDisabled();
   return (
     <button
       type="button"
       role="menuitem"
       class="menu-item"
-      disabled={offline}
+      disabled={writeDisabled}
       onClick={(event) => {
         const box = event.currentTarget.getBoundingClientRect();
         close();
@@ -153,14 +153,14 @@ const PILL_IN: Keyframe[] = [
 
 export function StatusMenu({ doc, model }: { doc: Doc; model: TagModel }) {
   const tag = statusTag(doc, model);
-  const offline = useOffline();
+  const writeDisabled = useWriteDisabled();
   const pill = useRef<HTMLSpanElement>(null);
   const changed = useChanged(doc.id, tag?.id ?? 0);
   useMountAnimation(pill, changed, PILL_IN, { duration: DURATION.menu, easing: EASE_OUT });
   return (
     <Menu
       label="Status"
-      disabled={offline}
+      disabled={writeDisabled}
       triggerClass="pill-button"
       trigger={
         <>
@@ -225,7 +225,7 @@ function MoreBody({ doc, model, close, onDelete, collapsed }: MoreProps & { clos
   const areas = areasOf(doc, model);
   const areaIds = areas.map((tag) => tag.id);
   const topics = topicsIn(model, areaIds);
-  const offline = useOffline();
+  const writeDisabled = useWriteDisabled();
   // The successor picker replaces the whole menu, so nothing below it is pushed around.
   if (picker !== null) {
     return (
@@ -264,7 +264,7 @@ function MoreBody({ doc, model, close, onDelete, collapsed }: MoreProps & { clos
         type="button"
         role="menuitem"
         class="menu-item menu-item--danger"
-        disabled={offline}
+        disabled={writeDisabled}
         onClick={() => {
           close();
           onDelete();

@@ -1,3 +1,4 @@
+import { runtimeConfig } from '../config/runtime';
 import { createStore, useStore } from '../state/store';
 
 /**
@@ -19,6 +20,11 @@ export function isOffline(): boolean {
 
 export function setOffline(offline: boolean): void {
   if (connectivity.get().offline !== offline) connectivity.set({ offline });
+}
+
+export function useWriteDisabled(): boolean {
+  const offline = useOffline();
+  return offline || runtimeConfig().readOnly;
 }
 
 export function useOffline(): boolean {
@@ -46,6 +52,7 @@ export class OfflineError extends Error {
  * The controls are disabled as well; this covers a dialog that was open when the network went.
  */
 export function requireOnline(): void {
+  if (runtimeConfig().readOnly) throw new Error('This demo is read only');
   if (isOffline()) throw new OfflineError();
 }
 

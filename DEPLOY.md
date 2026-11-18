@@ -13,11 +13,12 @@ npm run build
 
 The default configuration works with an existing archive. To customize it, copy `config.example.json` beside the deployed `index.html` as `config.json`. Keep this file in your deployment and copy it into each release. Reload the page to apply changes.
 
-| Setting          | Default           | Purpose                                                                                 |
-| ---------------- | ----------------- | --------------------------------------------------------------------------------------- |
-| `untaggedStatus` | `"current"`       | Put records without a status tag in Current. Use `"draft"` to put them in Drafts.       |
-| `successorField` | `"Superseded by"` | Name of the Paperless document-link custom field used to point to a replacement record. |
-| `recoveryFiles`  | `[]`              | Optional list of server-protected file links.                                           |
+| Setting          | Default           | Purpose                                                                                   |
+| ---------------- | ----------------- | ----------------------------------------------------------------------------------------- |
+| `readOnly`       | `false`           | Disable editing controls in the frontend. Enforce read-only access at the server as well. |
+| `untaggedStatus` | `"current"`       | Put records without a status tag in Current. Use `"draft"` to put them in Drafts.         |
+| `successorField` | `"Superseded by"` | Name of the Paperless document-link custom field used to point to a replacement record.   |
+| `recoveryFiles`  | `[]`              | Optional list of server-protected file links.                                             |
 
 The browser reads this file. Store credentials, recovery codes, and document contents separately. Each recovery entry has a stable `key`, human-readable `title`, `href`, `kind` (`text`, `pdf`, or `archive`), short `label`, and download `filename`. Use same-origin paths under `/recovery/`, `/recovery-files/`, or `/backups/`. Store and protect the linked files on your server.
 

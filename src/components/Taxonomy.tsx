@@ -1,3 +1,4 @@
+import { runtimeConfig } from '../config/runtime';
 import './taxonomy.css';
 import { useMemo } from 'preact/hooks';
 import type { Tag } from '../api/types';
@@ -21,6 +22,7 @@ interface RowProps {
 
 function TagRow({ tag, count, pressed, onToggle, onAct }: RowProps) {
   const openMenu = (x: number, y: number) => {
+    if (runtimeConfig().readOnly) return;
     onAct?.();
     openTagMenu({ tagId: tag.id, x, y });
   };
@@ -40,6 +42,7 @@ function TagRow({ tag, count, pressed, onToggle, onAct }: RowProps) {
       <button
         type="button"
         class="tag-more"
+        disabled={runtimeConfig().readOnly}
         aria-label={`Edit ${tag.name}`}
         aria-haspopup="menu"
         onClick={(event) => {
@@ -75,6 +78,7 @@ function Head({ title, kind, onAll, onNone, parent, onAct }: HeadProps) {
       <button
         type="button"
         class="tag-head-add"
+        disabled={runtimeConfig().readOnly}
         aria-label={`New ${kind}`}
         onClick={(event) => {
           const box = event.currentTarget.getBoundingClientRect();
