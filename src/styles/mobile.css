@@ -1,0 +1,547 @@
+@media (max-width: 1099px) {
+  .pane-actions--desktop .btn:not(.btn--primary):not(.btn--icon) {
+    width: 32px;
+    padding: 0;
+    font-size: 0;
+    gap: 0;
+  }
+}
+
+@media (max-width: 859px) {
+  :root {
+    --bottombar: 56px;
+    /* The floating bar's top edge, from the bottom of the screen. */
+    --bottombar-top: calc(12px + var(--bottombar) + env(safe-area-inset-bottom));
+    --action-bar: 64px;
+  }
+
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  .rail {
+    display: none;
+  }
+
+  .list-col,
+  .pane-col {
+    grid-area: 1 / 1;
+    border-right: 0;
+  }
+
+  .pane-head {
+    padding: 0 8px;
+    gap: 8px;
+  }
+
+  .pane-back {
+    display: inline-flex;
+  }
+
+  .pane-actions--desktop {
+    display: none;
+  }
+
+  .pane-actions--mobile {
+    display: flex;
+    height: calc(var(--action-bar) + env(safe-area-inset-bottom));
+    padding: 0 12px env(safe-area-inset-bottom);
+    gap: 8px;
+    background: var(--mw-gray-1);
+    border-top: 1px solid var(--mw-gray-6);
+  }
+
+  .pane-actions--mobile .btn {
+    height: 44px;
+  }
+
+  .pane-actions--mobile .btn--icon {
+    width: 44px;
+  }
+
+  .pane-actions--mobile .btn--grow {
+    flex: 1;
+  }
+
+  .preview-image {
+    padding: 12px;
+  }
+
+  .preview-text {
+    padding: 20px 16px 32px;
+  }
+
+  /* The search is a full screen: the keyboard takes the bottom, the results fill the rest. */
+  .palette-scrim {
+    padding-top: 0;
+  }
+
+  .palette {
+    width: 100vw;
+    height: var(--vvh, 100dvh);
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .palette-close {
+    display: inline-flex;
+  }
+
+  .intake {
+    top: auto;
+    left: 8px;
+    right: 8px;
+    width: auto;
+    bottom: calc(var(--bottombar-top) + 8px);
+  }
+
+  .row {
+    padding-left: 16px;
+  }
+
+  /* The list runs under the floating bar and ends clear of it. */
+  .list-scroll {
+    padding-bottom: calc(var(--bottombar-top) + 16px);
+    scroll-padding-bottom: calc(var(--bottombar-top) + 16px);
+  }
+
+  /* Header: it scrolls with the list. */
+  .topbar {
+    padding: env(safe-area-inset-top) 0 8px;
+  }
+
+  .topbar-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    padding: 0 16px 0 20px;
+  }
+
+  .topbar-title {
+    margin: 0;
+    font-size: 28px;
+    line-height: 34px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--mw-gray-12);
+  }
+
+  .topbar-more {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--mw-gray-3);
+    color: var(--mw-gray-12);
+  }
+
+  .topbar-more[aria-expanded='true'] {
+    background: var(--mw-gray-5);
+  }
+
+  .topbar-menu .menu {
+    top: calc(100% + 8px);
+    min-width: 240px;
+    padding: 6px;
+    border-radius: 16px;
+    transform-origin: top right;
+  }
+
+  .topbar-menu .menu-item {
+    height: 48px;
+    gap: 12px;
+    padding: 0 12px;
+    border-radius: 10px;
+    font-size: 16px;
+    color: var(--mw-gray-12);
+    text-decoration: none;
+  }
+
+  /* A tap leaves no hover behind on the switch row. */
+  .topbar-menu .menu-item:hover:not(:focus-visible) {
+    background: none;
+  }
+
+  .menu-icon {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    width: 20px;
+    color: var(--mw-gray-11);
+  }
+
+  .menu-switch {
+    position: relative;
+    flex: none;
+    width: 40px;
+    height: 24px;
+    margin-left: auto;
+    border-radius: 12px;
+    background: var(--mw-gray-7);
+    transition: background-color var(--t-hover) ease;
+  }
+
+  .menu-switch::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--mw-contrast);
+    box-shadow: 0 1px 2px color-mix(in srgb, var(--mw-gray-12) 24%, transparent);
+    transition: transform var(--t-menu) var(--ease-out);
+  }
+
+  [aria-checked='true'] > .menu-switch {
+    background: var(--mw-indigo-9);
+  }
+
+  [aria-checked='true'] > .menu-switch::after {
+    transform: translateX(16px);
+  }
+
+  /* Current and Drafts. The active pill holds the Filter button. */
+  .segments {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 44px;
+    padding: 0 20px;
+  }
+
+  .segment {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    height: 40px;
+    border-radius: 20px;
+  }
+
+  .segment[data-active] {
+    background: var(--mw-gray-3);
+  }
+
+  .segment-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    height: 40px;
+    padding: 0 16px;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--mw-gray-11);
+    text-decoration: none;
+  }
+
+  .segment[data-active] .segment-link {
+    padding-right: 12px;
+    color: var(--mw-gray-12);
+  }
+
+  .segment-divider {
+    flex: none;
+    width: 1px;
+    height: 20px;
+    background: var(--mw-gray-6);
+  }
+
+  .topbar-filter {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 0 20px 20px 0;
+    color: var(--mw-gray-12);
+  }
+
+  /* 40px pills, 44px hit areas. */
+  .segment-link::before,
+  .topbar-filter::before {
+    content: '';
+    position: absolute;
+    inset: -2px -2px;
+  }
+
+  /* A mark that costs no width: something is filtered. */
+  .topbar-filter[data-active='true']::after {
+    content: '';
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--mw-indigo-9);
+  }
+
+  /* 44px, not 36px: the row scrolls sideways, so it clips the chips' 44px hit areas. */
+  .topbar-chips {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 44px;
+    padding: 0 20px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .topbar-chips .chip {
+    padding: 0 10px 0 12px;
+    border-radius: 16px;
+    font-size: 14px;
+  }
+
+  /* List: month headers over one-line rows. */
+  .prow-head {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    margin: 0;
+    padding: 0 20px;
+    font-size: 15px;
+    line-height: 20px;
+    font-weight: 500;
+    color: var(--mw-gray-11);
+  }
+
+  .prow-wrap {
+    contain-intrinsic-size: auto 52px;
+  }
+
+  .prow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 52px;
+    padding: 0 20px;
+  }
+
+  .prow-glyph {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+  }
+
+  .prow-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: currentcolor;
+  }
+
+  .prow .row-title {
+    display: block;
+    flex: 1;
+    min-width: 0;
+    font-size: 17px;
+    line-height: 22px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--mw-gray-12);
+  }
+
+  .prow[data-superseded] .row-title {
+    color: var(--mw-gray-11);
+  }
+
+  .prow-end {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--mw-gray-11);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .prow .row-mark,
+  .prow .row-versions {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    margin: 0;
+    color: var(--mw-gray-11);
+  }
+
+  .prow-glyph-bar {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+  }
+
+  /* Touch has no hover: a press tints the row at once, the tint fades out on release. */
+  .list-scroll .prow:hover {
+    background: none;
+  }
+
+  .list-scroll .prow:active {
+    background: var(--mw-gray-3);
+    transition-duration: 0ms;
+  }
+
+  .list-scroll .prow[aria-current='true'] {
+    background: var(--mw-indigo-3);
+  }
+
+  /* Floating bar: a Search capsule and a round Upload button over the list. */
+  .bottombar {
+    position: fixed;
+    right: 16px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    left: 16px;
+    z-index: 20;
+    display: flex;
+    gap: 12px;
+    transition:
+      opacity var(--t-menu) var(--ease-out),
+      transform var(--t-menu) var(--ease-out);
+  }
+
+  /* A veil under the bar: rows fade out before they reach it, so nothing shows between the
+   * capsule and the button. It ignores touches and takes no layout. */
+  .bottombar::before {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    height: calc(var(--bottombar-top) + 24px);
+    background: linear-gradient(to bottom, transparent, var(--mw-gray-1) 55%);
+    pointer-events: none;
+    content: '';
+  }
+
+  .bottombar[data-hidden] {
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(16px);
+    pointer-events: none;
+    transition:
+      opacity var(--t-menu) var(--ease-out),
+      transform var(--t-menu) var(--ease-out),
+      visibility 0s linear var(--t-menu);
+  }
+
+  .bottombar-search,
+  .bottombar-upload {
+    height: var(--bottombar);
+    border-radius: 28px;
+    background: color-mix(in srgb, var(--mw-gray-2) 85%, transparent);
+    box-shadow: var(--shadow);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    color: var(--mw-gray-12);
+    transition: transform var(--t-press) var(--ease-out);
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+  }
+
+  .bottombar-search {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    padding: 0 20px;
+    font-size: 17px;
+    color: var(--mw-gray-11);
+  }
+
+  .bottombar-upload {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: var(--bottombar);
+  }
+
+  .bottombar-search:active,
+  .bottombar-upload:active,
+  .segment-link:active,
+  .topbar-more:active {
+    transform: scale(0.97);
+  }
+
+  .segment-link,
+  .topbar-more {
+    transition:
+      background-color 80ms var(--ease),
+      transform var(--t-press) var(--ease-out);
+  }
+
+  .toast {
+    bottom: calc(var(--bottombar-top) + 12px);
+  }
+}
+
+/* Keys never squeeze; reduced motion only fades. */
+html[data-input='keyboard'] .bottombar-search:active,
+html[data-input='keyboard'] .bottombar-upload:active,
+html[data-input='keyboard'] .segment-link:active,
+html[data-input='keyboard'] .topbar-more:active {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bottombar-search:active,
+  .bottombar-upload:active,
+  .segment-link:active,
+  .topbar-more:active,
+  .bottombar[data-hidden] {
+    transform: none;
+  }
+
+  .menu-switch::after {
+    transition: none;
+  }
+}
+
+/* Touch targets: 44px menu rows, 44px hit area behind the status pill. */
+@media (pointer: coarse), (max-width: 859px) {
+  .menu-item {
+    height: 44px;
+  }
+
+  .menu-label {
+    height: 28px;
+  }
+
+  .menu-download {
+    width: 44px;
+    height: 44px;
+  }
+
+  .pill-button {
+    min-width: 44px;
+    height: 44px;
+    border-radius: var(--radius-2);
+  }
+
+  .chip {
+    height: 32px;
+  }
+
+  .chip::before {
+    inset: -6px -3px;
+  }
+
+  .pane-back {
+    width: 44px;
+    height: 44px;
+  }
+
+  .result {
+    height: 56px;
+  }
+}

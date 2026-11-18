@@ -1,0 +1,27 @@
+:root {
+  --mw-gray-1: #fcfcfc;
+  --mw-gray-2: #f9f9f9;
+  --mw-gray-3: #f0f0f0;
+  --mw-gray-4: #e8e8e8;
+  --mw-gray-5: #e0e0e0;
+  --mw-gray-6: #d9d9d9;
+  --mw-gray-7: #cecece;
+  --mw-gray-8: #bbb;
+  --mw-gray-9: #8d8d8d;
+  --mw-gray-10: #838383;
+  --mw-gray-11: #646464;
+  --mw-gray-12: #202020;
+  --mw-indigo-1: #fdfdfe;
+  --mw-indigo-2: #f7f9ff;
+  --mw-indigo-3: #edf2fe;
+  --mw-indigo-4: #e1e9ff;
+  --mw-indigo-5: #d2deff;
+  --mw-indigo-6: #c1d0ff;
+  --mw-indigo-7: #abbdf9;
+  --mw-indigo-8: #8da4ef;
+  --mw-indigo-9: #3e63dd;
+  --mw-indigo-10: #3358d4;
+  --mw-indigo-11: #3a5bc7;
+  --mw-indigo-12: #1f2d5c;
+  --mw-contrast: #fff;
+}

@@ -1,0 +1,184 @@
+.taxonomy {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 8px 8px;
+}
+
+.tag-head {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 28px;
+  padding: 0 0 0 8px;
+  color: var(--mw-gray-11);
+  font-size: 11px;
+}
+
+.tag-head:not(:first-child) {
+  margin-top: 12px;
+}
+
+.tag-head-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.tag-head-action {
+  height: 24px;
+  padding: 0 4px;
+  border-radius: var(--radius-1);
+  color: var(--mw-gray-11);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.tag-head-add {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-1);
+  color: var(--mw-gray-11);
+}
+
+.tag-head-action:hover,
+.tag-head-add:hover {
+  background: var(--mw-gray-4);
+  color: var(--mw-gray-12);
+}
+
+.tag-subhead {
+  display: flex;
+  align-items: flex-end;
+  height: 32px;
+  padding: 0 8px 4px;
+  color: var(--mw-gray-11);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.tag-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 28px;
+  align-items: center;
+  border-radius: var(--radius-1);
+}
+
+.tag-row:hover,
+.tag-row:focus-within {
+  background: var(--mw-gray-4);
+}
+
+.tag-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  height: 32px;
+  padding: 0 4px 0 8px;
+  border-radius: var(--radius-1);
+  color: var(--mw-gray-11);
+  text-align: left;
+}
+
+.tag-toggle[aria-pressed='true'] {
+  background: var(--mw-gray-5);
+  color: var(--mw-gray-12);
+}
+
+.tag-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tag-count {
+  min-width: 20px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.glyph {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+}
+
+.tag-more {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-1);
+  color: var(--mw-gray-11);
+  opacity: 0;
+}
+
+.tag-row:hover .tag-more,
+.tag-more:focus-visible,
+.tag-more[aria-expanded='true'] {
+  opacity: 1;
+}
+
+.tag-more:hover {
+  background: var(--mw-gray-5);
+  color: var(--mw-gray-12);
+}
+
+/* The rail scrolls here; the upload button stays at the bottom. */
+.rail-topics {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+/* Touch: 44px rows and targets. The edit button is always there. */
+@media (pointer: coarse), (max-width: 859px) {
+  .tag-row {
+    grid-template-columns: minmax(0, 1fr) 44px;
+  }
+
+  .tag-toggle {
+    height: 44px;
+  }
+
+  .tag-more {
+    width: 44px;
+    height: 44px;
+    opacity: 1;
+  }
+
+  .tag-head {
+    height: 44px;
+  }
+
+  .tag-head-action {
+    height: 44px;
+    padding: 0 8px;
+  }
+
+  .tag-head-add {
+    width: 44px;
+    height: 44px;
+  }
+
+  .tag-subhead {
+    height: 44px;
+  }
+}
+
+.taxonomy-menu {
+  width: min(320px, calc(100vw - 24px));
+}

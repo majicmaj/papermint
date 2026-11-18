@@ -1,0 +1,20 @@
+/*
+ * Installed window (Chrome/Edge window controls overlay): the OS title bar is gone and the
+ * toolbar is the title bar. Empty toolbar space drags the window; every control opts out.
+ * The offsets come from --tb-x, --tb-w and --tb-right (see base.css), so a normal tab and an
+ * installed window use the same rules.
+ */
+.rail-bar,
+.list-head,
+.pane-head {
+  app-region: drag;
+  -webkit-app-region: drag;
+  user-select: none;
+}
+
+.rail-bar :is(button, a, input, select, textarea, [role='button']),
+.list-head :is(button, a, input, select, textarea, [role='button'], .menu),
+.pane-head :is(button, a, input, select, textarea, [role='button'], .menu) {
+  app-region: no-drag;
+  -webkit-app-region: no-drag;
+}

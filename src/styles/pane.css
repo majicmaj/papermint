@@ -1,0 +1,227 @@
+.pane-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  background: var(--mw-gray-2);
+}
+
+.pane-empty {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: var(--mw-gray-11);
+  opacity: 0.3;
+}
+
+.pane-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: none;
+  height: var(--head);
+  padding: 0 12px 0 20px;
+  background: var(--mw-gray-1);
+  border-bottom: 1px solid var(--mw-gray-6);
+}
+
+.pane-back {
+  display: none;
+}
+
+.pane-title {
+  /* The title keeps a readable width: actions leave the toolbar before it is squeezed. */
+  flex: 1 1 120px;
+  min-width: 120px;
+}
+
+.pane-title h1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+/* One fixed-height line of facts across the top of the pane body. What does not fit leaves
+ * whole (meta-fit.ts marks it data-dropped); nothing is cut in half. */
+.pane-metarow {
+  display: flex;
+  align-items: center;
+  flex: none;
+  height: var(--meta);
+  padding: 0 20px;
+  background: var(--mw-gray-1);
+  border-bottom: 1px solid var(--mw-gray-6);
+}
+
+.pane-meta {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  height: 16px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--mw-gray-11);
+  white-space: nowrap;
+}
+
+.pane-meta > [data-dropped] {
+  position: absolute;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.pane-topic {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.pane-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+}
+
+.pane-actions--mobile {
+  display: none;
+}
+
+.pill-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 28px;
+  padding: 0 4px 0 0;
+  border-radius: 14px;
+  color: var(--mw-gray-11);
+}
+
+.pill-button:hover {
+  background: var(--mw-gray-4);
+}
+
+.pane-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  background: var(--mw-gray-2);
+  overflow: hidden;
+}
+
+/* The preview fills what is left under the meta line. */
+.pane-view {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+.preview-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: var(--mw-gray-2);
+}
+
+.preview-image {
+  position: absolute;
+  inset: 0;
+  padding: 24px;
+}
+
+/* The image box fills the pane from the first paint, so decoding never moves anything. */
+.preview-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.preview-scroll {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.preview-text {
+  margin: 0;
+  max-width: 92ch;
+  padding: 28px 32px 48px;
+  font: 400 13px/21px var(--mono);
+  color: var(--mw-gray-12);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.pane {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.pane-status {
+  display: flex;
+  align-items: center;
+  flex: none;
+  min-width: 0;
+}
+
+.pane-version {
+  color: var(--mw-gray-12);
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pane--terminal .pane-back {
+  display: inline-flex;
+}
+
+.preview-failed {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--mw-gray-11);
+}
+
+/* Same 20px line as the real title, so the title never moves when it arrives. */
+.pane-skeleton {
+  display: flex;
+  align-items: center;
+  height: 20px;
+}
+
+/* Items keep their width. Only the version label, then the status link, may shrink, and only
+ * when they alone are wider than the line. The date never does. */
+.pane-meta > * {
+  flex: none;
+}
+
+.pane-meta > .pane-version {
+  flex: 0 1000 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pane-link {
+  color: var(--mw-gray-12);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}

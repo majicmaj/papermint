@@ -1,0 +1,452 @@
+/* The phone's filter sheet (src/mobile/filter-sheet): a menu of filter kinds in one inset grouped
+ * list, and a page per kind in the same sheet. Rows are 56px in the menu and 52px on a page.
+ * Pages slide with the drawer curve (transform and opacity only); a key moves them at once
+ * (motion.css); reduced motion fades them. */
+.fs-stage {
+  --fs-max: calc(88dvh - 32px);
+  --fs-slide: 280ms;
+
+  position: relative;
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  font-size: 17px;
+  line-height: 22px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fs-page {
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--fs-bg);
+  transform: translate3d(0, 0, 0);
+  transition:
+    transform var(--fs-slide) var(--ease-drawer),
+    opacity var(--fs-slide) var(--ease-drawer);
+}
+
+/* The page that leaves is out of the layout at once: the new page takes its place. */
+.fs-page[data-leave] {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Forward: the menu drifts left and dims under the page that comes in from the right. */
+.fs-page[data-leave='forward'] {
+  opacity: 0;
+  transform: translate3d(-25%, 0, 0);
+}
+
+/* Back: the page goes out to the right, above the menu that comes back. */
+.fs-page[data-leave='back'] {
+  z-index: 1;
+  transform: translate3d(100%, 0, 0);
+}
+
+@starting-style {
+  .fs-page[data-enter='forward'] {
+    transform: translate3d(100%, 0, 0);
+  }
+
+  .fs-page[data-enter='back'] {
+    opacity: 0;
+    transform: translate3d(-25%, 0, 0);
+  }
+}
+
+.fs-body {
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Headers: where a drag may start, so the browser must not scroll there. */
+.fs-head {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 12px;
+  touch-action: none;
+}
+
+.fs-top {
+  height: 48px;
+  margin-top: 4px;
+  padding: 0 20px;
+}
+
+.fs-subhead {
+  height: 56px;
+  padding: 0 20px;
+}
+
+.fs-search {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  height: 48px;
+  padding: 0 18px;
+  border-radius: 24px;
+  background: var(--fs-control);
+  color: var(--mw-gray-11);
+  cursor: text;
+}
+
+.fs-search:focus-within {
+  box-shadow: inset 0 0 0 1px var(--mw-gray-7);
+}
+
+.fs-search input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: none;
+  color: var(--mw-gray-12);
+  font: inherit;
+  font-size: 17px;
+}
+
+.fs-search input::placeholder {
+  color: var(--mw-gray-11);
+  opacity: 1;
+}
+
+.fs-round {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--fs-control);
+  color: var(--mw-gray-12);
+}
+
+.fs-close {
+  width: 48px;
+  height: 48px;
+}
+
+.fs-title {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  font-size: 17px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fs-clear {
+  height: 44px;
+  margin-right: -12px;
+  padding: 0 12px;
+  border-radius: 22px;
+  color: var(--mw-gray-12);
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.fs-label {
+  display: flex;
+  align-items: center;
+  height: 20px;
+  margin: 24px 20px 10px;
+  color: var(--mw-gray-11);
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.fs-page[data-page='menu'] .fs-section:first-child .fs-label {
+  margin-top: 30px;
+}
+
+/* A page's body starts close under its header; a label right under the actions too. */
+.fs-subhead + .fs-body {
+  padding-top: 8px;
+}
+
+.fs-actions + .fs-section .fs-label {
+  margin-top: 8px;
+}
+
+.fs-actions {
+  display: flex;
+  gap: 16px;
+  padding: 4px 20px 8px;
+}
+
+.fs-action {
+  height: 44px;
+  padding: 0 4px;
+  color: var(--mw-gray-11);
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.fs-group {
+  margin: 0 16px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--fs-group);
+}
+
+/* One row. The separator sits on the row below, inset to the text. */
+.fs-row {
+  --inset: 16px;
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  height: 52px;
+  padding: 0 16px;
+  color: var(--mw-gray-12);
+  font: inherit;
+  text-align: left;
+  transition: background-color var(--t-hover) ease;
+  user-select: none;
+}
+
+.fs-page[data-page='menu'] .fs-row {
+  height: 56px;
+}
+
+.fs-nav,
+.fs-toggle,
+.fs-tag {
+  --inset: 52px;
+}
+
+.fs-row + .fs-row::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: var(--inset);
+  height: 1px;
+  background: var(--fs-line);
+}
+
+/* Press: the tint is there at once and fades out (motion plan, press). */
+button.fs-row:active,
+label.fs-row:active,
+.fs-tag-toggle:active {
+  background: var(--fs-press);
+  transition-duration: 0ms;
+}
+
+.fs-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  color: var(--mw-gray-11);
+}
+
+.fs-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fs-summary {
+  flex: 0 1 auto;
+  max-width: 50%;
+  overflow: hidden;
+  color: var(--mw-gray-11);
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fs-chevron {
+  display: grid;
+  flex: none;
+  margin-right: -4px;
+  color: var(--mw-gray-11);
+}
+
+.fs-mark {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  color: var(--mw-gray-12);
+}
+
+/* Areas and topics: the toggle fills the row, the edit button sits at its end. */
+.fs-tag {
+  gap: 0;
+  padding: 0;
+}
+
+.fs-tag-toggle {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  height: 100%;
+  padding: 0 12px 0 16px;
+  font: inherit;
+  text-align: left;
+  transition: background-color var(--t-hover) ease;
+}
+
+.fs-tag .glyph {
+  width: 20px;
+  height: 20px;
+}
+
+.fs-tag .glyph .icon {
+  width: 20px;
+  height: 20px;
+}
+
+.fs-tag .glyph .dot {
+  width: 10px;
+  height: 10px;
+}
+
+.fs-more {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-right: 4px;
+  border-radius: 50%;
+  color: var(--mw-gray-11);
+}
+
+/* Only a chosen row carries a mark, as in a native list. The slot keeps its width either way. */
+.fs-tick {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  color: var(--mw-gray-12);
+}
+
+/* A switch: the thumb slides by transform, the track tints. */
+.fs-switch {
+  position: relative;
+  flex: none;
+  width: 51px;
+  height: 31px;
+  margin: 0;
+  border-radius: 16px;
+  background: var(--mw-gray-5);
+  box-shadow: inset 0 0 0 1px var(--mw-gray-6);
+  cursor: pointer;
+  transition: background-color var(--t-menu) ease;
+  appearance: none;
+}
+
+.fs-switch::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  background: var(--mw-contrast);
+  box-shadow: 0 2px 4px color-mix(in srgb, var(--mw-gray-12) 24%, transparent);
+  transition: transform var(--t-menu) var(--ease-out);
+}
+
+.fs-switch:checked {
+  background: var(--mw-indigo-9);
+  box-shadow: none;
+}
+
+.fs-switch:checked::before {
+  transform: translate3d(20px, 0, 0);
+}
+
+.fs-field {
+  cursor: text;
+}
+
+.fs-input {
+  flex: 0 1 172px;
+  min-width: 0;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: none;
+  color: var(--mw-gray-12);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.fs-input::placeholder {
+  color: var(--mw-gray-11);
+  opacity: 1;
+}
+
+.fs-input[data-empty]::-webkit-datetime-edit {
+  color: var(--mw-gray-11);
+}
+
+.fs-input::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
+.fs-unit {
+  flex: none;
+  color: var(--mw-gray-11);
+  font-size: 15px;
+}
+
+.fs-empty {
+  margin: 32px 20px;
+  color: var(--mw-gray-11);
+  font-size: 15px;
+  text-align: center;
+}
+
+/* Reduced motion: pages cross-fade in place. */
+@media (prefers-reduced-motion: reduce) {
+  .fs-page {
+    transition: opacity var(--t-menu) ease;
+  }
+
+  .fs-page[data-leave='forward'],
+  .fs-page[data-leave='back'] {
+    opacity: 0;
+    transform: none;
+  }
+
+  @starting-style {
+    .fs-page[data-enter='forward'],
+    .fs-page[data-enter='back'] {
+      opacity: 0;
+      transform: none;
+    }
+  }
+}

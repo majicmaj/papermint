@@ -1,0 +1,201 @@
+.list-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  border-right: 1px solid var(--mw-gray-6);
+}
+
+.list-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  height: var(--head);
+  padding: 0 12px;
+  overflow: visible;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--mw-gray-6);
+}
+
+.list-head::-webkit-scrollbar {
+  display: none;
+}
+
+.chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  height: 28px;
+  padding: 0 10px 0 8px;
+  border-radius: 14px;
+  background: var(--mw-gray-3);
+  color: var(--mw-gray-11);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.chip:hover {
+  background: var(--mw-gray-4);
+}
+
+.chip[aria-pressed='true'] {
+  background: var(--mw-indigo-4);
+  color: var(--mw-gray-12);
+}
+
+.list-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.row-wrap {
+  position: relative;
+  /* Long lists: rows off screen are not laid out or painted. A row is a fixed height, so one
+   * entering the viewport changes nothing around it. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto var(--row);
+}
+
+.row {
+  display: grid;
+  grid-template-rows: 20px 20px;
+  align-content: center;
+  gap: 2px;
+  height: var(--row);
+  padding: 0 44px 0 16px;
+  min-width: 0;
+}
+
+.row:hover {
+  background: var(--mw-gray-3);
+}
+
+.row[aria-current='true'] {
+  background: var(--mw-indigo-3);
+}
+
+.row[aria-current='true'] .pill {
+  background: var(--mw-indigo-1);
+}
+
+.row-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.row-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  font-size: 12px;
+  color: var(--mw-gray-11);
+}
+
+.row-date {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.row-toggle {
+  position: absolute;
+  top: 0;
+  right: 8px;
+  height: var(--row);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0 6px;
+  color: var(--mw-gray-11);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.row-toggle:hover {
+  color: var(--mw-gray-12);
+}
+
+.row--download {
+  position: relative;
+}
+
+.row-action {
+  position: absolute;
+  right: 20px;
+  top: 0;
+  height: var(--row);
+  display: flex;
+  align-items: center;
+  color: var(--mw-gray-11);
+}
+
+.row--upload[data-phase='failed'] {
+  color: var(--mw-gray-11);
+}
+
+.progress {
+  width: 120px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--mw-gray-4);
+  overflow: hidden;
+}
+
+.progress-fill {
+  display: block;
+  height: 100%;
+  background: var(--mw-gray-9);
+  transition: width 120ms linear;
+}
+
+.progress-fill[data-filing='true'] {
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.list-empty {
+  display: grid;
+  place-items: center;
+  height: var(--row);
+  color: var(--mw-gray-11);
+}
+
+.row-versions {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The chip stays 28px tall; its hit area is 44px. */
+.chip::before {
+  content: '';
+  position: absolute;
+  inset: -8px -3px;
+}
+
+.successor {
+  position: absolute;
+  left: 16px;
+  bottom: 7px;
+  max-width: calc(100% - 32px);
+  background: var(--mw-gray-1);
+  font-size: 12px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.successor a {
+  color: var(--mw-gray-12);
+  text-decoration: underline;
+}

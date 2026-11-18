@@ -1,0 +1,323 @@
+/* Motion. One file for the tokens and every transition that is not a layout rule.
+ * Only transform and opacity move (a tint or a color may fade). Nothing here changes a size or a
+ * position, so no animation can shift the page. Keyboard actions never animate: the root carries
+ * data-input="keyboard" after a key press and data-input="pointer" after a press or a tap. */
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --t-press: 120ms;
+  --t-hover: 100ms;
+  --t-menu: 160ms;
+  --t-swap: 160ms;
+  --t-pane: 220ms;
+  --t-panel: 220ms;
+  --t-toast: 400ms;
+  --t-drawer: 500ms;
+}
+
+/* Press: the interface heard you. Rows get a tint, buttons get a 3% squeeze. */
+.btn,
+.chip,
+.tab,
+.search-field,
+.pill-button,
+.topbar-filter {
+  transition:
+    background-color 80ms var(--ease),
+    transform var(--t-press) var(--ease-out);
+}
+
+.btn:active,
+.chip:active,
+.tab:active,
+.search-field:active,
+.pill-button:active,
+.topbar-filter:active {
+  transform: scale(0.97);
+}
+
+.row {
+  transition: background-color var(--t-hover) ease;
+}
+
+.row:active {
+  background: var(--mw-gray-4);
+  transition-duration: 0ms;
+}
+
+/* The status dot: a new status fades its color in place. */
+.dot {
+  transition: background-color var(--t-swap) ease;
+}
+
+/* A new status settles in (WAAPI, src/motion/change.ts). The pill grows from its left edge. */
+.pill-morph {
+  display: inline-flex;
+  transform-origin: left center;
+}
+
+/* Menus and popovers grow out of their trigger. Entry only: the exit is instant. */
+.menu,
+.editor-pop {
+  transition:
+    opacity var(--t-menu) var(--ease-out),
+    transform var(--t-menu) var(--ease-out);
+  transform-origin: top right;
+}
+
+.list-head .menu,
+.intake .menu,
+.tag-menu,
+.editor-pop {
+  transform-origin: top left;
+}
+
+.menu--up {
+  transform-origin: bottom right;
+}
+
+@starting-style {
+  .menu,
+  .editor-pop {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+/* A modal stays centered: it fades and settles, it does not grow from a trigger. */
+.dialog,
+.dialog-scrim {
+  transition:
+    opacity var(--t-pane) var(--ease-out),
+    transform var(--t-pane) var(--ease-out);
+}
+
+@starting-style {
+  .dialog-scrim {
+    opacity: 0;
+  }
+
+  .dialog {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+/* The palette opens from a click or a tap. From a key it opens at once. */
+.palette,
+.palette-scrim {
+  transition:
+    opacity var(--t-menu) var(--ease-out),
+    transform var(--t-menu) var(--ease-out);
+}
+
+.palette {
+  transform-origin: top center;
+}
+
+@starting-style {
+  .palette-scrim {
+    opacity: 0;
+  }
+
+  .palette {
+    opacity: 0;
+    transform: scale(0.98) translateY(-6px);
+  }
+}
+
+/* The filing form rises into place. */
+.intake {
+  transition:
+    opacity var(--t-panel) var(--ease-out),
+    transform var(--t-panel) var(--ease-out);
+}
+
+@starting-style {
+  .intake {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.dropzone {
+  transition: opacity var(--t-menu) var(--ease-out);
+}
+
+@starting-style {
+  .dropzone {
+    opacity: 0;
+  }
+}
+
+/* The toast uses the individual translate property: its centering transform stays untouched. */
+.toast {
+  translate: 0 0;
+  transition:
+    opacity var(--t-toast) ease,
+    translate var(--t-toast) ease;
+}
+
+.toast[data-state='closing'] {
+  opacity: 0;
+  translate: 0 16px;
+  transition-duration: 240ms;
+}
+
+@starting-style {
+  .toast {
+    opacity: 0;
+    translate: 0 100%;
+  }
+}
+
+/* Keyboard actions: no motion, ever. Every transition on the page stops while the keyboard is
+ * the last input: menus, the palette, dialogs, the drawer and the sheet, the toast, the intake
+ * form, rows, buttons. A new rule can never forget one. The drawer rules above carry the
+ * [data-state] attribute for specificity; `!important` here is the one way to beat all of them.
+ * Looping progress and skeleton pulses are animations, not transitions, and keep running. */
+html[data-input='keyboard'] *,
+html[data-input='keyboard'] *::before,
+html[data-input='keyboard'] *::after {
+  transition: none !important;
+}
+
+/* A key press on a button is not squeezed either. */
+html[data-input='keyboard'] .btn:active,
+html[data-input='keyboard'] .chip:active,
+html[data-input='keyboard'] .tab:active,
+html[data-input='keyboard'] .search-field:active,
+html[data-input='keyboard'] .pill-button:active,
+html[data-input='keyboard'] .topbar-filter:active {
+  transform: none;
+}
+
+/* Cross-fades between two states of the page (View Transitions). The root carries
+ * data-vt while one runs, so a named element is drawn as a group only then. */
+/* The desktop shell lays the pane out as cells of one grid (the pane column itself has no box),
+ * so the two cells that make the pane carry the name: the header and the body. */
+html[data-vt='pane'] .pane-head {
+  view-transition-name: record-head;
+}
+
+html[data-vt='pane'] .pane-body {
+  view-transition-name: record-pane;
+}
+
+html[data-vt='results'] .list-scroll {
+  view-transition-name: results;
+}
+
+::view-transition-group(root) {
+  animation-duration: var(--t-swap);
+  animation-timing-function: var(--ease-out);
+}
+
+::view-transition-group(results) {
+  animation-duration: var(--t-swap);
+  animation-timing-function: var(--ease-out);
+}
+
+::view-transition-group(record-pane),
+::view-transition-group(record-head) {
+  animation-duration: var(--t-pane);
+  animation-timing-function: var(--ease-out);
+}
+
+::view-transition-old(record-pane),
+::view-transition-old(record-head) {
+  animation: vt-pane-out var(--t-swap) var(--ease-out) both;
+}
+
+::view-transition-new(record-pane),
+::view-transition-new(record-head) {
+  animation: vt-pane-in var(--t-pane) var(--ease-out) both;
+}
+
+@keyframes vt-pane-in {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+}
+
+@keyframes vt-pane-out {
+  to {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+}
+
+@keyframes vt-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+/* Reduced motion: fewer and gentler. Opacity and color stay, movement goes. */
+@media (prefers-reduced-motion: reduce) {
+  .btn:active,
+  .chip:active,
+  .tab:active,
+  .search-field:active,
+  .pill-button:active,
+  .topbar-filter:active {
+    transform: none;
+  }
+
+  .btn,
+  .chip,
+  .tab,
+  .search-field,
+  .pill-button,
+  .topbar-filter {
+    transition: background-color 80ms var(--ease);
+  }
+
+  .menu,
+  .editor-pop,
+  .dialog,
+  .palette,
+  .intake {
+    transition: opacity var(--t-menu) var(--ease-out);
+  }
+
+  .toast {
+    transition: opacity var(--t-menu) ease;
+  }
+
+  .toast[data-state='closing'] {
+    translate: 0 0;
+  }
+
+  @starting-style {
+    .menu,
+    .editor-pop,
+    .dialog,
+    .palette,
+    .intake {
+      transform: none;
+    }
+
+    .toast {
+      translate: 0 0;
+    }
+  }
+
+  ::view-transition-old(record-pane),
+  ::view-transition-old(record-head) {
+    animation: vt-fade-out var(--t-menu) ease both;
+  }
+
+  ::view-transition-new(record-pane),
+  ::view-transition-new(record-head) {
+    animation: vt-fade-in var(--t-menu) ease both;
+  }
+}

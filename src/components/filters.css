@@ -1,0 +1,115 @@
+.filter-panel {
+  display: grid;
+  gap: 8px;
+  width: 360px;
+  padding: 8px;
+  color: var(--mw-gray-11);
+}
+
+.fp-row {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+
+.fp-dates {
+  grid-template-columns: 76px minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.fp-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px;
+}
+
+.filter-panel .field {
+  height: 28px;
+  padding: 0 8px;
+  font-size: 13px;
+}
+
+.fp-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  padding-top: 4px;
+}
+
+.fp-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  color: var(--mw-gray-12);
+}
+
+/* Menus in the toolbar open from the left edge of their button. */
+.list-head .menu {
+  right: auto;
+  left: 0;
+}
+
+.chips {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  align-self: stretch;
+  gap: 6px;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.chips::-webkit-scrollbar {
+  display: none;
+}
+
+.chips .chip--active,
+.list-head .chip--active {
+  background: var(--mw-indigo-3);
+  color: var(--mw-gray-12);
+}
+
+.list-head .chip--active:hover {
+  background: var(--mw-indigo-4);
+}
+
+.menu-host.areas-host {
+  display: none;
+}
+
+@media (max-width: 859px) {
+  /* A phone menu hangs from the toolbar edge to edge, never wider than the screen. */
+  .list-head .menu {
+    position: fixed;
+    top: calc(var(--head) + 4px);
+    left: 12px;
+    max-width: calc(100vw - 24px);
+  }
+
+  .menu-host.areas-host {
+    display: inline-flex;
+  }
+
+  .filter-panel {
+    width: min(360px, calc(100vw - 24px));
+  }
+
+  .fp-check {
+    min-height: 44px;
+  }
+
+  .filter-panel .field {
+    height: 44px;
+  }
+
+  /* Narrow: the label sits above the two dates. */
+  .fp-dates {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .fp-dates > span {
+    grid-column: 1 / -1;
+  }
+}

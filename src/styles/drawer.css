@@ -1,0 +1,191 @@
+/* The bottom drawer: the filter sheet and the record sheet on a phone.
+ * It sits above the page and below the menus, dialogs and the palette. Drag physics are in
+ * src/mobile/Drawer.tsx; this file is the resting states and the two transitions. */
+.drawer-root {
+  position: fixed;
+  inset: 0;
+  z-index: 32;
+}
+
+.drawer-root[data-state='closing'] {
+  pointer-events: none;
+}
+
+.drawer-scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--scrim);
+  opacity: 1;
+  transition: opacity var(--t-drawer) var(--ease-drawer);
+}
+
+.drawer {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-radius: var(--radius-3) var(--radius-3) 0 0;
+  background: var(--mw-gray-1);
+  box-shadow: var(--shadow);
+  transform: translate3d(0, 0, 0);
+  transition: transform var(--t-drawer) var(--ease-drawer);
+  outline: 0;
+}
+
+/* Dragged past the top edge, the sheet shows no gap below it. */
+.drawer::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 48px;
+  background: inherit;
+}
+
+@starting-style {
+  .drawer-scrim {
+    opacity: 0;
+  }
+
+  .drawer {
+    transform: translate3d(0, 100%, 0);
+  }
+}
+
+/* It leaves the way it came, faster than it arrived. */
+.drawer-root[data-state='closing'] .drawer-scrim {
+  opacity: 0;
+  transition-duration: 360ms;
+}
+
+.drawer-root[data-state='closing'] .drawer {
+  transform: translate3d(0, 100%, 0);
+  transition-duration: 360ms;
+}
+
+/* The filter sheet is 88% of the screen tall and moves down by the space its page leaves free
+ * (`translate`, src/mobile/filter-sheet/useFit.ts), so a page change shifts no layout. Its pages
+ * are in filter-sheet.css. */
+.drawer--filter {
+  /* Light: gray-1 and gray-2 are both near white, so rows and fields take the control steps. */
+  --fs-bg: var(--mw-gray-1);
+  --fs-group: var(--mw-gray-3);
+  --fs-control: var(--mw-gray-4);
+  --fs-press: var(--mw-gray-5);
+  --fs-line: var(--mw-gray-5);
+
+  height: 88dvh;
+  border-radius: 28px 28px 0 0;
+  background: var(--fs-bg);
+}
+
+html[data-bs-theme='dark'] .drawer--filter {
+  --fs-group: var(--mw-gray-2);
+  --fs-control: var(--mw-gray-3);
+  --fs-press: var(--mw-gray-4);
+  --fs-line: var(--mw-gray-4);
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-bs-theme='light']) .drawer--filter {
+    --fs-group: var(--mw-gray-2);
+    --fs-control: var(--mw-gray-3);
+    --fs-press: var(--mw-gray-4);
+    --fs-line: var(--mw-gray-4);
+  }
+}
+
+.drawer--record {
+  height: calc(100dvh - 12px - env(safe-area-inset-top));
+}
+
+.drawer-grip {
+  display: grid;
+  flex: none;
+  place-items: center;
+  touch-action: none;
+}
+
+.drawer--filter .drawer-grip {
+  height: 32px;
+  align-items: start;
+  padding-top: 8px;
+}
+
+.drawer--record .drawer-grip {
+  height: 20px;
+}
+
+.drawer-bar {
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--mw-gray-7);
+}
+
+.drawer--filter .drawer-bar {
+  height: 5px;
+  border-radius: 2.5px;
+}
+
+/* Where a drag may start, the browser must not scroll. */
+.drawer .pane-head {
+  touch-action: none;
+}
+
+.drawer .pane {
+  flex: 1;
+  height: auto;
+}
+
+.keyboard-proxy {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+  font-size: 16px;
+}
+
+/* Reduced motion: the sheet fades in and out instead of travelling. A drag stays direct, and a
+ * drag that dismisses finishes its slide, because the finger already moved the sheet. */
+@media (prefers-reduced-motion: reduce) {
+  .drawer {
+    transition:
+      opacity var(--t-menu) ease,
+      transform var(--t-menu) ease;
+  }
+
+  .drawer-root[data-state='closing'] .drawer {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+    transition-duration: var(--t-menu);
+  }
+
+  .drawer-root[data-release='drag'][data-state='closing'] .drawer {
+    opacity: 1;
+    transform: translate3d(0, 100%, 0);
+    transition: transform var(--t-menu) ease;
+  }
+
+  @starting-style {
+    .drawer {
+      opacity: 0;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  .drawer-root[data-state='closing'] .drawer-scrim {
+    transition-duration: var(--t-menu);
+  }
+
+  .drawer-scrim {
+    transition-duration: var(--t-menu);
+  }
+}

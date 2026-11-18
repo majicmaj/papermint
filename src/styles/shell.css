@@ -1,0 +1,330 @@
+/* Column layout: drag handles, the wide list when nothing is selected, recovery files. */
+
+.handle {
+  position: absolute;
+  z-index: 15;
+  top: 0;
+  bottom: 0;
+  width: 9px;
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.handle::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 4px;
+  width: 1px;
+  background: transparent;
+}
+
+.handle:hover::after,
+.handle:focus-visible::after,
+.handle[data-active='true']::after {
+  left: 3px;
+  width: 3px;
+  background: var(--mw-gray-8);
+}
+
+.handle:focus-visible {
+  outline: 0;
+}
+
+.handle--rail {
+  left: calc(var(--rail-w) - 4px);
+}
+
+.handle--list {
+  left: calc(var(--rail-w) + var(--list-w) - 4px);
+}
+
+/* The view name and count, first in the list's toolbar cell. Phones use their own bars. */
+.list-title {
+  display: none;
+}
+
+/* One 44px toolbar row across all three columns. Each column's header is a cell of it. */
+@media (min-width: 860px) {
+  .shell {
+    grid-template-rows: var(--bar) minmax(0, 1fr);
+  }
+
+  .rail,
+  .list-col,
+  .pane-col,
+  .pane {
+    display: contents;
+  }
+
+  .rail-bar,
+  .list-head,
+  .pane-head {
+    height: var(--bar);
+    border-bottom: 1px solid var(--mw-gray-6);
+  }
+
+  .rail-bar {
+    grid-area: 1 / 1;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+    padding: 0 8px 0 calc(var(--tb-x) + 8px);
+    background: var(--mw-gray-2);
+    border-right: 1px solid var(--mw-gray-6);
+  }
+
+  .rail-body {
+    grid-area: 2 / 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    background: var(--mw-gray-2);
+    border-right: 1px solid var(--mw-gray-6);
+  }
+
+  .list-head {
+    grid-area: 1 / 2;
+    padding-top: 0;
+    padding-bottom: 0;
+    background: var(--mw-gray-1);
+    border-right: 1px solid var(--mw-gray-6);
+  }
+
+  .list-title {
+    display: flex;
+    flex: none;
+    align-items: baseline;
+    gap: 8px;
+    width: 124px;
+    padding-left: 4px;
+    font-weight: 600;
+  }
+
+  .list-count {
+    min-width: 3ch;
+    color: var(--mw-gray-11);
+    font-size: 12px;
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .list-scroll {
+    grid-area: 2 / 2;
+    border-right: 1px solid var(--mw-gray-6);
+  }
+
+  .pane-head {
+    grid-area: 1 / 3;
+    padding-right: calc(12px + var(--tb-right));
+  }
+
+  .pane-body {
+    grid-area: 2 / 3;
+  }
+
+  /* The last cell of the toolbar keeps clear of the window buttons on the right. */
+  .shell[data-pane='list'] .list-head {
+    padding-right: calc(12px + var(--tb-right));
+    border-right: 0;
+  }
+
+  .shell[data-pane='list'] .list-scroll {
+    border-right: 0;
+  }
+
+  /* Handles never cover the toolbar: empty toolbar space only drags, and double-click does nothing. */
+  .handle {
+    top: var(--bar);
+  }
+
+  .intake {
+    top: calc(var(--bar) + 8px);
+  }
+
+  /* A folded sidebar: the list starts at the left edge, the button floats where it was. */
+  html[data-rail-collapsed] .rail-body,
+  html[data-rail-collapsed] .handle--rail {
+    display: none;
+  }
+
+  html[data-rail-collapsed] .rail-bar {
+    position: absolute;
+    z-index: 12;
+    top: 0;
+    left: 0;
+    width: calc(var(--tb-x) + 52px);
+    padding-right: 0;
+    background: none;
+    border: 0;
+  }
+
+  html[data-rail-collapsed] .list-head {
+    padding-left: calc(var(--tb-x) + 56px);
+  }
+}
+
+/* With no record selected the list takes the whole width and the pane is gone. */
+@media (min-width: 860px) {
+  .shell[data-pane='list'] {
+    grid-template-columns: var(--rail-w) minmax(0, 1fr);
+  }
+
+  .shell[data-pane='list'] .pane-col {
+    display: none;
+  }
+
+  .shell[data-pane='list'] .list-col {
+    border-right: 0;
+  }
+}
+
+/* Recovery rows: the row opens the file, the icon downloads it. */
+.row--file {
+  padding-right: 60px;
+}
+
+.row-download {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+@media (pointer: coarse), (max-width: 859px) {
+  .row-download {
+    top: 6px;
+    width: 44px;
+    height: 44px;
+  }
+}
+
+.file-card {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  color: var(--mw-gray-11);
+  text-align: center;
+}
+
+.file-card-name {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  color: var(--mw-gray-12);
+  font-weight: 600;
+}
+
+.file-card-meta {
+  display: flex;
+  gap: 10px;
+  min-height: 20px;
+  font-size: 12px;
+}
+
+/* Phones have fixed columns: there is nothing to drag. */
+@media (max-width: 859px) {
+  .handle {
+    display: none;
+  }
+}
+
+/* The offline dot. Its slot is always there, so it appearing moves nothing. */
+.sync-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin-left: 4px;
+  border-radius: 50%;
+  visibility: hidden;
+}
+
+.sync-dot[data-state='offline'] {
+  visibility: visible;
+  background: var(--mw-gray-11);
+}
+
+/* The record toolbar gives up Copy link, then Versions, then Download's label, as the pane
+ * narrows. Each moves into the ⋯ menu. The level comes from the pane's width (pane-width.ts). */
+.pane-titleline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.pane-titleline h1 {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.pane-titleline .marks {
+  flex: none;
+}
+
+/* Status context in the meta line. Its menu opens below, so the line never clips. */
+.pane-meta > .marks {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.pane-meta > .marks:empty {
+  display: none;
+}
+
+.pane-meta .marks-replaces {
+  height: 16px;
+  padding: 0 4px;
+}
+
+.pane-meta .successor {
+  display: inline-flex;
+  gap: 4px;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.pane-meta .successor a {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  color: var(--mw-gray-12);
+}
+
+.menu-collapsed {
+  display: none;
+}
+
+.pane:not([data-bar='full']) .pane-actions--desktop .btn-copy,
+.pane:is([data-bar='tight'], [data-bar='icon']) .pane-actions--desktop .menu-host--versions {
+  display: none;
+}
+
+.pane[data-bar='icon'] .pane-actions--desktop .btn--primary {
+  width: 36px;
+  padding: 0;
+}
+
+.pane[data-bar='icon'] .pane-actions--desktop .btn-label {
+  display: none;
+}
+
+.pane:not([data-bar='full']) .menu-item.menu-collapsed--copy {
+  display: flex;
+}
+
+.pane:not([data-bar='full']) .menu-sep.menu-collapsed--copy {
+  display: block;
+}
+
+.pane:is([data-bar='tight'], [data-bar='icon']) .menu-collapsed--versions {
+  display: block;
+}

@@ -1,0 +1,147 @@
+.palette-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 12vh;
+  background: var(--scrim);
+}
+
+/* Fixed height: the number of results never resizes the panel. */
+.palette {
+  display: flex;
+  flex-direction: column;
+  width: min(580px, calc(100vw - 24px));
+  height: min(472px, calc(100dvh - 24px));
+  border-radius: var(--radius-3);
+  background: var(--mw-gray-1);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.palette-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+  height: 52px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--mw-gray-6);
+  color: var(--mw-gray-11);
+}
+
+.palette-input input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  outline: 0;
+  background: none;
+  color: var(--mw-gray-12);
+  font: 400 16px/24px var(--font);
+}
+
+.palette-input input::placeholder {
+  color: var(--mw-gray-11);
+}
+
+.palette-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 6px;
+}
+
+.result {
+  display: grid;
+  grid-template-rows: 20px 18px;
+  align-content: center;
+  gap: 2px;
+  height: 52px;
+  padding: 0 10px;
+  border-radius: var(--radius-2);
+  cursor: pointer;
+}
+
+.result[aria-selected='true'] {
+  background: var(--mw-indigo-4);
+}
+
+.result-title,
+.result-sub {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.result-title {
+  font-weight: 500;
+}
+
+.result-sub {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--mw-gray-11);
+}
+
+/* A match is a tint, never a weight: a bolder letter is wider and would move the text after it.
+ * The title and the second line each stay one text node, painted through the highlight API. */
+::highlight(result-match) {
+  background-color: color-mix(in srgb, var(--mw-gray-12) 14%, transparent);
+  color: var(--mw-gray-12);
+}
+
+.result mark {
+  background: color-mix(in srgb, var(--mw-gray-12) 14%, transparent);
+  border-radius: 2px;
+  color: var(--mw-gray-12);
+}
+
+.result-sub mark {
+  color: var(--mw-gray-12);
+}
+
+.result-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.result-line .result-title {
+  flex: 1;
+  min-width: 0;
+}
+
+.result-badge {
+  display: flex;
+  flex: none;
+  width: 104px;
+  height: 20px;
+}
+
+.result-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  padding: 0 10px;
+  color: var(--mw-gray-11);
+}
+
+/* Only a phone needs it: there is no Escape key. */
+.palette-close {
+  display: none;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-right: -12px;
+  border-radius: var(--radius-2);
+  color: var(--mw-gray-11);
+}

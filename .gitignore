@@ -1,0 +1,12 @@
+dist/
+node_modules/
+screenshots/
+test-results/
+playwright-report/
+dist-*
+test-results-*
+
+# Instance settings stay outside the public source tree.
+/config.json
+/public/config.json
+/.env*

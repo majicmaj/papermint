@@ -1,0 +1,43 @@
+.marks {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  color: var(--mw-gray-11);
+  font-size: 12px;
+}
+
+.marks-signed {
+  display: inline-flex;
+  color: var(--mw-gray-12);
+}
+
+.marks .successor {
+  position: static;
+  background: none;
+  max-width: 100%;
+}
+
+.marks-replaces {
+  height: 24px;
+  padding: 0 8px;
+  border-radius: var(--radius-1);
+  color: var(--mw-gray-11);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.marks-replaces:hover {
+  background: var(--mw-gray-4);
+  color: var(--mw-gray-12);
+}
+
+.marks-item {
+  padding-left: 10px;
+}
+
+.marks-item a {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--mw-gray-12);
+}

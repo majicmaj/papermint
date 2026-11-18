@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Papermint</title>
+    <meta name="description" content="A focused frontend for Paperless-ngx" />
+    <script>
+      // Column widths and sidebar state the owner chose, applied before first paint so nothing
+      // moves when the app loads.
+      try {
+        var l = JSON.parse(localStorage.getItem('majin.layout.v1')),
+          r = document.documentElement,
+          c = function (v, min, max) {
+            return Math.round(Math.min(max, Math.max(min, v)));
+          };
+        if (l && typeof l.rail === 'number')
+          r.style.setProperty('--rail', c(l.rail, 180, 320) + 'px');
+        if (l && typeof l.list === 'number')
+          r.style.setProperty('--list', c(l.list, 320, 720) + 'px');
+        if (l && l.collapsed === true) r.setAttribute('data-rail-collapsed', '');
+      } catch (e) {}
+    </script>
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <meta name="theme-color" content="#fcfcfc" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Papermint" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

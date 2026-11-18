@@ -1,0 +1,168 @@
+/* A row is a div that opens the record; the successor inside it is a link of its own. */
+.row {
+  cursor: pointer;
+}
+
+.row-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.row-title-text {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The marks follow the title. Pinned to the right edge they would jump when the list widens. */
+.row-mark {
+  display: inline-flex;
+  flex: none;
+  color: var(--mw-gray-11);
+}
+
+/* The status and the date take a fixed width, so a row swapped in place keeps every column. */
+.row-meta .pill {
+  min-width: 84px;
+}
+
+.row-meta .row-date {
+  min-width: 84px;
+}
+
+/* Narrow rows give their second line to the successor: "Superseded by …" replaces the status line. */
+.row-title .successor {
+  position: absolute;
+  right: 16px;
+  bottom: 7px;
+  left: 16px;
+  max-width: none;
+  background: none;
+  color: var(--mw-gray-11);
+  font-weight: 400;
+}
+
+.row-title .successor a {
+  color: var(--mw-gray-12);
+  text-decoration: none;
+}
+
+.row-title .successor a:hover {
+  text-decoration: underline;
+}
+
+.row[data-successor] .row-meta {
+  visibility: hidden;
+}
+
+/*
+ * Desktop: one single-line grid for the wide list and the split view. The title takes what is
+ * left. Status and date are fixed columns on the left, so they never move when the pane opens.
+ * Versions, then topics, sit on the right and hide when the list is too narrow for them.
+ * Nothing wraps and nothing moves vertically.
+ */
+@media (min-width: 860px) {
+  .list-col {
+    container: list / inline-size;
+  }
+
+  .list-scroll .row:not([aria-hidden]) {
+    grid-template-columns: 108px 116px minmax(0, 1fr) 0 0;
+    grid-template-rows: var(--row);
+    align-content: center;
+    align-items: center;
+    column-gap: 0;
+    padding: 0 16px;
+  }
+
+  .list-scroll .row--file:not([aria-hidden]) {
+    padding-right: 60px;
+  }
+
+  .list-scroll .row-meta {
+    display: contents;
+  }
+
+  .list-scroll .row-meta .pill {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+  }
+
+  .list-scroll .row-meta .row-date {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .list-scroll .row-title {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .list-scroll .row-meta .dots,
+  .list-scroll .row-meta .row-versions {
+    display: none;
+  }
+
+  .list-scroll .row-title .successor {
+    position: static;
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .list-scroll .row[data-successor] .row-meta {
+    visibility: visible;
+  }
+}
+
+@container list (min-width: 560px) {
+  .list-scroll .row:not([aria-hidden]) {
+    grid-template-columns: 108px 116px minmax(0, 1fr) 0 60px;
+  }
+
+  .list-scroll .row-meta .row-versions {
+    display: inline-flex;
+    grid-column: 5;
+    grid-row: 1;
+    justify-self: end;
+    margin-left: 0;
+  }
+}
+
+@container list (min-width: 760px) {
+  .list-scroll .row:not([aria-hidden]) {
+    grid-template-columns: 108px 116px minmax(0, 1fr) 184px 60px;
+  }
+
+  .list-scroll .row-meta .dots {
+    display: flex;
+    grid-column: 4;
+    grid-row: 1;
+    gap: 14px;
+    min-width: 0;
+    padding-left: 16px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .list-scroll .row-meta .dots > span {
+    align-items: center;
+    gap: 6px;
+    color: var(--mw-gray-11);
+    font-size: 12px;
+  }
+
+  .list-scroll .row-meta .dots > span::after {
+    content: attr(title);
+  }
+}
+
+/* The successor picker: a search field over the list of records, in the menu. */
+.successor-picker .field {
+  margin-bottom: 4px;
+}
