@@ -2,6 +2,7 @@ import type { Filters } from '../../domain/filters';
 import { SORTS, type SortProps } from '../../components/SortRows';
 import { Icon } from '../../icons/Icon';
 import {
+  DESKTOP_MENU,
   isSwitch,
   searchMenu,
   summaryOf,
@@ -15,7 +16,7 @@ import { TagResults, hasTagHits, useChoice } from './TagPages';
 interface HeadProps {
   query: string;
   onQuery: (query: string) => void;
-  onClose: () => void;
+  onClose?: () => void;
 }
 
 /** The menu's top row: the search field and the round close button. */
@@ -32,13 +33,16 @@ export function MenuHead({ query, onQuery, onClose }: HeadProps) {
           autocapitalize="none"
           spellcheck={false}
           enterKeyHint="search"
+          data-popover-focus
           value={query}
           onInput={(event) => onQuery(event.currentTarget.value)}
         />
       </label>
-      <button type="button" class="fs-round fs-close" aria-label="Close" onClick={onClose}>
-        <Icon name="x" size={22} />
-      </button>
+      {onClose && (
+        <button type="button" class="fs-round fs-close" aria-label="Close" onClick={onClose}>
+          <Icon name="x" size={22} />
+        </button>
+      )}
     </div>
   );
 }
@@ -49,6 +53,7 @@ interface BodyProps extends SortProps {
   update: (patch: Partial<Filters>) => void;
   today: Date;
   onOpen: (kind: PageKind) => void;
+  desktop?: boolean;
 }
 
 function useSummary(props: BodyProps): SummaryContext {
@@ -92,14 +97,14 @@ function Row({ item, props, ctx }: { item: MenuItem; props: BodyProps; ctx: Summ
 export function MenuBody(props: BodyProps) {
   const ctx = useSummary(props);
   const { model } = useChoice();
-  const items = searchMenu(props.query);
+  const items = searchMenu(props.query, props.desktop ? DESKTOP_MENU : undefined);
   const searching = props.query.trim() !== '';
   const empty = searching && items.length === 0 && !hasTagHits(model, props.query);
   return (
     <>
       {items.length > 0 && (
         <div class="fs-section">
-          <Label>{searching ? 'Filters' : 'All filters'}</Label>
+          {(!props.desktop || searching) && <Label>{searching ? 'Filters' : 'All filters'}</Label>}
           <Group>
             {items.map((item) => (
               <Row key={item.kind} item={item} props={props} ctx={ctx} />

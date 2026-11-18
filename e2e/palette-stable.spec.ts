@@ -35,6 +35,7 @@ test('palette results update in place: no row moves, input-inclusive CLS is 0', 
   const orders: (string | null)[][] = [];
   const first = await slots(page);
   expect(first.length).toBeGreaterThan(3);
+  const { x, y, width, height } = first[0]!;
   // Name every node now on screen, so a node that moves is found by name, not by position.
   await page.evaluate(() =>
     document.querySelectorAll('.palette-list .result').forEach((el, i) => {
@@ -54,13 +55,13 @@ test('palette results update in place: no row moves, input-inclusive CLS is 0', 
     );
     for (const node of named)
       expect(node.y, `${key}: node ${node.slot} moved`).toBe(first[node.slot]!.y);
-    // Slot i sits where slot i sat before, whatever it shows now.
+    // Search may draw more rows than the recent list, with the same geometry for each slot.
     now.forEach((slot, index) => {
       expect(slot, `${key}: slot ${index}`).toMatchObject({
-        x: first[index]!.x,
-        y: first[index]!.y,
-        width: first[index]!.width,
-        height: first[index]!.height,
+        x,
+        y: y + index * height,
+        width,
+        height,
       });
     });
   }

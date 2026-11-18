@@ -1,7 +1,7 @@
-import type { SortKey } from '../domain/filters';
-import type { DetailedDoc } from '../domain/record-details';
+import type { SortKey } from './filters';
+import type { DetailedDoc } from './record-details';
 
-/** Phone list geometry. Every item has a fixed height, so its offset is known before layout. */
+/** List geometry is fixed so each item’s offset is known before layout. */
 export const PHONE_ROW = 52;
 export const PHONE_HEAD = 40;
 /** The space between the header and the first item. */
@@ -48,21 +48,25 @@ export function groupField(sort: SortKey): DateField | null {
 }
 
 /** Headers and rows in order, each with its offset from the top of the list. */
-export function listItems(rows: readonly DetailedDoc[], field: DateField | null): ListItem[] {
+export function listItems(
+  rows: readonly DetailedDoc[],
+  field: DateField | null,
+  { row, heading, top } = { row: PHONE_ROW, heading: PHONE_HEAD, top: LIST_TOP },
+): ListItem[] {
   const items: ListItem[] = [];
-  let y = LIST_TOP;
+  let y = top;
   let last: string | null = null;
   for (const doc of rows) {
     if (field) {
       const label = monthLabel(doc[field]);
       if (label !== last) {
         items.push({ kind: 'head', label, y });
-        y += PHONE_HEAD;
+        y += heading;
         last = label;
       }
     }
     items.push({ kind: 'row', doc, y });
-    y += PHONE_ROW;
+    y += row;
   }
   return items;
 }

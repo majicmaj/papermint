@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { DetailedDoc } from '../domain/record-details';
+import type { DetailedDoc } from './record-details';
 import {
   LIST_TOP,
   PHONE_HEAD,
@@ -9,7 +9,7 @@ import {
   listItems,
   monthLabel,
   shortDate,
-} from './groups';
+} from './list-groups';
 
 const doc = (id: number, created: string, modified?: string): DetailedDoc =>
   ({

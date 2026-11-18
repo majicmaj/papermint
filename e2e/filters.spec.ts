@@ -12,6 +12,7 @@ import {
   sheetFront,
   sheetPage,
   showSuperseded,
+  tagToggle,
 } from './f2';
 
 test('filter menu, chips and removing a chip', async ({ page }, info) => {
@@ -21,7 +22,7 @@ test('filter menu, chips and removing a chip', async ({ page }, info) => {
 
   await press(page.getByRole('button', { name: 'Filter' }), info);
   if (!isMobile(info)) await expect(page.locator('.filter-panel')).toBeVisible();
-  await chooseType(page, info, 'application/pdf', 'PDF');
+  await chooseType(page, info, 'PDF');
   await expect(chips).toHaveText(['PDF']);
   await expect(rowTitles(page)).toHaveText([
     'Joint tax return',
@@ -90,6 +91,39 @@ test('size loads from the metadata endpoint, and Superseded adds those records',
   await expect(rowTitles(page)).toHaveCount(12);
   await expect(page.locator('.list-scroll .row', { hasText: 'EIN letter scan' })).toBeVisible();
   await expectStable(page, `${info.project.name} size and superseded`, 600);
+});
+
+test('desktop filter search finds a topic directly and leaves a removable chip', async ({
+  page,
+}, info) => {
+  test.skip(isMobile(info), 'the desktop filter popover');
+  await boot(page);
+  const filter = page.getByRole('button', { name: 'Filter', exact: true });
+  await filter.focus();
+  await page.keyboard.press('Enter');
+  const panel = page.getByRole('dialog', { name: 'Filter' });
+  const search = panel.getByRole('textbox', { name: 'Search filters' });
+  await expect(search).toBeFocused();
+  await expect(panel.getByRole('button', { name: 'Areas', exact: true })).toHaveCount(0);
+  await expect(panel.getByRole('button', { name: 'Sort', exact: true })).toHaveCount(0);
+  await search.fill('Tax');
+  const topic = tagToggle(panel, 'Tax');
+  await expect(topic).toContainText('LLC');
+  await page.keyboard.press('ArrowDown');
+  await expect(topic).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(topic).toHaveAttribute('aria-pressed', 'true');
+  await expect(rowTitles(page)).toHaveText(['Joint tax return', 'EIN letter']);
+  await page.keyboard.press('Escape');
+  await expect(filter).toBeFocused();
+  await expect(tagToggle(page.locator('.rail'), 'Tax')).toHaveAttribute('aria-pressed', 'true');
+  const strip = page.getByRole('group', { name: 'Active filters' });
+  await strip.getByRole('button', { name: 'Remove Tax' }).focus();
+  await page.keyboard.press('Enter');
+  await expect(strip).toHaveCount(0);
+  await expect(filter).toBeFocused();
+  await expect(rowTitles(page)).toHaveCount(10);
+  await expectStable(page, 'desktop filter search and clear', 500);
 });
 
 /** The sort keys: a menu on desktop, the Sort page of the filter sheet on a phone. */

@@ -9,7 +9,13 @@ import { isTagIcon } from '../icons/tag-icons';
 import { rowIntent } from '../pwa/prefetch';
 import { useApp } from '../state/app';
 import { recordPath } from '../state/router';
-import { dateFieldFor, groupField, listItems, shortDate, type DateField } from './groups';
+import {
+  dateFieldFor,
+  groupField,
+  listItems,
+  shortDate,
+  type DateField,
+} from '../domain/list-groups';
 
 /**
  * What the end of a row shows. The end is right-aligned, so other marks or another date give it

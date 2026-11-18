@@ -223,6 +223,7 @@ test.describe('touch targets', () => {
     const doc = await recordWithVersions(page);
     await page.goto(`/r/${doc.id}`);
     await expect(page.locator('.pane-title h1')).toBeVisible();
+    await settled(page);
     const trigger = await page.locator('.pill-button').boundingBox();
     expect(trigger!.height).toBeGreaterThanOrEqual(44);
     expect(trigger!.width).toBeGreaterThanOrEqual(44);

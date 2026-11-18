@@ -170,7 +170,7 @@ test.describe('wide list when nothing is selected', () => {
         (await width(page, '.list-scroll')) - (viewport - (await width(page, '.rail-body'))),
       ),
     ).toBeLessThanOrEqual(1);
-    // Every column starts at the same x in every row.
+    // Titles and trailing dates are aligned across rows.
     const columns = await page.evaluate(() =>
       Array.from(document.querySelectorAll('.list-scroll .row[data-id]'))
         .slice(0, 8)
@@ -181,14 +181,13 @@ test.describe('wide list when nothing is selected', () => {
             y:
               row.querySelector('.row-title')!.getBoundingClientRect().y -
               row.getBoundingClientRect().y,
-            pill: x('.pill'),
+            title: x('.row-title'),
             date: x('.row-date'),
-            dots: x('.dots'),
           };
         }),
     );
     expect(columns.length).toBeGreaterThan(2);
-    for (const key of ['pill', 'date', 'dots'] as const) {
+    for (const key of ['title', 'date'] as const) {
       const xs = new Set(columns.map((c) => c[key] && Math.round(c[key]!)));
       expect(
         [...xs].filter((v) => v !== null),
@@ -232,8 +231,7 @@ test.describe('wide list and pane', () => {
     expect(await stable()).toBe(true);
   });
 
-  // Wide and split share one single-line row grid: status and date keep their columns, the
-  // title flexes, and topics, then versions, hide in a narrow list. Nothing moves.
+  // Wide and split share the same fixed row heights. Dates and metadata keep one line.
   test('wide <-> split moves nothing', async ({ page }, info) => {
     desktopOnly(info);
     await page.goto('/');

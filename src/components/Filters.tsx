@@ -1,5 +1,6 @@
-import { useRef, useState } from 'preact/hooks';
-import { filterChips, type FilterChip, type Filters } from '../domain/filters';
+import { useLayoutEffect, useRef, useState } from 'preact/hooks';
+import { filterChips, type Filters } from '../domain/filters';
+import { visibleSelection } from '../domain/taxonomy';
 import type { ViewName } from '../domain/views';
 import { Icon } from '../icons/Icon';
 import { FilterDrawer } from '../mobile/FilterDrawer';
@@ -7,11 +8,11 @@ import { TopBar } from '../mobile/TopBar';
 import { useMobile } from '../mobile/viewport';
 import { swap } from '../motion/transition';
 import { applyHeld } from '../state/app';
-import { useTopics } from '../state/topics';
+import { updateFilters, useFilters, useFilterTags } from '../state/filters';
+import { selectTaxonomy, selectTopics, useTopics } from '../state/topics';
 import { FilterPanel } from './FilterPanel';
 import { Menu } from './Menu';
 import { SortRows, type SortProps } from './SortRows';
-import { Taxonomy } from './Taxonomy';
 
 function SortMenu(props: SortProps) {
   return (
@@ -21,28 +22,8 @@ function SortMenu(props: SortProps) {
   );
 }
 
-/** Areas and topics as a menu. Phones have no sidebar, so the same rows live here. */
-function AreasMenu() {
-  const { areas, selected } = useTopics();
-  const count = areas.length + selected.length;
-  return (
-    <Menu
-      label="Areas"
-      triggerClass={count > 0 ? 'chip chip--active' : 'chip'}
-      hostClass="areas-host"
-      trigger="Areas"
-    >
-      {(close) => (
-        <div class="taxonomy-menu">
-          <Taxonomy onAct={close} />
-        </div>
-      )}
-    </Menu>
-  );
-}
-
-/** Chips in the order the owner made them: a new chip goes last, so no chip moves. */
-function useChipOrder(chips: FilterChip[]): FilterChip[] {
+/** A new chip goes last, so the existing ones keep their positions. */
+function useChipOrder<T extends { id: string }>(chips: T[]): T[] {
   const order = useRef<string[]>([]);
   order.current = [
     ...order.current.filter((id) => chips.some((chip) => chip.id === id)),
@@ -53,11 +34,10 @@ function useChipOrder(chips: FilterChip[]): FilterChip[] {
 
 interface Props extends SortProps {
   view: ViewName;
-  /** The view name and its row count, first in the desktop toolbar. */
+  split: boolean;
   title: string;
   count: number;
   filters: Filters;
-  setFilters: (filters: Filters) => void;
   mimes: string[];
 }
 
@@ -78,75 +58,130 @@ function withSwap(sort: SortProps): SortProps {
   };
 }
 
-export function FiltersBar({
+function MobileFilters({
   view,
-  title,
-  count,
   filters,
-  setFilters,
   mimes,
-  ...sortProps
-}: Props) {
-  const update = (patch: Partial<Filters>) =>
-    swap('results', () => {
-      applyHeld();
-      setFilters({ ...filters, ...patch });
-    });
-  const sort = withSwap(sortProps);
+  ...sort
+}: Omit<Props, 'split' | 'title' | 'count'>) {
   const chips = useChipOrder(filterChips(filters));
-  const mobile = useMobile();
   const [open, setOpen] = useState(false);
   const { areas, selected } = useTopics();
-  if (mobile) {
-    return (
-      <>
-        <TopBar
-          view={view}
-          chips={chips}
-          active={areas.length + selected.length > 0}
-          expanded={open}
-          onFilter={() => setOpen(true)}
-          onRemove={(chip) => update(chip.clear)}
-          superseded={filters.superseded}
-          onSuperseded={(superseded) => update({ superseded })}
-        />
-        <FilterDrawer
-          open={open}
-          onClose={() => setOpen(false)}
-          view={view}
-          filters={filters}
-          update={update}
-          mimes={mimes}
-          {...sort}
-        />
-      </>
-    );
-  }
+  return (
+    <>
+      <TopBar
+        view={view}
+        chips={chips}
+        active={areas.length + selected.length > 0}
+        expanded={open}
+        onFilter={() => setOpen(true)}
+        onRemove={(chip) => updateFilters(chip.clear)}
+        superseded={filters.superseded}
+        onSuperseded={(superseded) => updateFilters({ superseded })}
+      />
+      <FilterDrawer
+        open={open}
+        onClose={() => setOpen(false)}
+        view={view}
+        filters={filters}
+        update={updateFilters}
+        mimes={mimes}
+        {...sort}
+      />
+    </>
+  );
+}
+
+function DesktopFilterControls({
+  filters,
+  mimes,
+  ...sort
+}: Omit<Props, 'view' | 'split' | 'title' | 'count'>) {
+  return (
+    <>
+      <Menu label="Filter" dialog triggerClass="chip" hostClass="filter-host" trigger="Filter">
+        {() => <FilterPanel filters={filters} update={updateFilters} mimes={mimes} {...sort} />}
+      </Menu>
+      <SortMenu {...sort} />
+    </>
+  );
+}
+
+export function FiltersBar({ view, split, title, count, filters, mimes, ...sortProps }: Props) {
+  const sort = withSwap(sortProps);
+  const mobile = useMobile();
+  if (mobile) return <MobileFilters view={view} filters={filters} mimes={mimes} {...sort} />;
   return (
     <div class="list-head" role="toolbar">
       <span class="list-title">
         {title}
         <span class="list-count">{count > 0 ? count : ''}</span>
       </span>
-      <Menu label="Filter" triggerClass="chip" trigger="Filter">
-        {() => <FilterPanel filters={filters} update={update} mimes={mimes} />}
-      </Menu>
-      <SortMenu {...sort} />
-      <AreasMenu />
-      <div class="chips">
-        {chips.map((chip) => (
-          <button
-            key={chip.id}
-            class="chip chip--active"
-            type="button"
-            aria-label={`Remove ${chip.label}`}
-            onClick={() => update(chip.clear)}
-          >
-            {chip.label}
-            <Icon name="x" size={12} />
-          </button>
-        ))}
-      </div>
+      {view === 'records' && (
+        <DesktopFilterControls
+          key={split ? 'split' : 'wide'}
+          filters={filters}
+          mimes={mimes}
+          {...sort}
+        />
+      )}
+    </div>
+  );
+}
+
+function useActiveChips() {
+  const filters = useFilters();
+  const { areas, topics, model } = useFilterTags();
+  const removeArea = (id: number) => {
+    const next = areas.filter((area) => area !== id);
+    selectTaxonomy(next, visibleSelection(model, next, topics));
+  };
+  return useChipOrder([
+    ...filterChips(filters).map((chip) => ({ ...chip, remove: () => updateFilters(chip.clear) })),
+    ...areas.map((id) => ({
+      id: `area-${id}`,
+      label: model.byId.get(id)!.name,
+      remove: () => removeArea(id),
+    })),
+    ...topics.map((id) => ({
+      id: `topic-${id}`,
+      label: model.byId.get(id)!.name,
+      remove: () => selectTopics(topics.filter((topic) => topic !== id)),
+    })),
+  ]);
+}
+
+export function ActiveFilters() {
+  const chips = useActiveChips();
+  const strip = useRef<HTMLDivElement>(null);
+  const removing = useRef<number | null>(null);
+  useLayoutEffect(() => {
+    if (removing.current === null) return;
+    const buttons = strip.current?.querySelectorAll<HTMLButtonElement>('button');
+    const next =
+      buttons?.[Math.min(removing.current, chips.length - 1)] ??
+      document.querySelector<HTMLButtonElement>('.filter-host > button');
+    removing.current = null;
+    next?.focus({ preventScroll: true });
+  }, [chips.length]);
+  if (chips.length === 0) return null;
+  return (
+    <div class="desktop-filter-strip chips" role="group" aria-label="Active filters" ref={strip}>
+      {chips.map((chip, index) => (
+        <button
+          key={chip.id}
+          class="chip chip--active"
+          type="button"
+          aria-label={`Remove ${chip.label}`}
+          onClick={() => {
+            removing.current = index;
+            chip.remove();
+          }}
+        >
+          <span class="filter-chip-label">{chip.label}</span>
+          <Icon name="x" size={12} />
+        </button>
+      ))}
     </div>
   );
 }

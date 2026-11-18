@@ -48,7 +48,7 @@ test.describe('one toolbar row', () => {
     await expectStable(page, 'toolbar row', 600);
   });
 
-  test('the list toolbar leads with the view name and count, then Filter and Sort', async ({
+  test('the view name and count are on the left, with Filter and Sort at the right', async ({
     page,
   }) => {
     await boot(page, '/');
@@ -62,6 +62,9 @@ test.describe('one toolbar row', () => {
         els.slice(0, 3).map((el) => el.textContent?.replace(/\d+$/, '').trim()),
       );
     expect(order).toEqual(['Records', 'Filter', 'Sort']);
+    const end = await box(page, '.list-head > .menu-host:last-child');
+    const toolbar = await box(page, '.list-head');
+    expect(toolbar.x + toolbar.w - end.x - end.w).toBe(12);
     await expect(page.locator('.list-scroll').getByRole('button', { name: 'Filter' })).toHaveCount(
       0,
     );

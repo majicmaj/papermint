@@ -1,164 +1,111 @@
-/* A row is a div that opens the record; the successor inside it is a link of its own. */
 .row {
   cursor: pointer;
 }
 
-.row-title {
+.record-month {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  margin: 0;
+  padding: 3px 16px 0;
+  background: var(--mw-gray-2);
+  color: var(--mw-gray-11);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.desktop-records {
+  --row: 40px;
+  max-width: 900px;
+  container: archive / inline-size;
+}
+
+.desktop-records .archive-row {
+  grid-template-columns: minmax(0, 1fr) auto 90px;
+  grid-template-rows: var(--row);
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+}
+
+.archive-row .row-title {
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
 .row-title-text {
-  flex: 0 1 auto;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* The marks follow the title. Pinned to the right edge they would jump when the list widens. */
-.row-mark {
-  display: inline-flex;
+.archive-row .row-title .marks-signed {
   flex: none;
+}
+
+.archive-row .row-date {
   color: var(--mw-gray-11);
+  font-size: 12px;
+  text-align: right;
 }
 
-/* The status and the date take a fixed width, so a row swapped in place keeps every column. */
-.row-meta .pill {
-  min-width: 84px;
+.archive-row .row-meta {
+  gap: 12px;
 }
 
-.row-meta .row-date {
-  min-width: 84px;
+.archive-row .row-versions {
+  margin-left: 0;
 }
 
-/* Narrow rows give their second line to the successor: "Superseded by …" replaces the status line. */
-.row-title .successor {
-  position: absolute;
-  right: 16px;
-  bottom: 7px;
-  left: 16px;
-  max-width: none;
+.archive-row .successor {
+  position: static;
+  max-width: 220px;
   background: none;
+}
+
+.archive-row[data-superseded] .row-title {
   color: var(--mw-gray-11);
-  font-weight: 400;
 }
 
-.row-title .successor a {
-  color: var(--mw-gray-12);
-  text-decoration: none;
+.archive-row:has(.successor) .pill {
+  display: none;
 }
 
-.row-title .successor a:hover {
-  text-decoration: underline;
-}
-
-.row[data-successor] .row-meta {
-  visibility: hidden;
-}
-
-/*
- * Desktop: one single-line grid for the wide list and the split view. The title takes what is
- * left. Status and date are fixed columns on the left, so they never move when the pane opens.
- * Versions, then topics, sit on the right and hide when the list is too narrow for them.
- * Nothing wraps and nothing moves vertically.
- */
-@media (min-width: 860px) {
-  .list-col {
-    container: list / inline-size;
-  }
-
-  .list-scroll .row:not([aria-hidden]) {
-    grid-template-columns: 108px 116px minmax(0, 1fr) 0 0;
-    grid-template-rows: var(--row);
-    align-content: center;
-    align-items: center;
-    column-gap: 0;
-    padding: 0 16px;
-  }
-
-  .list-scroll .row--file:not([aria-hidden]) {
-    padding-right: 60px;
-  }
-
-  .list-scroll .row-meta {
-    display: contents;
-  }
-
-  .list-scroll .row-meta .pill {
-    grid-column: 1;
-    grid-row: 1;
-    justify-self: start;
-  }
-
-  .list-scroll .row-meta .row-date {
-    grid-column: 2;
-    grid-row: 1;
-  }
-
-  .list-scroll .row-title {
-    grid-column: 3;
-    grid-row: 1;
-  }
-
-  .list-scroll .row-meta .dots,
-  .list-scroll .row-meta .row-versions {
+@container archive (max-width: 640px) {
+  .archive-row .dots,
+  .archive-row .successor {
     display: none;
   }
 
-  .list-scroll .row-title .successor {
-    position: static;
-    flex: 0 1 auto;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .list-scroll .row[data-successor] .row-meta {
-    visibility: visible;
-  }
-}
-
-@container list (min-width: 560px) {
-  .list-scroll .row:not([aria-hidden]) {
-    grid-template-columns: 108px 116px minmax(0, 1fr) 0 60px;
-  }
-
-  .list-scroll .row-meta .row-versions {
+  .archive-row:has(.successor) .pill {
     display: inline-flex;
-    grid-column: 5;
-    grid-row: 1;
-    justify-self: end;
-    margin-left: 0;
   }
 }
 
-@container list (min-width: 760px) {
-  .list-scroll .row:not([aria-hidden]) {
-    grid-template-columns: 108px 116px minmax(0, 1fr) 184px 60px;
+@container archive (max-width: 420px) {
+  .record-month {
+    padding-inline: 12px;
   }
 
-  .list-scroll .row-meta .dots {
-    display: flex;
-    grid-column: 4;
-    grid-row: 1;
-    gap: 14px;
-    min-width: 0;
-    padding-left: 16px;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-
-  .list-scroll .row-meta .dots > span {
-    align-items: center;
+  .desktop-records .archive-row {
+    grid-template-columns: minmax(0, 1fr) auto 72px;
     gap: 6px;
-    color: var(--mw-gray-11);
-    font-size: 12px;
+    padding-inline: 12px;
   }
 
-  .list-scroll .row-meta .dots > span::after {
-    content: attr(title);
+  .archive-row .row-versions {
+    display: none;
+  }
+}
+
+@media (min-width: 860px) {
+  .list-scroll .row--file {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: var(--row);
+    align-items: center;
+    gap: 12px;
+    padding-right: 60px;
   }
 }
 

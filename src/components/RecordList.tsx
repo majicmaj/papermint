@@ -1,8 +1,7 @@
 import { runtimeConfig } from '../config/runtime';
 import './filters.css';
-import { FiltersBar } from './Filters';
+import { ActiveFilters, FiltersBar } from './Filters';
 import {
-  EMPTY_FILTERS,
   filterChips,
   matchesFilters,
   sortRecords,
@@ -18,13 +17,14 @@ import { applyHeld, loadIndex, useApp } from '../state/app';
 import { anyLayerOpen } from '../state/modal';
 import { currentRoute, navigate, recordPath, type Route } from '../state/router';
 import { useTopics } from '../state/topics';
+import { useActiveFilterCount, useFilters } from '../state/filters';
 import { PhoneList, PhoneSkeleton } from '../mobile/PhoneList';
-import { PHONE_ROW } from '../mobile/groups';
+import { PHONE_ROW } from '../domain/list-groups';
 import { useMobile } from '../mobile/viewport';
 import { Recovery } from './Recovery';
-import { Row, SkeletonRows } from './Rows';
+import { DesktopList } from './DesktopList';
+import { useListPosition } from './useListPosition';
 
-const ROW_HEIGHT = 56;
 const ROWS_KEY = 'majin.rows';
 
 /** Skeleton count: the row count of the last visit, else enough rows to fill the viewport. */
@@ -123,46 +123,22 @@ interface RowsProps {
   band: string;
 }
 
-/** The rows of a list view: the desktop rows, or the phone's grouped one-line rows. */
+/** The desktop and phone share the same sorted records and date grouping. */
 function ListRows({ rows, view, sort, selectedId, band }: RowsProps) {
   const model = useApp((s) => s.model);
   const phase = useApp((s) => s.phase);
   const mobile = useMobile();
   if (view === 'recovery') return null;
-  if (phase === 'loading') {
-    return mobile ? (
-      <PhoneSkeleton count={skeletonCount(PHONE_ROW)} />
-    ) : (
-      <SkeletonRows count={skeletonCount(ROW_HEIGHT)} />
-    );
-  }
-  if (mobile) {
-    return (
-      <PhoneList
-        rows={rows}
-        model={model}
-        view={view}
-        sort={sort}
-        selectedId={selectedId}
-        band={band}
-      />
-    );
-  }
-  return (
-    <>
-      {rows.map((doc, index) => (
-        // Keyed by position: a new result set swaps the content of the same rows in place.
-        // Keyed by id, Preact would move rows around and every row below a removed one would shift.
-        <Row key={index} doc={doc} model={model} view={view} selectedId={selectedId} />
-      ))}
-    </>
-  );
+  if (!mobile) return <DesktopList {...{ rows, view, sort, selectedId, band }} />;
+  if (phase === 'loading') return <PhoneSkeleton count={skeletonCount(PHONE_ROW)} />;
+  return <PhoneList {...{ rows, model, view, sort, selectedId, band }} />;
 }
 
 export function RecordList({ view, route }: Props) {
   const phase = useApp((s) => s.phase);
   const docs = useApp((s) => s.docs);
-  const [filters, setFilters] = useState(EMPTY_FILTERS);
+  const filters = useFilters();
+  const activeFilters = useActiveFilterCount();
   const [sort, setSort] = useState<SortKey>('created');
   const [ascending, setAscending] = useState(false);
   const scroller = useRef<HTMLDivElement>(null);
@@ -178,18 +154,15 @@ export function RecordList({ view, route }: Props) {
     mounted.current = true;
   }, [view]);
   useListKeys(ids, route, view);
-  useRowCountHint(rows.length, phase === 'ready' && view !== 'recovery');
-  useEffect(() => {
-    scroller.current
-      ?.querySelector(`[data-id="${selectedId}"]`)
-      ?.scrollIntoView({ block: 'nearest' });
-  }, [selectedId, phase]);
+  useRowCountHint(rows.length, mobile && phase === 'ready' && view !== 'recovery');
+  useListPosition(scroller, selectedId, phase, mobile);
+  const band = (mobile ? filterChips(filters).length : activeFilters) > 0 ? 'c' : '';
 
   const bar = (
     <FiltersBar
       view={view}
+      split={route.name === 'record' || route.name === 'file'}
       filters={filters}
-      setFilters={setFilters}
       sort={sort}
       setSort={setSort}
       ascending={ascending}
@@ -206,6 +179,7 @@ export function RecordList({ view, route }: Props) {
       {!mobile && bar}
       <div class="list-scroll" ref={scroller}>
         {mobile && bar}
+        {!mobile && view === 'records' && <ActiveFilters />}
         {view === 'recovery' && <Recovery />}
         {phase === 'error' && (
           <div class="list-empty">
@@ -214,16 +188,10 @@ export function RecordList({ view, route }: Props) {
             </button>
           </div>
         )}
-        <ListRows
-          rows={rows}
-          view={view}
-          sort={sort}
-          selectedId={selectedId}
-          band={filterChips(filters).length > 0 ? 'c' : ''}
-        />
+        <ListRows rows={rows} view={view} sort={sort} selectedId={selectedId} band={band} />
         {phase === 'ready' && rows.length === 0 && view !== 'recovery' && (
-          <div class="list-empty" key={filterChips(filters).length > 0 ? 'ce' : 'e'}>
-            None
+          <div class="list-empty" key={`${band}e`}>
+            {activeFilters > 0 ? 'No records match' : 'No records'}
           </div>
         )}
       </div>

@@ -1,6 +1,6 @@
 import type { ComponentChildren } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import type { Item, PaletteState, Range } from '../palette';
+import type { Command, Item, PaletteState, Range } from '../palette';
 import { Icon } from '../icons/Icon';
 import { palette } from '../state/actions';
 import { Dot } from './Pill';
@@ -80,6 +80,77 @@ function ResultRow({ item, index, selected }: RowProps) {
   );
 }
 
+function CommandRow({
+  command,
+  index,
+  selected,
+}: {
+  command: Command;
+  index: number;
+  selected: boolean;
+}) {
+  return (
+    <div
+      class="palette-command"
+      role="option"
+      id={`result-${index}`}
+      aria-selected={selected}
+      onMouseDown={(e) => e.preventDefault()}
+      onPointerMove={(e) => e.pointerType === 'mouse' && !selected && palette.select(index)}
+      onClick={() => palette.activate('open', index)}
+    >
+      <Icon name={command.icon} />
+      <span class="palette-command-label">{command.title}</span>
+      {command.detail && <span class="palette-command-detail">{command.detail}</span>}
+    </div>
+  );
+}
+
+function PaletteResults({ state }: { state: PaletteState }) {
+  const list = useRef<HTMLDivElement>(null);
+  useMatchHighlight(list, state.items);
+  useEffect(() => {
+    list.current?.querySelector('[aria-selected="true"]')?.scrollIntoView({ block: 'nearest' });
+  }, [state.selected, state.items, state.commands]);
+  return (
+    <div class="palette-list" role="listbox" id="palette-results" ref={list}>
+      {state.title && (
+        <div class="palette-context" role="presentation" title={state.title}>
+          {state.title}
+        </div>
+      )}
+      {state.items.map((item, index) => (
+        // Keep result slots in place when typing changes which record occupies one.
+        <ResultRow key={index} item={item} index={index} selected={index === state.selected} />
+      ))}
+      {state.commands.map((command, index) => {
+        const slot = index + state.items.length;
+        return (
+          <CommandRow
+            key={index}
+            command={command}
+            index={slot}
+            selected={slot === state.selected}
+          />
+        );
+      })}
+      {state.failed && (
+        <div class="result-status">
+          <span>Search failed</span>
+          <button type="button" class="btn btn--ghost" onClick={() => palette.retry()}>
+            Retry
+          </button>
+        </div>
+      )}
+      {state.items.length === 0 && !state.failed && !state.searching && state.query.trim() && (
+        <div class="result-status">
+          <span>No results</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /** Tab cycles between the search field and the Retry button. Focus never leaves the palette. */
 function cycleFocus(event: KeyboardEvent): void {
   const root = event.currentTarget as HTMLElement;
@@ -100,7 +171,11 @@ function handleKey(event: KeyboardEvent): void {
     return;
   }
   const actions: Record<string, () => void> = {
-    Escape: () => palette.close(),
+    Escape: () => {
+      const { nested } = palette.getState();
+      palette.back();
+      if (nested) (event.currentTarget as HTMLElement).querySelector('input')?.focus();
+    },
     ArrowDown: () => palette.move(1),
     ArrowUp: () => palette.move(-1),
     Enter: () => palette.activate(event.metaKey || event.ctrlKey ? 'download' : 'open'),
@@ -116,18 +191,13 @@ function handleKey(event: KeyboardEvent): void {
 export function PaletteView() {
   const state = usePalette();
   const input = useRef<HTMLInputElement>(null);
-  const list = useRef<HTMLDivElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   useVisualHeight(panel, state.open);
 
   useEffect(() => {
     if (state.open) input.current?.focus();
-  }, [state.open]);
+  }, [state.open, state.nested]);
 
-  useMatchHighlight(list, state.items);
-  useEffect(() => {
-    list.current?.querySelector('[aria-selected="true"]')?.scrollIntoView({ block: 'nearest' });
-  }, [state.selected, state.items]);
   if (!state.open) return null;
 
   return (
@@ -144,7 +214,21 @@ export function PaletteView() {
         onKeyDown={handleKey}
       >
         <div class="palette-input">
-          <Icon name="search" size={18} />
+          {state.nested ? (
+            <button
+              type="button"
+              class="palette-back"
+              aria-label="Back to record commands"
+              onClick={() => {
+                palette.back();
+                input.current?.focus();
+              }}
+            >
+              <Icon name="arrow_left" size={18} />
+            </button>
+          ) : (
+            <Icon name="search" size={18} />
+          )}
           <input
             ref={input}
             value={state.query}
@@ -154,7 +238,11 @@ export function PaletteView() {
             role="combobox"
             aria-expanded="true"
             aria-controls="palette-results"
-            aria-activedescendant={state.items.length ? `result-${state.selected}` : undefined}
+            aria-activedescendant={
+              state.items.length + state.commands.length > 0
+                ? `result-${state.selected}`
+                : undefined
+            }
             onInput={(e) => palette.setQuery((e.target as HTMLInputElement).value)}
           />
           <button
@@ -166,26 +254,7 @@ export function PaletteView() {
             <Icon name="x" size={18} />
           </button>
         </div>
-        <div class="palette-list" role="listbox" id="palette-results" ref={list}>
-          {state.items.map((item, index) => (
-            // Keyed by slot: a new ranking swaps the content of the same rows in place, so no
-            // row moves. Keyed by id, Preact would move the nodes and every keystroke would shift.
-            <ResultRow key={index} item={item} index={index} selected={index === state.selected} />
-          ))}
-          {state.failed && (
-            <div class="result-status">
-              <span>Search failed</span>
-              <button type="button" class="btn btn--ghost" onClick={() => palette.retry()}>
-                Retry
-              </button>
-            </div>
-          )}
-          {state.items.length === 0 && !state.failed && !state.searching && state.query.trim() && (
-            <div class="result-status">
-              <span>No results</span>
-            </div>
-          )}
-        </div>
+        <PaletteResults state={state} />
       </div>
     </div>
   );

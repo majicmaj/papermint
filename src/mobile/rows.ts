@@ -8,7 +8,7 @@ export type DateField = 'created' | 'added' | 'modified';
 /** A row that opens a page of its own inside the sheet. */
 export type PageKind = 'areas' | 'topics' | DateField | 'size' | 'pages' | 'type' | 'sort';
 /** A row that is a switch: it never opens a page. */
-export type SwitchKind = 'signed' | 'versions';
+export type SwitchKind = 'signed' | 'versions' | 'superseded';
 export type MenuKind = PageKind | SwitchKind;
 
 export interface MenuItem {
@@ -33,7 +33,17 @@ export const MENU: readonly MenuItem[] = [
 ];
 
 export const isSwitch = (kind: MenuKind): kind is SwitchKind =>
-  kind === 'signed' || kind === 'versions';
+  kind === 'signed' || kind === 'versions' || kind === 'superseded';
+
+export type FilterPageKind = Exclude<PageKind, 'areas' | 'topics' | 'sort'>;
+
+export const isFilterPage = (kind: PageKind): kind is FilterPageKind =>
+  kind !== 'areas' && kind !== 'topics' && kind !== 'sort';
+
+export const DESKTOP_MENU: readonly MenuItem[] = [
+  ...MENU.filter(({ kind }) => isSwitch(kind) || isFilterPage(kind)),
+  { kind: 'superseded', label: 'Superseded', icon: 'archive' },
+];
 
 export const labelOf = (kind: MenuKind): string =>
   MENU.find((item) => item.kind === kind)?.label ?? '';
@@ -188,7 +198,7 @@ export function searchNames<T extends { name: string }>(items: readonly T[], que
 }
 
 /** Menu rows whose label contains the query. An empty query keeps them all. */
-export function searchMenu(query: string): MenuItem[] {
+export function searchMenu(query: string, items = MENU): readonly MenuItem[] {
   const q = fold(query.trim());
-  return q ? MENU.filter((item) => fold(item.label).includes(q)) : [...MENU];
+  return q ? items.filter((item) => fold(item.label).includes(q)) : items;
 }

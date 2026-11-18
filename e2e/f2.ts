@@ -105,37 +105,50 @@ export async function heightOf(target: Locator): Promise<number> {
   return Math.round((await target.boundingBox())!.height);
 }
 
-/** The active filters: the desktop toolbar's chips, or the phone header's chip row. */
+/** The active filters: the desktop strip or the phone header's chip row. */
 export const chipsOf = (page: Page) => page.locator('.chips .chip, .topbar-chips .chip');
 
-/**
- * A filter field: in the open desktop Filter menu, or on its page of the phone's filter sheet
- * ('menu' for the switches on the sheet's first page).
- */
+async function desktopFilterPage(page: Page, title: string): Promise<Locator> {
+  const panel = page.getByRole('dialog', { name: 'Filter' });
+  if (!(await panel.isVisible())) await page.getByRole('button', { name: 'Filter' }).click();
+  const heading = panel.locator('.fs-title');
+  if ((await heading.count()) > 0) {
+    if ((await heading.innerText()) === title) return panel;
+    await panel.getByRole('button', { name: 'Back', exact: true }).click();
+  }
+  if (title !== 'menu') {
+    await panel.locator(`[data-kind="${title.toLowerCase()}"]`).click();
+    await expect(heading).toHaveText(title);
+  }
+  return panel;
+}
+
+/** A field on the corresponding filter page, or a switch on the first page. */
 export async function filterField(
   page: Page,
   info: TestInfo,
   sheet: string,
   label: string,
 ): Promise<Locator> {
-  if (!isMobile(info)) return page.locator('.filter-panel').getByLabel(label);
+  if (!isMobile(info)) return (await desktopFilterPage(page, sheet)).getByLabel(label);
   const front = sheet === 'menu' ? await sheetMenu(page) : await sheetPage(page, sheet);
   return front.getByLabel(label);
 }
 
-/** The type: a select in the desktop menu, a list of choices on the phone. */
-export async function chooseType(page: Page, info: TestInfo, mime: string, name: string) {
+/** Choose a file type from the list of choices. */
+export async function chooseType(page: Page, info: TestInfo, name: string) {
   if (!isMobile(info)) {
-    await page.locator('.filter-panel').getByLabel('Type').selectOption(mime);
+    const panel = await desktopFilterPage(page, 'Type');
+    await panel.getByRole('radio', { name, exact: true }).click();
     return;
   }
   await (await sheetPage(page, 'Type')).getByRole('radio', { name, exact: true }).tap();
 }
 
-/** Superseded: a switch in the desktop menu, under the header's More menu on the phone. */
+/** Superseded: a switch in the desktop popover, under the header's More menu on the phone. */
 export async function showSuperseded(page: Page, info: TestInfo) {
   if (!isMobile(info)) {
-    await page.locator('.filter-panel').getByLabel('Superseded').check();
+    await (await filterField(page, info, 'menu', 'Superseded')).check();
     return;
   }
   await closeTaxonomy(page, info);

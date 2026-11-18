@@ -54,6 +54,57 @@
   padding: 6px;
 }
 
+.palette-context {
+  padding: 4px 10px;
+  overflow: hidden;
+  color: var(--mw-gray-11);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.palette-back {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin: 0 -13px;
+  border-radius: var(--radius-2);
+}
+
+.palette-command {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 10px;
+  border-radius: var(--radius-2);
+  cursor: pointer;
+}
+
+.palette-command[aria-selected='true'] {
+  background: var(--mw-indigo-4);
+}
+
+.palette-command-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.palette-command .icon,
+.palette-command-detail {
+  flex: none;
+  color: var(--mw-gray-11);
+}
+
+.palette-command-detail {
+  font-size: 12px;
+}
+
 .result {
   display: grid;
   grid-template-rows: 20px 18px;

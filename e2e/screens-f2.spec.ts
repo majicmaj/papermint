@@ -57,7 +57,7 @@ for (const scheme of ['light', 'dark'] as const) {
 
     await press(page.getByRole('button', { name: 'Filter' }), info);
     await shot('filter-menu');
-    await chooseType(page, info, 'application/pdf', 'PDF');
+    await chooseType(page, info, 'PDF');
     await (await filterField(page, info, 'Pages', 'Minimum pages')).fill('3');
     await (await filterField(page, info, 'menu', 'Signed')).check();
     await showSuperseded(page, info);
@@ -75,7 +75,7 @@ for (const scheme of ['light', 'dark'] as const) {
     else await openFilter(page);
     await (await filterField(page, info, 'menu', 'Signed')).uncheck();
     await (await filterField(page, info, 'Pages', 'Minimum pages')).fill('');
-    await chooseType(page, info, '', 'Any');
+    await chooseType(page, info, 'Any');
     await page.keyboard.press('Escape');
     await shot('superseded-row');
 

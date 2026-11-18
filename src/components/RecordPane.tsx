@@ -5,14 +5,9 @@ import type { Doc } from '../api/types';
 import { formatDate } from '../domain/format';
 import { statusTag, topicsOf, type TagModel } from '../domain/tags';
 import { VIEW_PATH } from '../domain/views';
-import {
-  findVersion,
-  isCurrent,
-  resolveVersion,
-  selectedVersionId,
-  versionName,
-} from '../domain/versions';
+import { findVersion, isCurrent, resolveVersion, selectedVersionId } from '../domain/versions';
 import { Icon } from '../icons/Icon';
+import { registerPaletteRecord } from '../state/actions';
 import { useApp } from '../state/app';
 import { copyLink } from '../shell/copy-link';
 import { openDeleteDialog } from '../state/dialog';
@@ -50,7 +45,8 @@ function useRecord(id: number): Lookup {
       });
     return () => abort.abort();
   }, [id, phase, known === null]);
-  const doc = known ?? fetched;
+  useEffect(() => (fetched ? registerPaletteRecord(fetched) : undefined), [fetched]);
+  const doc = known ?? (fetched?.id === id ? fetched : null);
   if (doc) return { state: 'ready', doc };
   return failed ? { state: 'missing' } : { state: 'loading' };
 }
@@ -86,16 +82,23 @@ function Meta({ doc, route, model }: PaneProps) {
   const topics = topicsOf(doc, model).slice(0, 2);
   const current = isCurrent(doc, route.version);
   const version = findVersion(doc, selectedVersionId(doc, route.version));
+  const versioned = version && (doc.versions.length > 1 || version.label?.trim());
+  const label =
+    version?.label?.trim() ||
+    (current ? 'Current version' : version?.isRoot ? 'Original' : 'Version');
   const pages = current && doc.pageCount ? `${doc.pageCount} p` : null;
   return (
     <div class="pane-meta" ref={line}>
-      {doc.versions.length > 1 && version && (
-        <span class="pane-version" data-rank="1">
-          {versionName(version)}
+      {versioned && (
+        <span class="pane-version" data-rank="1" title={label}>
+          {label}
         </span>
       )}
-      <span class="pane-date" data-rank="2">
-        {formatDate(doc.created)}
+      <time class="pane-date" data-rank="2" dateTime={versioned ? version.added : doc.created}>
+        {formatDate(versioned ? version.added : doc.created)}
+      </time>
+      <span class="marks" data-rank="3">
+        <Context doc={doc} />
       </span>
       {pages && (
         <span class="pane-pages" data-rank="4">
@@ -108,9 +111,6 @@ function Meta({ doc, route, model }: PaneProps) {
           {t.name}
         </span>
       ))}
-      <span class="marks" data-rank="3">
-        <Context doc={doc} />
-      </span>
     </div>
   );
 }

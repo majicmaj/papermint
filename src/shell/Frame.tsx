@@ -55,7 +55,19 @@ export function Frame({
         <div class="pane-actions pane-actions--desktop">{actions(false)}</div>
       </header>
       <div class="pane-body">
-        <div class="pane-metarow">{meta}</div>
+        <div class="pane-metarow">
+          {meta}
+          {!terminal && (
+            <button
+              type="button"
+              class="btn btn--icon btn--ghost pane-close"
+              aria-label="Close preview"
+              onClick={onBack}
+            >
+              <Icon name="x" size={16} />
+            </button>
+          )}
+        </div>
         <div class="pane-view">{body}</div>
       </div>
       <footer class="pane-actions pane-actions--mobile">{actions(true)}</footer>

@@ -10,7 +10,7 @@ Papermint gives your documents a focused workspace. Search from the keyboard, re
 
 ![Papermint’s desktop search palette showing synthetic records](docs/search-demo.webp)
 
-- **Find a record.** Press <kbd>⌘</kbd> / <kbd>Ctrl</kbd> + <kbd>K</kbd> or <kbd>/</kbd> to search titles and document text. Filter by date, file type, status, area, and topic.
+- **Find a record.** Press <kbd>⌘</kbd> / <kbd>Ctrl</kbd> + <kbd>K</kbd> or <kbd>/</kbd> for recent records and commands. Type to search titles and document text, or use Filter to narrow the archive by topic, date, file type, and more.
 - **Read and file.** Preview a record beside the list on desktop or in a sheet on mobile. Upload through the picker or drag and drop, then file a new record or attach it as a version.
 - **Keep track of versions.** Browse version history and follow links to replacements. Download originals directly from Paperless.
 - **Install it.** Add Papermint to your home screen or desktop. A limited document index remains available offline.

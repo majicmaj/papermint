@@ -1,10 +1,12 @@
 import { matchTitle } from './match';
 import { parseHighlights } from './snippet';
-import type { Entry, FullTextHit, Item, OpenMode, PaletteState } from './types';
+import type { Entry, FullTextHit, IdleContent, Item, OpenMode, PaletteState } from './types';
 
 export interface PaletteOptions {
   /** Current index in display order. Called on every keystroke. */
   getEntries: () => readonly Entry[];
+  /** Recent records and commands available for the current screen. */
+  getIdle?: () => IdleContent;
   /** Full-text search. Must honor `signal`. */
   fullText: (query: string, signal: AbortSignal) => Promise<FullTextHit[]>;
   onActivate: (id: number, mode: OpenMode) => void;
@@ -24,6 +26,9 @@ export class PaletteController {
     open: false,
     query: '',
     items: [],
+    commands: [],
+    title: undefined,
+    nested: false,
     selected: 0,
     searching: false,
     failed: false,
@@ -32,6 +37,7 @@ export class PaletteController {
   private timer: ReturnType<typeof setTimeout> | null = null;
   private abort: AbortController | null = null;
   private textItems: Item[] = [];
+  private nested: IdleContent | undefined;
 
   constructor(private readonly options: PaletteOptions) {}
 
@@ -52,10 +58,14 @@ export class PaletteController {
   close(): void {
     this.cancelSearch();
     this.textItems = [];
+    this.nested = undefined;
     this.update({
       open: false,
       query: '',
       items: [],
+      commands: [],
+      title: undefined,
+      nested: false,
       selected: 0,
       searching: false,
       failed: false,
@@ -65,7 +75,8 @@ export class PaletteController {
   setQuery(query: string): void {
     this.cancelSearch();
     this.textItems = [];
-    this.update({ query, selected: 0, failed: false });
+    if (query.trim()) this.nested = undefined;
+    this.update({ query, selected: 0, failed: false, searching: false });
     this.recompute();
     if (query.trim().length >= 2) this.scheduleFullText(query.trim());
   }
@@ -85,17 +96,33 @@ export class PaletteController {
   }
 
   move(delta: number): void {
-    const count = this.state.items.length;
+    const count = this.state.items.length + this.state.commands.length;
     if (count === 0) return;
     this.update({ selected: (this.state.selected + delta + count) % count });
   }
 
   select(index: number): void {
-    if (index >= 0 && index < this.state.items.length) this.update({ selected: index });
+    if (index >= 0 && index < this.state.items.length + this.state.commands.length) {
+      this.update({ selected: index });
+    }
+  }
+
+  back(): void {
+    if (!this.nested) return this.close();
+    this.nested = undefined;
+    this.recompute(0);
   }
 
   /** Act on one item. Pass `index` to act on a clicked item, not on the highlighted one. */
   activate(mode: OpenMode, index: number = this.state.selected): void {
+    const command = this.state.commands[index - this.state.items.length];
+    if (command) {
+      const next = command.run();
+      if (!next) return this.close();
+      this.nested = next;
+      this.recompute(next.selected ?? 0);
+      return;
+    }
     const item = this.state.items[index];
     if (!item) return;
     this.options.onActivate(item.id, mode);
@@ -111,7 +138,6 @@ export class PaletteController {
     const { query } = this.state;
     const limit = this.options.maxTitleItems ?? 8;
     const entries = this.options.getEntries();
-    if (query.trim() === '') return entries.slice(0, limit).map((e) => toItem(e, []));
     const scored: { entry: Entry; score: number; ranges: [number, number][] }[] = [];
     for (const entry of entries) {
       const hit = matchTitle(entry.title, query);
@@ -121,15 +147,31 @@ export class PaletteController {
     return scored.slice(0, limit).map((s) => toItem(s.entry, s.ranges));
   }
 
-  private recompute(): void {
+  private recompute(selection = this.state.selected): void {
+    if (!this.state.query.trim()) {
+      const idle = this.nested ??
+        this.options.getIdle?.() ?? { entries: this.options.getEntries() };
+      const items = (idle.entries ?? [])
+        .slice(0, this.options.maxTitleItems ?? 8)
+        .map((e) => toItem(e, []));
+      const commands = idle.commands ?? [];
+      this.update({
+        items,
+        commands,
+        title: idle.title,
+        nested: this.nested !== undefined,
+        selected: Math.min(selection, Math.max(0, items.length + commands.length - 1)),
+      });
+      return;
+    }
     const titles = this.titleItems();
     const seen = new Set(titles.map((item) => item.id));
     // Hits that are already shown as title matches do not use up the full-text budget.
     const limit = this.options.maxTextItems ?? 6;
     const extra = this.textItems.filter((item) => !seen.has(item.id)).slice(0, limit);
     const merged = [...titles, ...extra];
-    const selected = Math.min(this.state.selected, Math.max(0, merged.length - 1));
-    this.update({ items: merged, selected });
+    const selected = Math.min(selection, Math.max(0, merged.length - 1));
+    this.update({ items: merged, commands: [], title: undefined, nested: false, selected });
   }
 
   private cancelSearch(): void {

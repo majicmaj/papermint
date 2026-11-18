@@ -31,6 +31,20 @@ export function useTopics() {
 
 export const selection = store;
 
+/** Update both selections inside the same results change. */
+export function writeSelection(next: { areas: number[]; selected: number[] }): void {
+  store.set(next);
+  writeIds(AREAS_KEY, next.areas);
+  writeIds(TOPICS_KEY, next.selected);
+}
+
+export function selectTaxonomy(areas: number[], selected: number[]): void {
+  swap('results', () => {
+    applyHeld();
+    writeSelection({ areas, selected });
+  });
+}
+
 /** A choice here changes the results, so they cross-fade (never while the keyboard acts). */
 export function selectTopics(selected: number[]): void {
   swap('results', () => {

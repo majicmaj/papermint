@@ -1,3 +1,5 @@
+import type { IconName } from '../icons/paths';
+
 export type Range = [start: number, end: number];
 
 export interface Segment {
@@ -42,10 +44,27 @@ export interface FullTextHit {
 
 export type OpenMode = 'open' | 'download';
 
+export interface Command {
+  title: string;
+  icon: IconName;
+  detail?: string;
+  run: () => IdleContent | void;
+}
+
+export interface IdleContent {
+  title?: string;
+  entries?: readonly Entry[];
+  commands?: readonly Command[];
+  selected?: number;
+}
+
 export interface PaletteState {
   open: boolean;
   query: string;
   items: Item[];
+  commands: readonly Command[];
+  title: string | undefined;
+  nested: boolean;
   selected: number;
   /** True while a full-text request is in flight. */
   searching: boolean;

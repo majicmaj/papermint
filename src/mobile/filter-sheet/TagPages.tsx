@@ -6,7 +6,7 @@ import type { TagModel } from '../../domain/tags';
 import { Icon } from '../../icons/Icon';
 import { useApp } from '../../state/app';
 import { openTagEditor, openTagMenu, type TagKind } from '../../state/tag-editor';
-import { selectAreas, selectTopics, useTopics } from '../../state/topics';
+import { selectTaxonomy, selectTopics, useTopics } from '../../state/topics';
 import { searchNames } from '../rows';
 import { Group, Label, PageHead, Tick } from './parts';
 
@@ -27,10 +27,8 @@ export function useChoice() {
   const { areas, selected } = useTopics();
   const model = useApp((s) => s.model);
   const visible = visibleSelection(model, areas, selected);
-  const pickAreas = (next: number[]) => {
-    selectAreas(next);
-    selectTopics(visibleSelection(model, next, selected));
-  };
+  const pickAreas = (next: number[]) =>
+    selectTaxonomy(next, visibleSelection(model, next, selected));
   /** A topic outside the chosen areas brings its area along, or the choice would do nothing. */
   const toggleTopic = (id: number) => {
     if (visible.includes(id)) {
@@ -39,7 +37,8 @@ export function useChoice() {
     }
     const area = model.areaOf.get(id);
     if (areas.length > 0 && area !== undefined && !areas.includes(area)) {
-      selectAreas([...areas, area]);
+      selectTaxonomy([...areas, area], [...visible, id]);
+      return;
     }
     selectTopics([...visible, id]);
   };
