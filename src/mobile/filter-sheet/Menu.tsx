@@ -10,6 +10,7 @@ import {
   type PageKind,
   type SummaryContext,
 } from '../rows';
+import { FavoriteSection, SaveFavoriteRow, useFavoriteHits } from './FavoriteRows';
 import { Group, Label, NavRow, SwitchRow } from './parts';
 import { TagResults, hasTagHits, useChoice } from './TagPages';
 
@@ -54,6 +55,8 @@ interface BodyProps extends SortProps {
   today: Date;
   onOpen: (kind: PageKind) => void;
   desktop?: boolean;
+  /** Closes the phone's sheet. The desktop Filter menu has none, and shows no favorites. */
+  onClose?: () => void;
 }
 
 function useSummary(props: BodyProps): SummaryContext {
@@ -99,9 +102,12 @@ export function MenuBody(props: BodyProps) {
   const { model } = useChoice();
   const items = searchMenu(props.query, props.desktop ? DESKTOP_MENU : undefined);
   const searching = props.query.trim() !== '';
-  const empty = searching && items.length === 0 && !hasTagHits(model, props.query);
+  const phone = !props.desktop && props.onClose;
+  const favoriteHits = useFavoriteHits(props.query) && !!phone;
+  const empty = searching && items.length === 0 && !hasTagHits(model, props.query) && !favoriteHits;
   return (
     <>
+      {phone && <FavoriteSection query={props.query} onClose={phone} />}
       {items.length > 0 && (
         <div class="fs-section">
           {(!props.desktop || searching) && <Label>{searching ? 'Filters' : 'All filters'}</Label>}
@@ -113,6 +119,7 @@ export function MenuBody(props: BodyProps) {
         </div>
       )}
       {searching && <TagResults query={props.query} />}
+      {phone && !searching && <SaveFavoriteRow onClose={phone} />}
       {empty && <p class="fs-empty">No matches</p>}
     </>
   );

@@ -11,6 +11,7 @@ import { swap } from '../motion/transition';
 import { applyHeld } from '../state/app';
 import { updateFilters, useFilters, useFilterTags } from '../state/filters';
 import { selectTaxonomy, selectTopics, useTopics } from '../state/topics';
+import { FavoriteStar } from './Favorites';
 import { FilterPanel } from './FilterPanel';
 import { Menu } from './Menu';
 import { GroupMenu } from './GroupMenu';
@@ -191,6 +192,7 @@ export function ActiveFilters() {
           <Icon name="x" size={12} />
         </button>
       ))}
+      <FavoriteStar />
     </div>
   );
 }

@@ -1,6 +1,8 @@
 import type { FilterChip } from '../domain/filters';
 import { VIEW_LABEL, type ViewName } from '../domain/views';
 import { Icon } from '../icons/Icon';
+import { FavoriteGlyph } from '../components/Favorites';
+import { applyFavorite, useActiveFavorite, useFavorites } from '../state/favorites';
 import { HeaderMenu } from './HeaderMenu';
 
 interface Props {
@@ -13,6 +15,29 @@ interface Props {
   onRemove: (chip: FilterChip) => void;
   superseded: boolean;
   onSuperseded: (value: boolean) => void;
+}
+
+/** Favorites beside Filter: one tap shows a favorite, a second tap clears it. */
+function Favorites() {
+  const items = useFavorites();
+  const active = useActiveFavorite();
+  if (items.length === 0) return null;
+  return (
+    <div class="topbar-favs" role="group" aria-label="Favorites">
+      {items.map((favorite) => (
+        <button
+          key={favorite.id}
+          type="button"
+          class="topbar-fav"
+          aria-pressed={favorite.id === active?.id}
+          onClick={() => applyFavorite(favorite.id)}
+        >
+          <FavoriteGlyph icon={favorite.icon} color={favorite.color} />
+          <span class="topbar-fav-name">{favorite.name}</span>
+        </button>
+      ))}
+    </div>
+  );
 }
 
 /**
@@ -39,6 +64,7 @@ export function TopBar({ view, chips, active, expanded, onFilter, onRemove, ...m
             <Icon name="sliders_horizontal" size={18} />
             Filter
           </button>
+          <Favorites />
         </div>
       )}
       {list && chips.length > 0 && (

@@ -43,9 +43,20 @@ function useShown(src: string, sensitive: boolean): [Shown, () => void] {
 }
 
 function TextPreview({ text }: { text: string }) {
+  const parts = text.split(/(https?:\/\/[^\s<>"'()]*[^\s<>"'().,;!?])/gi);
   return (
     <div class="preview-scroll">
-      <pre class="preview-text">{text}</pre>
+      <pre class="preview-text">
+        {parts.map((part, index) =>
+          index % 2 === 0 ? (
+            part
+          ) : (
+            <a key={index} href={part} target="_blank" rel="noopener noreferrer">
+              {part}
+            </a>
+          ),
+        )}
+      </pre>
     </div>
   );
 }

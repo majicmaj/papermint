@@ -41,6 +41,8 @@ describe('the menu', () => {
       'Type',
       'Signed',
       'Versions',
+      'Sensitive',
+      'Unfiled',
       'Sort',
     ]);
   });
@@ -53,6 +55,7 @@ describe('the menu', () => {
       'added',
       'modified',
       'signed',
+      'unfiled',
     ]);
     expect(searchMenu('sïgn').map((item) => item.kind)).toEqual(['signed']);
     expect(searchMenu('zzz')).toEqual([]);

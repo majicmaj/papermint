@@ -1,0 +1,237 @@
+/* Favorites: pinned filter combinations above Areas in the rail. Rows reuse the tag row. */
+.favorites {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 8px 0;
+}
+
+/* The taxonomy below starts its own section. */
+.favorites + .taxonomy {
+  padding-top: 12px;
+}
+
+/* A row: the same shape as an area or topic row in the rail. */
+.fav-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 28px;
+  align-items: center;
+  border-radius: var(--radius-1);
+}
+
+.fav-row:hover,
+.fav-row:focus-within {
+  background: var(--mw-gray-4);
+}
+
+.fav-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  height: 32px;
+  padding: 0 4px 0 8px;
+  border-radius: var(--radius-1);
+  color: var(--mw-gray-11);
+  text-align: left;
+}
+
+.fav-toggle[aria-pressed='true'] {
+  background: var(--surface-selected);
+  color: var(--on-selected);
+}
+
+.fav-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fav-count {
+  min-width: 20px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.fav-more {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-1);
+  color: var(--mw-gray-11);
+  opacity: 0;
+}
+
+.fav-row:hover .fav-more,
+.fav-more:focus-visible,
+.fav-more[aria-expanded='true'] {
+  opacity: 1;
+}
+
+.fav-more:hover {
+  background: var(--mw-gray-5);
+  color: var(--mw-gray-12);
+}
+
+/* The star at the end of the active filter chips. */
+.fav-star {
+  margin-left: auto;
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--mw-gray-6);
+}
+
+.desktop-filter-strip .fav-star:hover {
+  background: var(--mw-gray-3);
+  color: var(--mw-gray-12);
+}
+
+.desktop-filter-strip .fav-star[data-on='true'] {
+  background: var(--mw-gray-3);
+  box-shadow: none;
+  color: var(--mw-gray-12);
+}
+
+.fav-star-icon {
+  display: inline-grid;
+  place-items: center;
+}
+
+/* A saved combination: the star is filled. A custom icon keeps its outline. */
+.fav-star-fill .icon {
+  fill: currentColor;
+}
+
+/* The editor. */
+.fav-pop {
+  top: clamp(8px, var(--y), calc(100dvh - 520px));
+  width: min(320px, calc(100vw - 16px));
+  max-height: calc(100dvh - 16px);
+  overflow-y: auto;
+}
+
+.fav-name {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  align-items: center;
+  gap: 4px;
+}
+
+.fav-name .fav-glyph {
+  justify-self: center;
+  width: 20px;
+  height: 20px;
+}
+
+.fav-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  color: var(--mw-gray-11);
+  font-size: 12px;
+  list-style: none;
+}
+
+.fav-part {
+  max-width: 100%;
+  padding: 2px 8px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--mw-gray-3);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fav-current {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  color: var(--mw-gray-12);
+}
+
+.fav-foot {
+  gap: 8px;
+}
+
+.fav-remove {
+  margin-right: auto;
+  color: var(--mw-gray-11);
+}
+
+.fav-menu {
+  top: min(var(--y), calc(100dvh - 196px));
+}
+
+/* The phone header: favorites beside Filter, one tap each. The row scrolls sideways. */
+.topbar-favs {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  height: 44px;
+  margin-left: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.topbar-favs::-webkit-scrollbar {
+  display: none;
+}
+
+.topbar-fav {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  max-width: 180px;
+  height: 44px;
+  padding: 0 14px 0 12px;
+  border-radius: 20px;
+  background: var(--mw-gray-3);
+  color: var(--mw-gray-12);
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.topbar-fav[aria-pressed='true'] {
+  background: var(--surface-selected);
+  color: var(--on-selected);
+}
+
+.topbar-fav-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (pointer: coarse), (max-width: 859px) {
+  .fav-row {
+    grid-template-columns: minmax(0, 1fr) 44px;
+  }
+
+  .fav-toggle {
+    height: 44px;
+  }
+
+  .fav-more {
+    width: 44px;
+    height: 44px;
+    opacity: 1;
+  }
+
+  .fav-current {
+    min-height: 44px;
+  }
+}
+
+/* The phone sheet's last row. Off while there is nothing new to save. */
+.fs-fav-save:disabled {
+  opacity: 0.45;
+  cursor: default;
+}

@@ -1,4 +1,5 @@
 import type { IconName } from '../icons/paths';
+import type { TagIconName } from '../icons/tag-icons';
 
 export type Range = [start: number, end: number];
 
@@ -46,7 +47,7 @@ export type OpenMode = 'open' | 'download';
 
 export interface Command {
   title: string;
-  icon: IconName;
+  icon: IconName | TagIconName;
   detail?: string;
   run: () => IdleContent | void;
 }

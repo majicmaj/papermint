@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { boot } from './f2';
+import { mockApi } from './fixture';
 import { expectStable, isMobile } from './helpers';
 
 const head = (page: Page) => page.locator('.pane-head');
@@ -58,4 +59,22 @@ test.describe('record header marks, on a direct route', () => {
     );
     await expectStable(page, `${info.project.name} marks`, 800);
   });
+});
+
+test('text previews make web URLs clickable while preserving the surrounding text', async ({
+  page,
+}) => {
+  await mockApi(page);
+  const url = 'https://example.test/backups/file.pdf?version=2';
+  const body = `Backup: ${url}.\nPlain text: javascript:alert(1)`;
+  await page.route('**/api/documents/108/preview/**', (route) =>
+    route.fulfill({ contentType: 'text/plain', body }),
+  );
+  await page.goto('/r/108');
+  const preview = page.locator('.preview-text');
+  const links = preview.getByRole('link');
+  await expect(links).toHaveCount(1);
+  await expect(links).toHaveAttribute('href', url);
+  await expect(links).toHaveAttribute('rel', 'noopener noreferrer');
+  expect(await preview.textContent()).toBe(body);
 });

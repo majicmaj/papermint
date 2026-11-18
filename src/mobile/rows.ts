@@ -8,7 +8,8 @@ export type DateField = 'created' | 'added' | 'modified';
 /** A row that opens a page of its own inside the sheet. */
 export type PageKind = 'areas' | 'topics' | DateField | 'size' | 'pages' | 'type' | 'sort';
 /** A row that is a switch: it never opens a page. */
-export type SwitchKind = 'signed' | 'versions' | 'superseded';
+const SWITCH_KINDS = ['signed', 'sensitive', 'unfiled', 'versions', 'superseded'] as const;
+export type SwitchKind = (typeof SWITCH_KINDS)[number];
 export type MenuKind = PageKind | SwitchKind;
 
 export interface MenuItem {
@@ -29,11 +30,13 @@ export const MENU: readonly MenuItem[] = [
   { kind: 'type', label: 'Type', icon: 'file_text' },
   { kind: 'signed', label: 'Signed', icon: 'badge_check' },
   { kind: 'versions', label: 'Versions', icon: 'layers' },
+  { kind: 'sensitive', label: 'Sensitive', icon: 'file_lock' },
+  { kind: 'unfiled', label: 'Unfiled', icon: 'folder' },
   { kind: 'sort', label: 'Sort', icon: 'arrow_up_down' },
 ];
 
 export const isSwitch = (kind: MenuKind): kind is SwitchKind =>
-  kind === 'signed' || kind === 'versions' || kind === 'superseded';
+  SWITCH_KINDS.some((value) => value === kind);
 
 export type FilterPageKind = Exclude<PageKind, 'areas' | 'topics' | 'sort'>;
 

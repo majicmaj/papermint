@@ -36,12 +36,19 @@ export function useActiveFilterCount(): number {
   return areas.length + topics.length + filterChips(filters).length;
 }
 
-function clearFilters(): void {
+/** Replace every filter, area and topic at once, in one results change. */
+export function replaceFilters(filters: Filters, areas: number[], selected: number[]): void {
   swap('results', () => {
     applyHeld();
-    store.set({ filters: EMPTY_FILTERS });
-    writeSelection({ areas: [], selected: [] });
+    store.set({ filters });
+    writeSelection({ areas, selected });
   });
+}
+
+export const filtersStore = store;
+
+export function clearFilters(): void {
+  replaceFilters(EMPTY_FILTERS, [], []);
 }
 
 export function clearFiltersCommand(): (() => void) | undefined {

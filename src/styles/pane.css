@@ -175,6 +175,11 @@
   overflow-wrap: anywhere;
 }
 
+.preview-text a {
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
 .pane {
   display: flex;
   flex-direction: column;

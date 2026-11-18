@@ -10,6 +10,7 @@ import { copyLink } from '../shell/copy-link';
 import { appStore, notify } from './app';
 import { uploadFiles } from './uploads';
 import { popLayer, pushLayer } from './modal';
+import { favoriteCommands } from './favorites';
 import { clearFiltersCommand } from './filters';
 import { currentRoute, goToView, navigate, recordPath, routeStore, type Route } from './router';
 
@@ -141,6 +142,7 @@ function paletteIdle(): IdleContent {
           },
         ],
   );
+  commands.push(...favoriteCommands(view === 'records'));
   const clear = view === 'records' ? clearFiltersCommand() : undefined;
   if (clear) commands.push({ title: 'Clear filters', icon: 'list_filter', run: clear });
   if (!runtimeConfig().readOnly) commands.push({ title: 'Upload', icon: 'upload', run: pickFiles });

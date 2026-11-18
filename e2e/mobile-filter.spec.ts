@@ -50,7 +50,7 @@ test('the sheet is a menu: search and close on top, one grouped list of filter k
 
   const front = sheetFront(page);
   await expect(front.locator('.fs-label').first()).toHaveText('All filters');
-  await expect(front.locator('.fs-row .fs-text')).toHaveText([
+  await expect(front.locator('.fs-row:not(.fs-fav-save) .fs-text')).toHaveText([
     'Areas',
     'Topics',
     'Created',
@@ -61,12 +61,15 @@ test('the sheet is a menu: search and close on top, one grouped list of filter k
     'Type',
     'Signed',
     'Versions',
+    'Sensitive',
+    'Unfiled',
     'Sort',
   ]);
-  const group = await box(front.locator('.fs-group'));
+  const group = await box(front.locator('.fs-group').first());
   expect(round(group.x - drawer.x)).toBe(16);
   for (const row of await rowBoxes(front)) expect(round(row.height)).toBe(56);
-  await expect(front.getByRole('switch')).toHaveCount(2);
+  await expect(front.getByRole('switch')).toHaveCount(4);
+  await expect(front.getByRole('button', { name: 'Save as favorite' })).toBeDisabled();
   await expect(front.locator('.fs-nav[data-kind="sort"] .fs-summary')).toHaveText('Created');
   // Recovery lives in the header's menu, not in the sheet.
   await expect(sheet.getByRole('link', { name: 'Recovery' })).toHaveCount(0);
@@ -227,6 +230,7 @@ test('search narrows the kinds and toggles areas and topics in place', async ({ 
     'Added',
     'Modified',
     'Signed',
+    'Unfiled',
   ]);
   // Fewer rows never shrink the sheet: the field stays where the thumb left it.
   expect(round((await box(sheet)).height)).toBe(round(height));
@@ -248,7 +252,7 @@ test('search narrows the kinds and toggles areas and topics in place', async ({ 
   await field.fill('zzz');
   await expect(front.locator('.fs-empty')).toHaveText('No matches');
   await field.fill('');
-  await expect(front.locator('.fs-row')).toHaveCount(11);
+  await expect(front.locator('.fs-row:not(.fs-fav-save)')).toHaveCount(13);
   await closeTaxonomy(page, test.info());
 });
 

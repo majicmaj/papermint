@@ -4,6 +4,7 @@ import { IntakePanel } from './components/IntakePanel';
 import { DropZone, Toast } from './components/Overlays';
 import { DialogHost } from './components/ConfirmDelete';
 import { PaletteView } from './components/PaletteView';
+import { FavoriteEditor, FavoriteMenu } from './components/FavoriteEditor';
 import { TagEditor } from './components/TagEditor';
 import { TagMenu } from './components/TagMenu';
 import { anyLayerOpen, useModalOpen } from './state/modal';
@@ -101,6 +102,8 @@ export function App() {
       <DialogHost />
       <TagMenu />
       <TagEditor />
+      <FavoriteMenu />
+      <FavoriteEditor />
       <DropZone />
       <Toast />
     </>

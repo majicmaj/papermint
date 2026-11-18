@@ -1,17 +1,10 @@
 import './filters.css';
 import { ActiveFilters, FiltersBar } from './Filters';
-import {
-  filterChips,
-  matchesFilters,
-  sortRecords,
-  type Filters,
-  type SortKey,
-} from '../domain/filters';
-import { signed, type DetailedDoc } from '../domain/record-details';
+import { filterChips, sortRecords, type Filters, type SortKey } from '../domain/filters';
+import { recordsMatching } from '../domain/matching';
+import type { DetailedDoc } from '../domain/record-details';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
-import { matchesTaxonomy } from '../domain/tags';
-import { selectionOf, visibleSelection } from '../domain/taxonomy';
-import { VIEW_LABEL, archiveRecords, type ViewName } from '../domain/views';
+import { VIEW_LABEL, type ViewName } from '../domain/views';
 import { applyHeld, loadIndex, useApp } from '../state/app';
 import { anyLayerOpen } from '../state/modal';
 import { currentRoute, navigate, recordPath, type Route } from '../state/router';
@@ -95,17 +88,8 @@ function useRows(
   const { selected, areas } = useTopics();
   return useMemo(() => {
     if (view === 'recovery') return [];
-    const records = archiveRecords(docs, model, filters.superseded);
-    const chosen = selectionOf(model, areas);
-    const topics = visibleSelection(model, chosen, selectionOf(model, selected));
-    return sortRecords(
-      records.filter(
-        (doc) =>
-          matchesTaxonomy(doc, chosen, topics) && matchesFilters(doc, filters, signed(doc, tags)),
-      ),
-      sort,
-      ascending,
-    );
+    const rows = recordsMatching(docs, model, tags, { filters, areas, topics: selected });
+    return sortRecords(rows, sort, ascending);
   }, [docs, view, model, selected, areas, filters, tags, sort, ascending]);
 }
 

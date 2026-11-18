@@ -106,7 +106,7 @@ export async function heightOf(target: Locator): Promise<number> {
 }
 
 /** The active filters: the desktop strip or the phone header's chip row. */
-export const chipsOf = (page: Page) => page.locator('.chips .chip, .topbar-chips .chip');
+export const chipsOf = (page: Page) => page.locator('.chips .chip--active, .topbar-chips .chip');
 
 async function desktopFilterPage(page: Page, title: string): Promise<Locator> {
   const panel = page.getByRole('dialog', { name: 'Filter' });

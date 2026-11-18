@@ -1,5 +1,6 @@
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import { expectStable, isMobile, stepStable } from './helpers';
+import { mockApi, TAG } from './fixture';
 import {
   boot,
   chipsOf,
@@ -91,6 +92,20 @@ test('size loads from the metadata endpoint, and Superseded adds those records',
   await expect(rowTitles(page)).toHaveCount(12);
   await expect(page.locator('.list-scroll .row', { hasText: 'EIN letter scan' })).toBeVisible();
   await expectStable(page, `${info.project.name} size and superseded`, 600);
+});
+
+test('Sensitive and Unfiled can be combined and cleared independently', async ({ page }, info) => {
+  const api = await mockApi(page);
+  api.docs.find((doc) => doc.id === 111)!.tags = [TAG.current, TAG.sensitive];
+  await page.goto('/');
+  await expect(rowTitles(page)).toHaveCount(10);
+  await (await filterField(page, info, 'menu', 'Sensitive')).check();
+  await expect(rowTitles(page)).toHaveText(['Apartment lease', 'Photo ID']);
+  await (await filterField(page, info, 'menu', 'Unfiled')).check();
+  await expect(rowTitles(page)).toHaveText(['Photo ID']);
+  await (await filterField(page, info, 'menu', 'Sensitive')).uncheck();
+  await expect(chipsOf(page)).toHaveText(['Unfiled']);
+  await expect(rowTitles(page)).toHaveText(['Photo ID']);
 });
 
 test('desktop filter search finds a topic directly and leaves a removable chip', async ({

@@ -15,6 +15,8 @@ export interface Filters {
   mime: string;
   versions: boolean;
   signed: boolean;
+  sensitive: boolean;
+  unfiled: boolean;
   /** Show Superseded records in Records as well. */
   superseded: boolean;
 }
@@ -32,6 +34,8 @@ export const EMPTY_FILTERS: Filters = {
   mime: '',
   versions: false,
   signed: false,
+  sensitive: false,
+  unfiled: false,
   superseded: false,
 };
 export type SortKey = 'created' | 'added' | 'modified' | 'title' | 'size';
@@ -46,7 +50,13 @@ function matchesNumbers(doc: DetailedDoc, filters: Filters): boolean {
   }
   return true;
 }
-export function matchesFilters(doc: DetailedDoc, filters: Filters, isSigned: boolean): boolean {
+interface RecordFlags {
+  signed: boolean;
+  sensitive: boolean;
+  unfiled: boolean;
+}
+
+export function matchesFilters(doc: DetailedDoc, filters: Filters, flags: RecordFlags): boolean {
   for (const key of ['created', 'added', 'modified'] as const) {
     const value = (doc[key] ?? '').slice(0, 10);
     if (filters[`${key}From`] && value < filters[`${key}From`]) return false;
@@ -56,7 +66,9 @@ export function matchesFilters(doc: DetailedDoc, filters: Filters, isSigned: boo
   return (
     (!filters.mime || doc.mime === filters.mime) &&
     (!filters.versions || doc.versions.length > 1) &&
-    (!filters.signed || isSigned)
+    (!filters.signed || flags.signed) &&
+    (!filters.sensitive || flags.sensitive) &&
+    (!filters.unfiled || flags.unfiled)
   );
 }
 export function sortRecords(docs: DetailedDoc[], key: SortKey, ascending: boolean): DetailedDoc[] {
@@ -128,6 +140,10 @@ export function filterChips(filters: Filters): FilterChip[] {
       ? [{ id: 'versions', label: 'Versions', clear: { versions: false } }]
       : []),
     ...(filters.signed ? [{ id: 'signed', label: 'Signed', clear: { signed: false } }] : []),
+    ...(filters.sensitive
+      ? [{ id: 'sensitive', label: 'Sensitive', clear: { sensitive: false } }]
+      : []),
+    ...(filters.unfiled ? [{ id: 'unfiled', label: 'Unfiled', clear: { unfiled: false } }] : []),
     ...(filters.superseded
       ? [{ id: 'superseded', label: 'Superseded', clear: { superseded: false } }]
       : []),

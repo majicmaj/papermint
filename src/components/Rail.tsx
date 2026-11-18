@@ -1,5 +1,6 @@
 import { runtimeConfig } from '../config/runtime';
 import { RailBar } from '../shell/RailBar';
+import { Favorites } from './Favorites';
 import { Taxonomy } from './Taxonomy';
 import {
   VIEW_LABEL,
@@ -66,6 +67,7 @@ export function Rail({ active }: { active: ViewName }) {
           ))}
         </nav>
         <section class="rail-topics">
+          <Favorites />
           <Taxonomy />
         </section>
         <div class="rail-foot">

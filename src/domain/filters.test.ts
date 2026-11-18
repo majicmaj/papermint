@@ -18,6 +18,7 @@ const doc: DetailedDoc = {
 };
 describe('filters and sort', () => {
   it('combines date, size, pages, type, versions and signed', () => {
+    const flags = { signed: true, sensitive: false, unfiled: true };
     const filters = {
       ...EMPTY_FILTERS,
       createdFrom: '2026-01-01',
@@ -28,10 +29,18 @@ describe('filters and sort', () => {
       versions: true,
       signed: true,
     };
-    expect(matchesFilters(doc, filters, true)).toBe(true);
-    expect(matchesFilters(doc, filters, false)).toBe(false);
-    expect(matchesFilters(doc, { ...filters, minSize: '101' }, true)).toBe(false);
-    expect(matchesFilters(doc, { ...filters, modifiedTo: '2026-02-01' }, true)).toBe(false);
+    expect(matchesFilters(doc, filters, flags)).toBe(true);
+    expect(matchesFilters(doc, filters, { ...flags, signed: false })).toBe(false);
+    expect(matchesFilters(doc, { ...filters, minSize: '101' }, flags)).toBe(false);
+    expect(matchesFilters(doc, { ...filters, modifiedTo: '2026-02-01' }, flags)).toBe(false);
+  });
+  it('requires both markers when filtering by Sensitive and Unfiled', () => {
+    const filters = { ...EMPTY_FILTERS, sensitive: true, unfiled: true };
+    const flags = { signed: false, sensitive: true, unfiled: true };
+    expect(matchesFilters(doc, filters, flags)).toBe(true);
+    expect(matchesFilters(doc, filters, { ...flags, sensitive: false })).toBe(false);
+    expect(matchesFilters(doc, filters, { ...flags, unfiled: false })).toBe(false);
+    expect(filterChips(filters).map(({ label }) => label)).toEqual(['Sensitive', 'Unfiled']);
   });
   it('sorts without mutating the index', () => {
     const docs = [doc, { ...doc, id: 2, title: 'A', size: 200 }];
