@@ -38,7 +38,7 @@ for (const scheme of ['light', 'dark'] as const) {
     await page.unroute('**/api/documents/?*query=*');
 
     await mockWrites(page);
-    await page.goto('/pending');
+    await page.goto('/');
     await waitForRows(page);
     await dropFile(page, 'Operating agreement signed.txt');
     // Filing needs an area or a target record, so Confirm is off until one is chosen.

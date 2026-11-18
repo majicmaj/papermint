@@ -14,11 +14,10 @@ import { startModality } from './motion/modality';
 import { RecordSheet } from './mobile/RecordSheet';
 import { BottomBar } from './mobile/BottomBar';
 import { useMobile } from './mobile/viewport';
-import { viewFor, type ViewName } from './domain/views';
+import { VIEW_PATH, type ViewName } from './domain/views';
 import { openPalette, palette } from './state/actions';
-import { loadIndex, useApp } from './state/app';
+import { loadIndex } from './state/app';
 import { currentRoute, navigate, useRoute, type Route } from './state/router';
-import { VIEW_PATH } from './domain/views';
 
 // Who acted last, the keyboard or a pointer, from the first interaction on: keys never animate.
 startModality();
@@ -61,19 +60,15 @@ function useGlobalKeys(route: Route, view: ViewName): void {
   }, []);
 }
 
-function useActiveView(route: Route): ViewName {
-  const docs = useApp((s) => s.docs);
-  const model = useApp((s) => s.model);
+function activeView(route: Route): ViewName {
   if (route.name === 'file') return route.from ?? 'recovery';
-  if (route.name !== 'record') return route.name;
-  if (route.from) return route.from;
-  const doc = docs.find((d) => d.id === route.id);
-  return doc ? viewFor(doc, model) : 'records';
+  if (route.name === 'record') return route.from ?? 'records';
+  return route.name;
 }
 
 export function App() {
   const route = useRoute();
-  const view = useActiveView(route);
+  const view = activeView(route);
   useEffect(() => void loadIndex(), []);
   const covered = useModalOpen();
   const mobile = useMobile();

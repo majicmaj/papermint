@@ -1,4 +1,5 @@
 import { swap } from '../motion/transition';
+import { applyHeld } from './app';
 import { createStore, useStore } from './store';
 
 const AREAS_KEY = 'majin.areas';
@@ -33,6 +34,7 @@ export const selection = store;
 /** A choice here changes the results, so they cross-fade (never while the keyboard acts). */
 export function selectTopics(selected: number[]): void {
   swap('results', () => {
+    applyHeld();
     store.set({ selected });
     writeIds(TOPICS_KEY, selected);
   });
@@ -40,6 +42,7 @@ export function selectTopics(selected: number[]): void {
 
 export function selectAreas(areas: number[]): void {
   swap('results', () => {
+    applyHeld();
     store.set({ areas });
     writeIds(AREAS_KEY, areas);
   });

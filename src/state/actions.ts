@@ -2,12 +2,12 @@ import { runtimeConfig } from '../config/runtime';
 import { searchFullText, downloadUrl } from '../api/documents';
 import { formatDate } from '../domain/format';
 import { statusTag } from '../domain/tags';
-import { listView, VIEWS } from '../domain/views';
+import { archiveRecords } from '../domain/views';
 import { PaletteController, type Entry } from '../palette';
 import { appStore } from './app';
 import { uploadFiles } from './uploads';
 import { popLayer, pushLayer } from './modal';
-import { navigate, recordPath } from './router';
+import { currentRoute, goToView, navigate, recordPath } from './router';
 
 export function triggerDownload(id: number, version?: number): void {
   const link = document.createElement('a');
@@ -18,16 +18,15 @@ export function triggerDownload(id: number, version?: number): void {
   link.remove();
 }
 
-/** Palette entries in display order: Records, then Pending, then the rest. */
+/** Palette entries in display order: Records, then superseded documents. */
 export function paletteEntries(): Entry[] {
   const { docs, model } = appStore.get();
   const seen = new Set<number>();
-  const ordered = VIEWS.filter((v) => v !== 'recovery').flatMap((view) =>
-    listView(docs, view, model, null),
+  const records = [...archiveRecords(docs, model)].sort(
+    (a, b) => b.created.localeCompare(a.created) || b.id - a.id,
   );
-  for (const doc of docs) {
-    if (!ordered.includes(doc)) ordered.push(doc);
-  }
+  const included = new Set(records.map((doc) => doc.id));
+  const ordered = [...records, ...docs.filter((doc) => !included.has(doc.id))];
   return ordered.flatMap((doc) => {
     if (seen.has(doc.id)) return [];
     seen.add(doc.id);
@@ -55,7 +54,7 @@ export function pickFiles(): void {
     const files = Array.from(input.files ?? []);
     if (files.length > 0) {
       void uploadFiles(files);
-      navigate('/pending');
+      if (currentRoute().name !== 'records') goToView('records');
     }
   };
   input.click();

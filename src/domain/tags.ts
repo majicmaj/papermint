@@ -1,18 +1,12 @@
 import type { Doc, Tag } from '../api/types';
 
-export type StatusKey = 'current' | 'draft' | 'superseded';
+export type StatusKey = 'current' | 'superseded';
 
 /** Display order of statuses in menus. */
-export const STATUS_ORDER: readonly StatusKey[] = ['draft', 'current', 'superseded'];
+export const STATUS_ORDER: readonly StatusKey[] = ['current', 'superseded'];
 
 /** Names that are never an area or a topic. `Signed` is a marker, `Final` is the legacy `Current`. */
-export const RESERVED_TAGS: readonly string[] = [
-  'draft',
-  'current',
-  'superseded',
-  'signed',
-  'final',
-];
+export const RESERVED_TAGS: readonly string[] = ['current', 'superseded', 'signed', 'final'];
 
 export type HierarchicalTag = Tag;
 
@@ -101,10 +95,6 @@ export function statusTag(doc: Doc, model: TagModel): Tag | null {
     if (model.statusKey.has(id)) return model.byId.get(id) ?? null;
   }
   return null;
-}
-
-export function tagByStatus(model: TagModel, key: StatusKey): Tag | null {
-  return model.statuses.find((t) => model.statusKey.get(t.id) === key) ?? null;
 }
 
 export function topicsOf(doc: Doc, model: TagModel): Tag[] {

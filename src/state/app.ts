@@ -26,7 +26,7 @@ export interface AppState {
   cached: boolean;
   /**
    * A newer index that arrived in the background. It is never drawn on its own: visible rows
-   * never appear, vanish or reorder by themselves. It applies on the next view switch.
+   * never appear, vanish or reorder by themselves. It applies on the next intentional list change.
    */
   held: Index | null;
   successorField: number | null;
@@ -91,7 +91,7 @@ function applyIndex(fetched: Doc[], tags: Tag[]): void {
 
 /**
  * Fetch the index. A background fetch over rows that are already on screen is held, not drawn:
- * it applies at the next user-initiated view switch. A fetch the owner asked for (`now`),
+ * it applies at the next user-initiated list change. A fetch the owner asked for (`now`),
  * or the first fetch when nothing is on screen yet, applies at once.
  */
 export async function loadIndex(mode: 'background' | 'now' = 'background'): Promise<void> {

@@ -14,8 +14,7 @@ test(`${ROWS} records: off-screen rows are skipped and scrolling stays smooth`, 
 }) => {
   await trackCls(page);
   await start(page);
-  // Records holds the Current ones; Drafts are another view.
-  await expect.poll(() => page.locator('.list-scroll .row[data-id]').count()).toBeGreaterThan(450);
+  await expect(page.locator('.list-scroll .row[data-id]')).toHaveCount(ROWS);
   // Let the first layout settle before counting what was skipped.
   await page.evaluate(
     () => new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(done))),

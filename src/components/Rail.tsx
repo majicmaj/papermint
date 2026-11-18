@@ -1,7 +1,13 @@
 import { runtimeConfig } from '../config/runtime';
 import { RailBar } from '../shell/RailBar';
 import { Taxonomy } from './Taxonomy';
-import { VIEW_LABEL, VIEW_PATH, viewCount, visibleViews, type ViewName } from '../domain/views';
+import {
+  VIEW_LABEL,
+  VIEW_PATH,
+  archiveRecords,
+  visibleViews,
+  type ViewName,
+} from '../domain/views';
 import { Icon } from '../icons/Icon';
 import type { IconName } from '../icons/paths';
 import { openPalette, pickFiles } from '../state/actions';
@@ -10,7 +16,6 @@ import { navigate } from '../state/router';
 
 export const VIEW_ICON: Record<ViewName, IconName> = {
   records: 'files',
-  pending: 'clock',
   recovery: 'life_buoy',
 };
 
@@ -26,7 +31,7 @@ export function Brand() {
 function NavLink({ view, active }: { view: ViewName; active: ViewName }) {
   const docs = useApp((s) => s.docs);
   const model = useApp((s) => s.model);
-  const count = view === 'recovery' ? 0 : viewCount(docs, view, model);
+  const count = view === 'recovery' ? 0 : archiveRecords(docs, model).length;
   return (
     <a
       class="nav-item"

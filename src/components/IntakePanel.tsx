@@ -101,6 +101,7 @@ function Selects({ item }: { item: UploadItem }) {
           value={item.statusId ?? ''}
           onChange={(e) => set({ statusId: Number((e.target as HTMLSelectElement).value) || null })}
         >
+          <option value="">No status</option>
           {model.statuses.map((t) => (
             <option key={t.id} value={t.id}>
               {t.name}

@@ -110,7 +110,7 @@ interface ListProps {
  */
 export function PhoneList({ rows, model, view, sort, selectedId, band }: ListProps) {
   const tags = useApp((state) => state.tags);
-  const field = dateFieldFor(sort, view);
+  const field = dateFieldFor(sort);
   return (
     <>
       {listItems(rows, groupField(sort)).map((item) =>

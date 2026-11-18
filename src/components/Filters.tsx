@@ -6,6 +6,7 @@ import { FilterDrawer } from '../mobile/FilterDrawer';
 import { TopBar } from '../mobile/TopBar';
 import { useMobile } from '../mobile/viewport';
 import { swap } from '../motion/transition';
+import { applyHeld } from '../state/app';
 import { useTopics } from '../state/topics';
 import { FilterPanel } from './FilterPanel';
 import { Menu } from './Menu';
@@ -64,8 +65,16 @@ interface Props extends SortProps {
 function withSwap(sort: SortProps): SortProps {
   return {
     ...sort,
-    setSort: (key) => swap('results', () => sort.setSort(key)),
-    setAscending: (value) => swap('results', () => sort.setAscending(value)),
+    setSort: (key) =>
+      swap('results', () => {
+        applyHeld();
+        sort.setSort(key);
+      }),
+    setAscending: (value) =>
+      swap('results', () => {
+        applyHeld();
+        sort.setAscending(value);
+      }),
   };
 }
 
@@ -79,7 +88,10 @@ export function FiltersBar({
   ...sortProps
 }: Props) {
   const update = (patch: Partial<Filters>) =>
-    swap('results', () => setFilters({ ...filters, ...patch }));
+    swap('results', () => {
+      applyHeld();
+      setFilters({ ...filters, ...patch });
+    });
   const sort = withSwap(sortProps);
   const chips = useChipOrder(filterChips(filters));
   const mobile = useMobile();

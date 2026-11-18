@@ -156,7 +156,7 @@ test('pages: dates with presets, sizes, pages and the type, each with Clear', as
   ]);
   expect((await box(front.getByLabel('Minimum pages'))).height).toBeGreaterThanOrEqual(44);
   await front.getByRole('button', { name: 'Clear' }).tap();
-  await expect(rowTitles(page)).toHaveCount(9);
+  await expect(rowTitles(page)).toHaveCount(10);
 
   front = await sheetPage(page, 'Size');
   await front.getByLabel('Minimum size').fill('105');
@@ -240,7 +240,7 @@ test('search narrows the kinds and toggles areas and topics in place', async ({ 
   await field.fill('llc');
   await front.locator('.fs-tag-toggle', { hasText: 'LLC' }).tap();
   // Health sits under Personal, which is not chosen: its choice no longer filters.
-  await expect(rowTitles(page)).toHaveCount(6);
+  await expect(rowTitles(page)).toHaveCount(7);
   await field.fill('tax');
   // A topic outside the chosen areas brings its area along.
   await front.locator('.fs-tag-toggle', { hasText: 'Tax' }).tap();

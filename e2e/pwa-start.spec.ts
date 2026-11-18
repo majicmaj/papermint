@@ -39,7 +39,7 @@ test('a warm start draws the stored records at the first paint, never a skeleton
   expect((await readCls(page)).total).toBeLessThanOrEqual(0.001);
 });
 
-test('a changed index from the server waits for the next view switch', async ({
+test('a changed index from the server waits for an intentional list change', async ({
   page,
   request,
 }) => {
@@ -54,9 +54,9 @@ test('a changed index from the server waits for the next view switch', async ({
   await page.waitForTimeout(1500);
   expect(await rows(page).count()).toBe(before);
   expect(await page.locator('.list-scroll .row-title').allInnerTexts()).toEqual(titles);
-  // The owner switches view: the held index is drawn.
-  await page.locator('.nav-item', { hasText: 'Drafts' }).click();
-  await page.locator('.nav-item', { hasText: 'Records' }).click();
+  // Changing the order redraws the list, even with no other view to switch to.
+  await page.getByRole('button', { name: 'Sort', exact: true }).click();
+  await page.getByRole('menuitemradio', { name: 'Title', exact: true }).click();
   await expect.poll(() => rows(page).count()).toBeGreaterThan(before);
 });
 

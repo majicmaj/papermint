@@ -13,7 +13,7 @@ import { signed, type DetailedDoc } from '../domain/record-details';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { matchesTaxonomy } from '../domain/tags';
 import { selectionOf, visibleSelection } from '../domain/taxonomy';
-import { VIEW_LABEL, listView, type ViewName } from '../domain/views';
+import { VIEW_LABEL, archiveRecords, type ViewName } from '../domain/views';
 import { applyHeld, loadIndex, useApp } from '../state/app';
 import { anyLayerOpen } from '../state/modal';
 import { currentRoute, navigate, recordPath, type Route } from '../state/router';
@@ -94,15 +94,12 @@ function useRows(
   const tags = useApp((s) => s.tags);
   const { selected, areas } = useTopics();
   return useMemo(() => {
-    const base = listView(docs, view, model, null);
-    const extra =
-      view === 'records' && filters.superseded
-        ? docs.filter((doc) => doc.tags.some((id) => model.statusKey.get(id) === 'superseded'))
-        : [];
+    if (view === 'recovery') return [];
+    const records = archiveRecords(docs, model, filters.superseded);
     const chosen = selectionOf(model, areas);
     const topics = visibleSelection(model, chosen, selectionOf(model, selected));
     return sortRecords(
-      [...base, ...extra].filter(
+      records.filter(
         (doc) =>
           matchesTaxonomy(doc, chosen, topics) && matchesFilters(doc, filters, signed(doc, tags)),
       ),
@@ -156,14 +153,7 @@ function ListRows({ rows, view, sort, selectedId, band }: RowsProps) {
       {rows.map((doc, index) => (
         // Keyed by position: a new result set swaps the content of the same rows in place.
         // Keyed by id, Preact would move rows around and every row below a removed one would shift.
-        <Row
-          key={index}
-          doc={doc}
-          model={model}
-          view={view}
-          selectedId={selectedId}
-          dateField={view === 'pending' ? 'added' : 'created'}
-        />
+        <Row key={index} doc={doc} model={model} view={view} selectedId={selectedId} />
       ))}
     </>
   );
@@ -173,9 +163,7 @@ export function RecordList({ view, route }: Props) {
   const phase = useApp((s) => s.phase);
   const docs = useApp((s) => s.docs);
   const [filters, setFilters] = useState(EMPTY_FILTERS);
-  // Drafts come in by when they were added; every other list by when they were created.
-  const [chosen, setSort] = useState<SortKey | null>(null);
-  const sort: SortKey = chosen ?? (view === 'pending' ? 'added' : 'created');
+  const [sort, setSort] = useState<SortKey>('created');
   const [ascending, setAscending] = useState(false);
   const scroller = useRef<HTMLDivElement>(null);
   const rows = useRows(view, filters, sort, ascending);

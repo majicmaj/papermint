@@ -1,11 +1,10 @@
 import type { SortKey } from '../domain/filters';
 import type { DetailedDoc } from '../domain/record-details';
-import type { ViewName } from '../domain/views';
 
 /** Phone list geometry. Every item has a fixed height, so its offset is known before layout. */
 export const PHONE_ROW = 52;
 export const PHONE_HEAD = 40;
-/** The space between the segments and the first item. */
+/** The space between the header and the first item. */
 export const LIST_TOP = 8;
 
 export type DateField = 'created' | 'added' | 'modified';
@@ -37,10 +36,10 @@ export function monthLabel(value: string | undefined): string {
   return date ? MONTH.format(date) : 'No date';
 }
 
-/** The date a row shows: the sorted date, else the view's own date. */
-export function dateFieldFor(sort: SortKey, view: ViewName): DateField {
+/** The date a row shows: the sorted date, else the document's creation date. */
+export function dateFieldFor(sort: SortKey): DateField {
   if (sort === 'created' || sort === 'added' || sort === 'modified') return sort;
-  return view === 'pending' ? 'added' : 'created';
+  return 'created';
 }
 
 /** A date sort groups by month; a title or size sort is one flat list. */

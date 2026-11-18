@@ -5,7 +5,7 @@ import { exitDelay, usePresence } from '../motion/presence';
 import { Icon } from '../icons/Icon';
 import { useApp } from '../state/app';
 import { uploadFiles } from '../state/uploads';
-import { navigate } from '../state/router';
+import { currentRoute, goToView } from '../state/router';
 
 const EXIT_MS = 260;
 
@@ -40,7 +40,7 @@ export function DropZone() {
       const files = Array.from(e.dataTransfer?.files ?? []);
       if (files.length === 0) return;
       void uploadFiles(files);
-      navigate('/pending');
+      if (currentRoute().name !== 'records') goToView('records');
     };
     window.addEventListener('dragenter', enter);
     window.addEventListener('dragover', over);

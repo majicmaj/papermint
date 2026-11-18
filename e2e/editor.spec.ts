@@ -137,6 +137,7 @@ test('the record menu: areas, the topics of those areas, and New topic assigns i
     'LLC',
     'Personal',
     'Banking',
+    'Draft',
     'Tax',
   ]);
   await expect(menu.getByRole('menuitemcheckbox', { name: 'LLC' })).toBeDisabled();

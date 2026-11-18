@@ -12,7 +12,7 @@ Papermint gives your documents a focused workspace. Search from the keyboard, re
 
 - **Find a record.** Press <kbd>⌘</kbd> / <kbd>Ctrl</kbd> + <kbd>K</kbd> or <kbd>/</kbd> to search titles and document text. Filter by date, file type, status, area, and topic.
 - **Read and file.** Preview a record beside the list on desktop or in a sheet on mobile. Upload through the picker or drag and drop, then file a new record or attach it as a version.
-- **Keep track of versions.** Separate drafts from current records and follow links to replacements. Download originals directly from Paperless.
+- **Keep track of versions.** Browse version history and follow links to replacements. Download originals directly from Paperless.
 - **Install it.** Add Papermint to your home screen or desktop. A limited document index remains available offline.
 
 ## Try the demo
@@ -34,7 +34,7 @@ Open [http://127.0.0.1:4673](http://127.0.0.1:4673). The demo uses synthetic doc
 
 Papermint was developed against **Paperless-ngx 3.4.2**. Serve the built frontend and the authenticated Paperless API on the same HTTPS origin. The [deployment guide](DEPLOY.md) has an Nginx example, setup checks, and the runtime configuration reference.
 
-Documents without a status tag show up under **Current** by default. Papermint uses your existing Paperless tag hierarchy for areas and topics. Add status tags if you want a drafting workflow and a document-link field if you want to connect replacement records. An optional `config.json` lets you change the default status, name the replacement field, and link to files your deployment protects.
+Records includes documents with or without tags. Use the Superseded filter to include documents marked as replaced. Papermint uses your existing Paperless tag hierarchy for areas and topics. An optional `config.json` lets you name the replacement field and link to files your deployment protects.
 
 ## Work on Papermint
 

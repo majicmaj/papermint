@@ -10,7 +10,6 @@ for (const scheme of ['light', 'dark'] as const) {
       page.screenshot({ path: `screenshots/${info.project.name}-${scheme}-${name}.png` });
     for (const [name, path] of [
       ['records', '/'],
-      ['pending', '/pending'],
       ['recovery', '/recovery'],
     ] as const) {
       await page.goto(path);

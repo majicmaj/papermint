@@ -16,8 +16,6 @@ interface RowProps {
   model: TagModel;
   view: ViewName;
   selectedId: number | null;
-  /** Pending rows show when the record was added, other rows when it was created. */
-  dateField: 'created' | 'added';
 }
 
 export function open(event: MouseEvent | KeyboardEvent, path: string, from: ViewName): void {
@@ -32,7 +30,7 @@ export function open(event: MouseEvent | KeyboardEvent, path: string, from: View
 }
 
 /** A row never changes height. Versions open in the record view, not in the list. */
-export function Row({ doc, model, view, selectedId, dateField }: RowProps) {
+export function Row({ doc, model, view, selectedId }: RowProps) {
   const path = recordPath(doc.id);
   const tags = useApp((state) => state.tags);
   const { successor } = useLinks(doc);
@@ -69,7 +67,7 @@ export function Row({ doc, model, view, selectedId, dateField }: RowProps) {
         </span>
         <span class="row-meta">
           <StatusPill tag={statusTag(doc, model)} />
-          <span class="row-date">{formatDate(doc[dateField])}</span>
+          <span class="row-date">{formatDate(doc.created)}</span>
           <TopicDots tags={topics.length > 0 ? topics : areasOf(doc, model)} />
           {doc.versions.length > 1 && (
             <span class="row-versions" title="Versions">

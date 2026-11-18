@@ -8,7 +8,7 @@ export { recordPath, parseRoute };
 export type { Route };
 
 function readLocation(): Route {
-  const state = history.state as { from?: ViewName } | null;
+  const state = history.state as { from?: ViewName | 'pending' } | null;
   return parseRoute(location.pathname, location.search, state?.from ?? null);
 }
 
@@ -21,6 +21,9 @@ export function currentRoute(): Route {
 export const routeStore = createStore<{ route: Route }>({ route: readLocation() });
 
 export function refreshRoute(): void {
+  if (/^\/pending\/*$/.test(location.pathname)) {
+    history.replaceState(history.state, '', `/${location.search}${location.hash}`);
+  }
   routeStore.set({ route: readLocation() });
 }
 

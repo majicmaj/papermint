@@ -165,7 +165,7 @@ export function StatusMenu({ doc, model }: { doc: Doc; model: TagModel }) {
       trigger={
         <>
           <span ref={pill} class="pill-morph">
-            <StatusPill tag={tag} />
+            {tag ? <StatusPill tag={tag} /> : 'Status'}
           </span>
           <Icon name="chevron_down" size={14} />
         </>

@@ -81,7 +81,6 @@ function secrets(req, res, path) {
 
 // The demo archive is generated. These routes and labels exercise the optional download UI.
 const demoConfig = {
-  untaggedStatus: 'draft',
   recoveryFiles: [
     {
       key: 'code',
@@ -298,7 +297,7 @@ async function handle(req, res) {
     if (!allowPublic(req, res, url)) return;
   }
   if (url.pathname === '/config.json') {
-    const config = PUBLIC ? { readOnly: true, untaggedStatus: 'draft' } : demoConfig;
+    const config = PUBLIC ? { readOnly: true } : demoConfig;
     return send(res, 200, config, { 'cache-control': 'no-store' });
   }
   const body = PUBLIC ? '' : await readBody(req);

@@ -4,7 +4,7 @@ import { NEW_ID } from './mocks';
 /**
  * A complete mocked archive: every read and write goes to memory, nothing reaches the live
  * API. The taxonomy is hierarchical: areas LLC (10) and Personal (11), topics Tax (20) and
- * Banking (21) under LLC, Health (22) under Personal. Statuses: Draft 1, Current 2,
+ * Banking (21) and Draft (1) under LLC, Health (22) under Personal. Statuses: Current 2,
  * Superseded 3. Signed 4 and Sensitive 5 are markers.
  */
 export interface MockTag {
@@ -61,7 +61,7 @@ const tag = (id: number, name: string, color: string, parent: number | null = nu
 
 function makeTags(): MockTag[] {
   const tags = [
-    tag(1, 'Draft', '#757575'),
+    tag(1, 'Draft', '#757575', 10),
     tag(2, 'Current', '#2e7d32'),
     tag(3, 'Superseded', '#8d8d8d'),
     tag(4, 'Signed', '#3e63dd'),

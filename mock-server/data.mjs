@@ -10,7 +10,7 @@ export const SENSITIVE_FIELD = 'SENSITIVE-CUSTOM-FIELD-SENTINEL';
 export const FAKE_CODE = 'FAKE-CODE-0000-1111-2222';
 
 const TAGS = [
-  [1, 'Draft', '#757575', null],
+  [1, 'Review', '#757575', 10],
   [2, 'Current', '#2e7d32', null],
   [3, 'Superseded', '#8d8d8d', null],
   [4, 'Signed', '#3e63dd', null],
@@ -135,4 +135,4 @@ export const PDF_VERSIONS = new Set([1011, 1012]);
 
 /** The record Paperless files for an upload, as the mock's task answer names it. */
 export const UPLOADED_ID = 990001;
-export const uploadedDoc = () => doc(UPLOADED_ID, 'Uploaded file', [1], '2026-11-16');
+export const uploadedDoc = () => doc(UPLOADED_ID, 'Uploaded file', [], '2026-11-16');

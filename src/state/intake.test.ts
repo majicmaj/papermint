@@ -14,7 +14,7 @@ const tag = (id: number, name: string, parent: number | null = null): Tag => ({
 const model = buildTagModel(
   [
     tag(5, 'Signed'),
-    tag(9, 'Draft'),
+    tag(9, 'Superseded'),
     tag(13, 'Current'),
     tag(1, 'LLC'),
     tag(2, 'Personal'),

@@ -62,7 +62,7 @@ test('filter menu, chips and removing a chip', async ({ page }, info) => {
     await stepStable(page, `${info.project.name} remove chip`);
   }
   await expect(chips).toHaveCount(0);
-  await expect(rowTitles(page)).toHaveCount(9);
+  await expect(rowTitles(page)).toHaveCount(10);
   await expectStable(page, `${info.project.name} filter chips`, 600);
 });
 
@@ -75,6 +75,7 @@ test('size loads from the metadata endpoint, and Superseded adds those records',
   await minimum.fill('105');
   await expect(chipsOf(page)).toHaveText(['Size from 105 KB']);
   await expect(rowTitles(page)).toHaveText([
+    'Draft contract',
     'Joint tax return',
     'Apartment lease',
     'Health insurance',
@@ -86,7 +87,7 @@ test('size loads from the metadata endpoint, and Superseded adds those records',
   await minimum.fill('');
   await showSuperseded(page, info);
   await expect(chipsOf(page)).toHaveText(['Superseded']);
-  await expect(rowTitles(page)).toHaveCount(11);
+  await expect(rowTitles(page)).toHaveCount(12);
   await expect(page.locator('.list-scroll .row', { hasText: 'EIN letter scan' })).toBeVisible();
   await expectStable(page, `${info.project.name} size and superseded`, 600);
 });

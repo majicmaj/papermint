@@ -11,14 +11,12 @@ export interface RecoveryFile {
 
 export interface AppConfig {
   readOnly: boolean;
-  untaggedStatus: 'current' | 'draft';
   successorField: string;
   recoveryFiles: readonly RecoveryFile[];
 }
 
 export const DEFAULT_CONFIG: AppConfig = {
   readOnly: false,
-  untaggedStatus: 'current',
   successorField: 'Superseded by',
   recoveryFiles: [],
 };
@@ -75,7 +73,6 @@ export function parseConfig(value: unknown): AppConfig {
   const input = object(value);
   return {
     readOnly: input.readOnly === true,
-    untaggedStatus: input.untaggedStatus === 'draft' ? 'draft' : DEFAULT_CONFIG.untaggedStatus,
     successorField: string(input.successorField) || DEFAULT_CONFIG.successorField,
     recoveryFiles: parseRecoveryFiles(input.recoveryFiles),
   };

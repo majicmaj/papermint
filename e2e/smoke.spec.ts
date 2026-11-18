@@ -11,7 +11,6 @@ test.beforeEach(async ({ page }) => {
 
 for (const [name, path] of [
   ['records', '/'],
-  ['pending', '/pending'],
   ['recovery', '/recovery'],
 ] as const) {
   test(`${name} view loads without layout shift`, async ({ page }, info) => {
@@ -21,6 +20,13 @@ for (const [name, path] of [
     await shot(page, info, name);
   });
 }
+
+test('a legacy Drafts link opens the shared archive', async ({ page }) => {
+  await page.goto('/pending');
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.locator('.list-scroll .row', { hasText: 'Draft contract' })).toHaveCount(1);
+  await expect(page.getByRole('link', { name: 'Drafts', exact: true })).toHaveCount(0);
+});
 
 test('cold cache load without layout shift', async ({ page }, info) => {
   await page.goto('/');
@@ -148,7 +154,7 @@ test('area and topic toggles, view switches and version menus do not shift layou
       await page.keyboard.press(key);
       await page.waitForTimeout(200);
     }
-    await page.locator('.nav-item', { hasText: 'Drafts' }).click();
+    await page.locator('.nav-item', { hasText: 'Recovery' }).click();
     await page.waitForTimeout(300);
     await page.locator('.nav-item', { hasText: 'Records' }).click();
   }

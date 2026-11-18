@@ -9,18 +9,15 @@ export type Route =
   | { name: 'record'; id: number; version: number | null; from: ViewName | null }
   | { name: 'file'; key: string; from: ViewName | null };
 
-const VIEW_BY_PATH: Record<string, ViewName> = {
-  '/pending': 'pending',
-};
-
 export function parseRoute(
   path: string,
   search = '',
-  source: ViewName | null = null,
+  source: ViewName | 'pending' | null = null,
   config: AppConfig = runtimeConfig(),
 ): Route {
   const hasRecovery = config.recoveryFiles.length > 0;
-  const from = source === 'recovery' && !hasRecovery ? null : source;
+  const from = source === 'pending' ? 'records' : source;
+  const back = from === 'recovery' && !hasRecovery ? null : from;
   const trimmed = path.length > 1 ? path.replace(/\/+$/, '') : path;
   const record = /^\/r\/(\d+)$/.exec(trimmed);
   if (record) {
@@ -29,14 +26,14 @@ export function parseRoute(
       name: 'record',
       id: Number(record[1]),
       version: version && /^\d+$/.test(version) ? Number(version) : null,
-      from,
+      from: back,
     };
   }
   if (trimmed === '/recovery' && hasRecovery) return { name: 'recovery' };
   const file = /^\/f\/([a-z0-9-]+)$/.exec(trimmed);
   const known = file ? recoveryFile(file[1]!, config.recoveryFiles) : null;
-  if (known) return { name: 'file', key: known.key, from };
-  return { name: VIEW_BY_PATH[trimmed] ?? 'records' };
+  if (known) return { name: 'file', key: known.key, from: back };
+  return { name: 'records' };
 }
 
 export function recordPath(id: number, version: number | null = null): string {

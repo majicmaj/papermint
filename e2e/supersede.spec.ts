@@ -58,14 +58,14 @@ test('a record that leaves Superseded loses its link, and nothing else is writte
   await expectStable(page, `${info.project.name} leave superseded`, 600);
 });
 
-test('a status change without links sends tags only', async ({ page }, info) => {
-  const api = await boot(page, '/r/104');
+test('a status change preserves the Draft topic and sends tags only', async ({ page }, info) => {
+  const api = await boot(page, '/r/108');
   await openStatus(page, info);
-  await press(page.getByRole('menuitemradio', { name: 'Draft' }), info);
+  await press(page.getByRole('menuitemradio', { name: 'Current' }), info);
   await expect.poll(() => api.writes.docPatches.length).toBe(1);
   expect(api.writes.docPatches[0]).toEqual({
-    id: 104,
-    body: { tags: [TAG.llc, 21, TAG.draft] },
+    id: 108,
+    body: { tags: [TAG.draft, TAG.llc, TAG.current] },
   });
 });
 

@@ -12,6 +12,7 @@ import {
 } from './f2';
 
 const ALL = [
+  'Draft contract',
   'Joint tax return',
   'Apartment lease',
   'Health insurance',
@@ -40,6 +41,7 @@ test('areas and topics: OR inside a group, AND between groups', async ({ page },
   await press(tagToggle(tax, 'LLC'), info);
   await expect(tagToggle(tax, 'LLC')).toHaveAttribute('aria-pressed', 'true');
   await expect(rowTitles(page)).toHaveText([
+    'Draft contract',
     'Joint tax return',
     'Bank statement',
     'Meeting notes',
@@ -52,6 +54,9 @@ test('areas and topics: OR inside a group, AND between groups', async ({ page },
   await expect(subheads(tax)).toHaveCount(0);
   await expect(tagToggle(tax, 'Health')).toHaveCount(0);
 
+  await press(tagToggle(tax, 'Draft'), info);
+  await expect(rowTitles(page)).toHaveText(['Draft contract']);
+  await press(tagToggle(tax, 'Draft'), info);
   await press(tagToggle(tax, 'Tax'), info);
   await expect(rowTitles(page)).toHaveText(['Joint tax return', 'EIN letter']);
   await press(tagToggle(tax, 'Banking'), info);

@@ -58,34 +58,18 @@ test('the floating bar: a Search capsule and a round Upload button over the list
   await expectStable(page, 'floating bar', 500);
 });
 
-test('Current and Drafts are pills under the title; the active one holds Filter', async ({
-  page,
-}) => {
+test('Records has one filter control with a 44px tap target', async ({ page }) => {
   await bootLong(page);
-  const pills = page.locator('.segments .segment-link');
-  await expect(pills).toHaveText(['Current', 'Drafts']);
-  for (const pill of await pills.all()) {
-    expect((await pill.boundingBox())!.height).toBe(40);
-    expect((await hitArea(pill)).height).toBeGreaterThanOrEqual(44);
-  }
-  const filter = page.locator('.segment[data-active] .topbar-filter');
+  await expect(page.locator('.topbar-title')).toHaveText('Records');
+  await expect(page.getByRole('link', { name: 'Drafts', exact: true })).toHaveCount(0);
+  const filter = page.locator('.topbar-filter');
   const area = await hitArea(filter);
   expect(area.width).toBeGreaterThanOrEqual(44);
   expect(area.height).toBeGreaterThanOrEqual(44);
-  await expect(pills.first()).toHaveAttribute('aria-current', 'page');
   await resetCls(page);
-  await pills.nth(1).tap();
-  await expect(page).toHaveURL(/\/pending$/);
-  await expect(page.locator('.topbar-title')).toHaveText('Records');
-  await expect(page.locator('.segments .segment-link').nth(1)).toHaveAttribute(
-    'aria-current',
-    'page',
-  );
-  await expect(page.locator('.segment[data-active] .segment-link')).toHaveText('Drafts');
-  await stepStable(page, 'pill to Drafts', 500);
-  await page.locator('.segments .segment-link').first().tap();
-  await expect(page).toHaveURL(/\/$/);
-  await expectStable(page, 'pills', 500);
+  await openFilter(page);
+  await expect(filter).toHaveAttribute('aria-expanded', 'true');
+  await expectStable(page, 'filter control', 500);
 });
 
 /** Sort by title in the Filter sheet, on its own page if the sheet has one. */
@@ -101,19 +85,19 @@ test('the list: month headers over one-line 52px rows; a title sort is flat', as
 }, info) => {
   await bootLong(page);
   const heads = page.locator('.list-scroll .prow-head');
-  await expect(heads.first()).toHaveText('July 2026');
+  await expect(heads.first()).toHaveText('August 2026');
   await expect(heads.last()).toHaveText('January 2025');
-  const segments = (await page.locator('.segments').boundingBox())!;
+  const controls = (await page.locator('.topbar-controls').boundingBox())!;
   const head = (await heads.first().boundingBox())!;
   expect(head.height).toBe(40);
-  expect(Math.round(head.y - (segments.y + segments.height))).toBe(8);
+  expect(Math.round(head.y - (controls.y + controls.height))).toBe(8);
   const row = page.locator('.list-scroll .row[data-id]').first();
   expect((await row.boundingBox())!.height).toBe(52);
   await expect(row.locator('.row-title')).toHaveCSS('font-size', '17px');
   await expect(row.locator('.pill')).toHaveCount(0);
-  // A date of this year has no year; Operating agreement shows Signed and its 3 versions.
+  // A date of this year has no year.
   const thisYear = new Date().getFullYear() === 2026;
-  await expect(row.locator('.row-date')).toHaveText(thisYear ? 'Jul 1' : 'Jul 1, 2026');
+  await expect(row.locator('.row-date')).toHaveText(thisYear ? 'Aug 1' : 'Aug 1, 2026');
   const agreement = page.locator('.list-scroll .row', { hasText: 'Operating agreement' });
   await expect(agreement.getByRole('img', { name: 'Signed' })).toBeVisible();
   await expect(agreement.locator('.row-versions')).toHaveText('3');
@@ -202,7 +186,7 @@ test('the header: a large title, Filter in the pill, and Recovery and Superseded
   await page.getByRole('menuitem', { name: 'Recovery' }).tap();
   await expect(page).toHaveURL(/\/recovery$/);
   await expect(title).toHaveText('Recovery');
-  await expect(page.locator('.segments')).toHaveCount(0);
+  await expect(page.locator('.topbar-controls')).toHaveCount(0);
   await stepStable(page, 'recovery from the menu', 700);
   await more.tap();
   await page.getByRole('menuitem', { name: 'Records' }).tap();

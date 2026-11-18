@@ -39,9 +39,9 @@ describe('phone dates', () => {
   });
 
   it('shows the sorted date, else the view date', () => {
-    expect(dateFieldFor('modified', 'records')).toBe('modified');
-    expect(dateFieldFor('title', 'pending')).toBe('added');
-    expect(dateFieldFor('size', 'records')).toBe('created');
+    expect(dateFieldFor('modified')).toBe('modified');
+    expect(dateFieldFor('added')).toBe('added');
+    expect(dateFieldFor('size')).toBe('created');
     expect(groupField('title')).toBeNull();
     expect(groupField('added')).toBe('added');
   });

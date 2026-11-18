@@ -205,64 +205,28 @@
     transform: translateX(16px);
   }
 
-  /* Current and Drafts. The active pill holds the Filter button. */
-  .segments {
+  .topbar-controls {
     display: flex;
     align-items: center;
-    gap: 8px;
     height: 44px;
     padding: 0 20px;
   }
 
-  .segment {
-    display: inline-flex;
-    flex: none;
-    align-items: center;
-    height: 40px;
-    border-radius: 20px;
-  }
-
-  .segment[data-active] {
-    background: var(--mw-gray-3);
-  }
-
-  .segment-link {
+  .topbar-filter {
     position: relative;
     display: inline-flex;
     align-items: center;
+    gap: 8px;
     height: 40px;
     padding: 0 16px;
     border-radius: 20px;
+    background: var(--mw-gray-3);
+    color: var(--mw-gray-12);
     font-size: 15px;
     font-weight: 500;
-    color: var(--mw-gray-11);
-    text-decoration: none;
   }
 
-  .segment[data-active] .segment-link {
-    padding-right: 12px;
-    color: var(--mw-gray-12);
-  }
-
-  .segment-divider {
-    flex: none;
-    width: 1px;
-    height: 20px;
-    background: var(--mw-gray-6);
-  }
-
-  .topbar-filter {
-    position: relative;
-    display: inline-grid;
-    place-items: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 0 20px 20px 0;
-    color: var(--mw-gray-12);
-  }
-
-  /* 40px pills, 44px hit areas. */
-  .segment-link::before,
+  /* 40px pill, 44px hit area. */
   .topbar-filter::before {
     content: '';
     position: absolute;
@@ -468,12 +432,10 @@
 
   .bottombar-search:active,
   .bottombar-upload:active,
-  .segment-link:active,
   .topbar-more:active {
     transform: scale(0.97);
   }
 
-  .segment-link,
   .topbar-more {
     transition:
       background-color 80ms var(--ease),
@@ -488,7 +450,6 @@
 /* Keys never squeeze; reduced motion only fades. */
 html[data-input='keyboard'] .bottombar-search:active,
 html[data-input='keyboard'] .bottombar-upload:active,
-html[data-input='keyboard'] .segment-link:active,
 html[data-input='keyboard'] .topbar-more:active {
   transform: none;
 }
@@ -496,7 +457,6 @@ html[data-input='keyboard'] .topbar-more:active {
 @media (prefers-reduced-motion: reduce) {
   .bottombar-search:active,
   .bottombar-upload:active,
-  .segment-link:active,
   .topbar-more:active,
   .bottombar[data-hidden] {
     transform: none;

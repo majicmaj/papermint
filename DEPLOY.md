@@ -16,7 +16,6 @@ The default configuration works with an existing archive. To customize it, copy 
 | Setting          | Default           | Purpose                                                                                   |
 | ---------------- | ----------------- | ----------------------------------------------------------------------------------------- |
 | `readOnly`       | `false`           | Disable editing controls in the frontend. Enforce read-only access at the server as well. |
-| `untaggedStatus` | `"current"`       | Put records without a status tag in Current. Use `"draft"` to put them in Drafts.         |
 | `successorField` | `"Superseded by"` | Name of the Paperless document-link custom field used to point to a replacement record.   |
 | `recoveryFiles`  | `[]`              | Optional list of server-protected file links.                                             |
 
@@ -66,7 +65,7 @@ For optional recovery files, add dedicated authenticated routes outside the SPA 
 
 ## Organize the archive
 
-Top-level Paperless tags become **Areas** and descendants become **Topics**. When Areas exist, choose one when filing a standalone upload. An archive with no Areas can accept untagged uploads. To use the status controls, create `Current`, `Draft`, and `Superseded` tags in Paperless. `Signed` and `Sensitive` act as visual markers. `Sensitive` also disables speculative preview requests. Paperless's permissions control access to the records.
+Top-level Paperless tags become **Areas** and descendants become **Topics**. When Areas exist, choose one when filing a standalone upload. An archive with no Areas can accept untagged uploads. To use the status controls, create `Current` and `Superseded` tags in Paperless. `Signed` and `Sensitive` act as visual markers. `Sensitive` also disables speculative preview requests. Paperless's permissions control access to the records.
 
 To link an older record to its replacement, create a custom field with type **Document Link** in Paperless and use its name for `successorField`.
 

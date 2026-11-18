@@ -11,22 +11,20 @@ const sample = {
 };
 
 describe('runtime config', () => {
-  it('defaults to Records for untagged documents and has no recovery links', () => {
+  it('ignores the legacy untagged status preference and defaults to no recovery links', () => {
     expect(parseConfig(null)).toEqual(DEFAULT_CONFIG);
-    expect(parseConfig({ untaggedStatus: 'unknown', successorField: ' ' })).toEqual(DEFAULT_CONFIG);
+    expect(parseConfig({ untaggedStatus: 'draft', successorField: ' ' })).toEqual(DEFAULT_CONFIG);
   });
 
   it('accepts deployment preferences and keeps the first record for each key', () => {
     expect(
       parseConfig({
         readOnly: true,
-        untaggedStatus: 'draft',
         successorField: '  Replaced by  ',
         recoveryFiles: [sample, { ...sample, title: 'Duplicate' }],
       }),
     ).toEqual({
       readOnly: true,
-      untaggedStatus: 'draft',
       successorField: 'Replaced by',
       recoveryFiles: [sample],
     });

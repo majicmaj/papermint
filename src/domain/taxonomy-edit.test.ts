@@ -22,7 +22,7 @@ const tags = [
   tag(2, 'Personal'),
   tag(3, 'Tax', 1),
   tag(4, 'Health', 2),
-  tag(5, 'Draft'),
+  tag(5, 'Draft', 1),
   tag(6, 'Final'),
   tag(7, 'Signed'),
   tag(8, 'Mac'),
@@ -33,19 +33,19 @@ const model = buildTagModel(tags, []);
 describe('areas and topics', () => {
   it('derives areas from top-level tags except the reserved names, Sensitive included', () => {
     expect(model.areas.map((t) => t.name)).toEqual(['LLC', 'Mac', 'Personal']);
-    expect(model.topics.map((t) => t.name)).toEqual(['Health', 'Tax']);
+    expect(model.topics.map((t) => t.name)).toEqual(['Draft', 'Health', 'Tax']);
     expect(model.areaOf.get(3)).toBe(1);
   });
 
   it('keeps a flat taxonomy as areas without topics', () => {
     const flat = buildTagModel([tag(1, 'LLC'), tag(2, 'Tax'), tag(3, 'Draft')], []);
-    expect(flat.areas.map((t) => t.name)).toEqual(['LLC', 'Tax']);
+    expect(flat.areas.map((t) => t.name)).toEqual(['Draft', 'LLC', 'Tax']);
     expect(flat.topics).toEqual([]);
   });
 
   it('shows the topics of the chosen areas, or of every area when none is chosen', () => {
     expect(effectiveAreas(model, [])).toHaveLength(3);
-    expect(topicsIn(model, [1]).map((t) => t.id)).toEqual([3]);
+    expect(topicsIn(model, [1]).map((t) => t.id)).toEqual([5, 3]);
     expect(
       topicsIn(
         model,

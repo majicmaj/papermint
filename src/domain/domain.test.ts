@@ -4,7 +4,7 @@ import { normalizeDoc } from '../api/documents';
 import { fileKind, formatDate } from './format';
 import { buildTagModel, statusKeyOf, withStatus } from './tags';
 import { withTopic } from './taxonomy';
-import { listView, viewFor, viewCount } from './views';
+import { archiveRecords } from './views';
 import { parseRoute, recordPath } from '../state/routes';
 
 const tag = (id: number, name: string): Tag => ({
@@ -40,15 +40,15 @@ describe('tag model', () => {
   const model = buildTagModel(TAGS, docs);
 
   it('finds status tags by name and orders them', () => {
-    expect(model.statuses.map((t) => t.name)).toEqual(['Draft', 'Final', 'Superseded']);
+    expect(model.statuses.map((t) => t.name)).toEqual(['Final', 'Superseded']);
   });
 
   it('treats flat non-status tags as areas', () => {
-    expect(model.areas.map((t) => t.name)).toEqual(['LLC', 'Recovery', 'Tax']);
+    expect(model.areas.map((t) => t.name)).toEqual(['Draft', 'LLC', 'Recovery', 'Tax']);
   });
 
-  it('keeps exactly one status tag', () => {
-    expect(withStatus([1, 9, 6, 5], model, 13)).toEqual([1, 6, 5, 13]);
+  it('changes the status without removing the Draft label', () => {
+    expect(withStatus([1, 9, 6, 5, 14], model, 13)).toEqual([1, 9, 6, 5, 13]);
     expect(statusKeyOf([13], model)).toBe('current');
   });
 
@@ -70,27 +70,12 @@ describe('views', () => {
     doc(7, [13, 11]),
   ];
 
-  it('puts Signed, Final and untagged documents in Records by default', () => {
-    expect(listView(docs, 'records', model, null).map((d) => d.id)).toEqual([2, 1, 7, 6]);
+  it('includes draft-tagged and untagged documents in Records', () => {
+    expect(archiveRecords(docs, model).map((d) => d.id)).toEqual([1, 2, 3, 4, 6, 7]);
   });
 
-  it('puts untagged documents in Drafts when configured, newest added first', () => {
-    expect(listView(docs, 'pending', model, null, 'draft').map((d) => d.id)).toEqual([6, 4, 3]);
-  });
-
-  it('keeps Recovery separate from tagged Paperless documents', () => {
-    expect(listView(docs, 'recovery', model, null).map((d) => d.id)).toEqual([]);
-  });
-
-  it('filters by topic', () => {
-    expect(listView(docs, 'records', model, 6).map((d) => d.id)).toEqual([]);
-  });
-
-  it('counts and routes records', () => {
-    expect(viewCount(docs, 'records', model)).toBe(4);
-    expect(viewFor(docs[4]!, model)).toBe('records');
-    expect(viewFor(docs[5]!, model)).toBe('records');
-    expect(viewFor(docs[5]!, model, 'draft')).toBe('pending');
+  it('includes superseded documents only when requested', () => {
+    expect(archiveRecords(docs, model, true)).toEqual(docs);
   });
 });
 
@@ -126,12 +111,12 @@ describe('format and api', () => {
 describe('router', () => {
   it('parses views and records', () => {
     expect(parseRoute('/')).toEqual({ name: 'records' });
-    expect(parseRoute('/pending/')).toEqual({ name: 'pending' });
+    expect(parseRoute('/pending/')).toEqual({ name: 'records' });
     expect(parseRoute('/r/12', '?v=30', 'pending')).toEqual({
       name: 'record',
       id: 12,
       version: 30,
-      from: 'pending',
+      from: 'records',
     });
     expect(parseRoute('/nope')).toEqual({ name: 'records' });
   });

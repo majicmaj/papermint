@@ -100,7 +100,7 @@ test.describe('invalid version', () => {
     await page.goto(`/r/${doc.id}?v=999999`);
     await expect(page.locator('.pane-title h1')).toHaveText('Version not found');
     await page.getByRole('button', { name: 'Back' }).click();
-    await expect(page).toHaveURL(/\/(pending)?$/);
+    await expect(page).toHaveURL(/\/$/);
   });
 });
 

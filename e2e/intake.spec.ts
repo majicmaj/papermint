@@ -10,14 +10,14 @@ const confirm = (page: Page) => page.locator('.intake').getByRole('button', { na
 test('a dropped file opens a fixed-size filing form: area is required, topics follow the area', async ({
   page,
 }, info) => {
-  const api = await boot(page, '/pending');
+  const api = await boot(page);
   const firstRow = () => page.locator('.list-scroll .row').first().boundingBox();
   const rowBefore = await firstRow();
   await dropFile(page, 'Tax form 2026.txt');
   const panel = page.locator('.intake');
   await expect(panel).toBeVisible();
   await expect(panel.getByPlaceholder('Title')).toHaveValue('Tax form 2026');
-  await expect(panel.getByRole('combobox', { name: 'Status' })).toHaveValue(String(TAG.draft));
+  await expect(panel.getByRole('combobox', { name: 'Status' })).toHaveValue('');
   await expect(confirm(page)).toBeDisabled();
   await settled(page);
   const sending = await panel.boundingBox();
@@ -36,7 +36,7 @@ test('a dropped file opens a fixed-size filing form: area is required, topics fo
 
   // Only the topics of the chosen area.
   await press(panel.getByRole('button', { name: 'Topics' }), info);
-  await expect(page.getByRole('menuitemcheckbox')).toHaveText(['Banking', 'Tax']);
+  await expect(page.getByRole('menuitemcheckbox')).toHaveText(['Banking', 'Draft', 'Tax']);
   await press(page.getByRole('menuitemcheckbox', { name: 'Tax' }), info);
   await page.keyboard.press('Escape');
   await page.screenshot({ path: `screenshots/${info.project.name}-intake-light.png` });
@@ -79,13 +79,13 @@ test('the area on screen is the default, and removing it from the choice drops i
   await press(confirm(page), info);
   await expect(panel).toHaveCount(0);
   const patch = api.writes.docPatches.find((p) => p.id === NEW_ID)!;
-  expect((patch.body['tags'] as number[]).sort((a, b) => a - b)).toEqual([TAG.draft, TAG.llc]);
+  expect((patch.body['tags'] as number[]).sort((a, b) => a - b)).toEqual([TAG.llc]);
 });
 
 test('"Add as version of…" merges into the chosen record and writes nothing else', async ({
   page,
 }, info) => {
-  const api = await boot(page, '/pending');
+  const api = await boot(page);
   await dropFile(page, 'Operating agreement signed.txt');
   const panel = page.locator('.intake');
   await expect(confirm(page)).toBeDisabled();
@@ -114,7 +114,7 @@ test('"Add as version of…" merges into the chosen record and writes nothing el
 });
 
 test('dismissing the form sends nothing', async ({ page }, info) => {
-  const api = await boot(page, '/pending');
+  const api = await boot(page);
   await dropFile(page, 'Scratch.txt');
   const panel = page.locator('.intake');
   await expect(panel.getByRole('button', { name: 'Dismiss' })).toBeVisible();

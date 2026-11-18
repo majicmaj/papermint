@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'preact/hooks';
-import { VIEW_PATH, viewFor } from '../domain/views';
+import { VIEW_PATH } from '../domain/views';
 import { closeDialog, useDialog } from '../state/dialog';
-import { deleteRecord, useApp } from '../state/app';
+import { deleteRecord } from '../state/app';
 import { navigate, routeStore } from '../state/router';
 
 interface Props {
@@ -62,16 +62,13 @@ export function ConfirmDelete({ title, onCancel, onConfirm }: Props) {
 /** Renders the open dialog outside the page, so the page behind can be inert. */
 export function DialogHost() {
   const dialog = useDialog();
-  const docs = useApp((s) => s.docs);
-  const model = useApp((s) => s.model);
   if (!dialog) return null;
   const confirm = () => {
     closeDialog();
     // Leave the record only if the user is still looking at the one being deleted.
     const route = routeStore.get().route;
     if (route.name === 'record' && route.id === dialog.docId) {
-      const doc = docs.find((d) => d.id === dialog.docId);
-      const home = route.from ?? (doc ? viewFor(doc, model) : 'records');
+      const home = route.from ?? 'records';
       navigate(VIEW_PATH[home], { replace: true });
     }
     void deleteRecord(dialog.docId);

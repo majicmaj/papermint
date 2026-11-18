@@ -10,7 +10,6 @@ interface RawTask {
 /** POST one file to post_document. Resolves with the task id. Reports upload progress 0..1. */
 export function uploadDocument(
   file: File,
-  tagIds: number[],
   onProgress: (fraction: number) => void,
 ): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -21,7 +20,6 @@ export function uploadDocument(
     }
     const form = new FormData();
     form.append('document', file, file.name);
-    for (const id of tagIds) form.append('tags', String(id));
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '/api/documents/post_document/');
     xhr.setRequestHeader('Accept', 'application/json');

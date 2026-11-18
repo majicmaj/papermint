@@ -72,8 +72,8 @@ test.describe('desktop results and status', () => {
 
   test('a view switch, an area and a filter cross-fade the results in place', async ({ page }) => {
     await start(page);
-    await page.locator('.nav-item', { hasText: 'Drafts' }).click();
-    await expect(page.locator('.list-scroll .row[data-id="108"]')).toBeVisible();
+    await page.locator('.nav-item', { hasText: 'Recovery' }).click();
+    await expect(page).toHaveURL(/\/recovery$/);
     await page.waitForTimeout(400);
     let seen = await animationsSeen(page);
     expect(anyAnimation(seen, '::view-transition-new(results)'), seen.join('\n')).toBe(true);
@@ -97,13 +97,13 @@ test.describe('desktop results and status', () => {
   });
 
   test('a status change settles the new pill in', async ({ page }) => {
-    await start(page, '/r/104');
+    await start(page, '/r/108');
     await expect(page.locator('.pane-title h1')).toBeVisible();
     await page.waitForTimeout(400);
     await clearSeen(page);
     await page.locator('.pill-button').click();
-    await page.getByRole('menuitemradio', { name: 'Draft' }).click();
-    await expect(page.locator('.pill-button .pill')).toContainText('Draft');
+    await page.getByRole('menuitemradio', { name: 'Current' }).click();
+    await expect(page.locator('.pill-button .pill')).toContainText('Current');
     await page.waitForTimeout(400);
     const seen = await animationsSeen(page);
     expect(
@@ -116,13 +116,13 @@ test.describe('desktop results and status', () => {
   test('reduced motion: the pane and the pill fade, nothing slides or scales', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await start(page);
-    await row(page, 104).click();
+    await row(page, 108).click();
     await expect(page.locator('.pane-title h1')).toBeVisible();
     await page.waitForTimeout(400);
     await clearSeen(page);
     await page.locator('.pill-button').click();
-    await page.getByRole('menuitemradio', { name: 'Draft' }).click();
-    await expect(page.locator('.pill-button .pill')).toContainText('Draft');
+    await page.getByRole('menuitemradio', { name: 'Current' }).click();
+    await expect(page.locator('.pill-button .pill')).toContainText('Current');
     await page.locator('.pill-button').click();
     await page.waitForTimeout(400);
     const seen = await animationsSeen(page);
@@ -241,7 +241,7 @@ test.describe('toast', () => {
 
 test.describe('intake and press', () => {
   test('the filing form rises into place', async ({ page }, info) => {
-    await start(page, '/pending');
+    await start(page);
     await clearSeen(page);
     await dropFile(page, 'Tax form 2026.txt');
     await expect(page.locator('.intake')).toBeVisible();

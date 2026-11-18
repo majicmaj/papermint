@@ -104,15 +104,15 @@ test.describe('phone: a key closes a layer at once', () => {
 test('a status change by the keyboard has no pill animation; by a pointer it has', async ({
   page,
 }, info) => {
-  await boot(page, '/r/104');
+  await boot(page, '/r/103');
   await page.waitForTimeout(500);
   await recordAnimations(page);
   const pill = page.locator('.pill-button');
   await pill.focus();
   await page.keyboard.press('Enter');
-  await page.getByRole('menuitemradio', { name: 'Draft' }).focus();
+  await page.getByRole('menuitemradio', { name: 'Current' }).focus();
   await page.keyboard.press('Enter');
-  await expect(pill.locator('.pill')).toContainText('Draft');
+  await expect(pill.locator('.pill')).toContainText('Current');
   await page.waitForTimeout(400);
   let seen = await animationsSeen(page);
   expect(anyAnimation(seen, /waapi/), seen.join('\n')).toBe(false);
@@ -121,8 +121,9 @@ test('a status change by the keyboard has no pill animation; by a pointer it has
 
   await page.evaluate(() => (window as unknown as { __anims: Set<string> }).__anims.clear());
   await pill.click();
-  await page.getByRole('menuitemradio', { name: 'Current' }).click();
-  await expect(pill.locator('.pill')).toContainText('Current');
+  await page.getByRole('menuitemradio', { name: 'Superseded' }).click();
+  await page.getByRole('menuitem', { name: 'Operating agreement', exact: true }).click();
+  await expect(pill.locator('.pill')).toContainText('Superseded');
   await page.waitForTimeout(400);
   seen = await animationsSeen(page);
   expect(anyAnimation(seen, /pill-morph waapi/), seen.join('\n')).toBe(true);

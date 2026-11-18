@@ -4,7 +4,7 @@ import { ApiError } from '../api/http';
 import type { Doc } from '../api/types';
 import { formatDate } from '../domain/format';
 import { statusTag, topicsOf, type TagModel } from '../domain/tags';
-import { VIEW_PATH, viewFor } from '../domain/views';
+import { VIEW_PATH } from '../domain/views';
 import {
   findVersion,
   isCurrent,
@@ -168,8 +168,8 @@ function IdleActions() {
   );
 }
 
-function VersionMissing({ doc, route, model }: PaneProps) {
-  const home = VIEW_PATH[route.from ?? viewFor(doc, model)];
+function VersionMissing({ doc, route }: Pick<PaneProps, 'doc' | 'route'>) {
+  const home = VIEW_PATH[route.from ?? 'records'];
   return (
     <Frame
       terminal
@@ -198,9 +198,9 @@ function VersionMissing({ doc, route, model }: PaneProps) {
 function Loaded({ doc, route, model }: PaneProps) {
   const status = useMemo(() => statusTag(doc, model), [doc, model]);
   const resolved = resolveVersion(doc, route.version);
-  if (resolved.state === 'invalid') return <VersionMissing doc={doc} route={route} model={model} />;
+  if (resolved.state === 'invalid') return <VersionMissing doc={doc} route={route} />;
   const version = resolved.id;
-  const home = VIEW_PATH[route.from ?? viewFor(doc, model)];
+  const home = VIEW_PATH[route.from ?? 'records'];
   return (
     <Frame
       titleKey={`${doc.id}:${version}`}

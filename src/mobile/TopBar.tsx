@@ -2,7 +2,6 @@ import type { FilterChip } from '../domain/filters';
 import { VIEW_LABEL, type ViewName } from '../domain/views';
 import { Icon } from '../icons/Icon';
 import { HeaderMenu } from './HeaderMenu';
-import { Segments } from './Segments';
 
 interface Props {
   view: ViewName;
@@ -17,25 +16,30 @@ interface Props {
 }
 
 /**
- * The phone's header. It scrolls with the list: a large title and `⋯`, the Current and Drafts
- * pills with the Filter button, and the active filters while there are any.
+ * The phone header scrolls with the list and shows chips when filters are active.
  */
 export function TopBar({ view, chips, active, expanded, onFilter, onRemove, ...more }: Props) {
   const list = view !== 'recovery';
   return (
     <header class="topbar">
       <div class="topbar-head">
-        <h1 class="topbar-title">{VIEW_LABEL[list ? 'records' : 'recovery']}</h1>
+        <h1 class="topbar-title">{VIEW_LABEL[view]}</h1>
         <HeaderMenu view={view} {...more} />
       </div>
       {list && (
-        <Segments
-          key={view}
-          view={view}
-          active={active || chips.length > 0}
-          expanded={expanded}
-          onFilter={onFilter}
-        />
+        <div class="topbar-controls">
+          <button
+            type="button"
+            class="topbar-filter"
+            aria-haspopup="dialog"
+            aria-expanded={expanded}
+            data-active={active || chips.length > 0 ? 'true' : undefined}
+            onClick={onFilter}
+          >
+            <Icon name="sliders_horizontal" size={18} />
+            Filter
+          </button>
+        </div>
       )}
       {list && chips.length > 0 && (
         <div class="chips topbar-chips">

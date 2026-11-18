@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { transitionFor, type Route } from './routes';
 
 const list: Route = { name: 'records' };
-const drafts: Route = { name: 'pending' };
+const recovery: Route = { name: 'recovery' };
 const record = (id: number): Route => ({ name: 'record', id, version: null, from: null });
 
 describe('transitionFor', () => {
@@ -17,8 +17,8 @@ describe('transitionFor', () => {
   });
 
   it('cross-fades the results when the view changes', () => {
-    expect(transitionFor(list, drafts, false)).toBe('results');
-    expect(transitionFor(list, drafts, true)).toBe('results');
+    expect(transitionFor(list, recovery, false)).toBe('results');
+    expect(transitionFor(list, recovery, true)).toBe('results');
   });
 
   it('changes content in place from one record to the next', () => {
