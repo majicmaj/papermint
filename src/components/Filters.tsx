@@ -72,7 +72,6 @@ function MobileFilters({
   const { areas, selected } = useTopics();
   return (
     <>
-      {runtimeConfig().readOnly && <div class="demo-label">Demo · Read only</div>}
       <TopBar
         view={view}
         chips={chips}

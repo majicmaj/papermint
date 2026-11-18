@@ -12,37 +12,39 @@
     <meta property="og:title" content="Papermint" />
     <meta property="og:description" content="A quiet, installable frontend for Paperless-ngx." />
     <meta property="og:image" content="https://papermint.hobbyhood.app/media/desktop-dark.webp" />
-    <meta name="theme-color" content="#08100c" />
+    <meta name="theme-color" content="#111113" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#fcfcfd" media="(prefers-color-scheme: light)" />
     <link rel="icon" href="/demo/favicon.png" type="image/png" />
     <link rel="apple-touch-icon" href="/demo/icons/apple-touch-icon.png" />
     <style>
       :root {
-        --bg: #070b09;
-        --surface: #0e1512;
-        --edge: rgba(214, 245, 225, 0.09);
-        --edge-strong: rgba(214, 245, 225, 0.16);
-        --text: #eef6f0;
-        --muted: #8a978f;
-        --faint: #5c6862;
-        --mint: #c4f2d6;
-        --mint-ink: #04140b;
-        --glow: rgba(110, 231, 168, 0.16);
+        /* Radix gray and indigo, dark: the same steps the app uses (src/styles/radix). */
+        --bg: #111113; /* gray-1 */
+        --surface: #18191b; /* gray-2 */
+        --edge: #272a2d; /* gray-4 */
+        --edge-strong: #363a3f; /* gray-6 */
+        --text: #edeef0; /* gray-12 */
+        --muted: #b0b4ba; /* gray-11 */
+        --faint: #777b84; /* gray-10 */
+        --primary: #3e63dd; /* indigo-9 */
+        --on-primary: #ffffff;
+        --glow: rgba(62, 99, 221, 0.22); /* indigo-9 */
         --font:
           ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
         color-scheme: dark;
       }
       @media (prefers-color-scheme: light) {
         :root {
-          --bg: #f7faf8;
+          --bg: #fcfcfd; /* gray-1 */
           --surface: #ffffff;
-          --edge: rgba(8, 40, 22, 0.08);
-          --edge-strong: rgba(8, 40, 22, 0.14);
-          --text: #0c1611;
-          --muted: #5d6b63;
-          --faint: #8c9891;
-          --mint: #0f3d26;
-          --mint-ink: #e9fbf0;
-          --glow: rgba(46, 160, 98, 0.14);
+          --edge: #e8e8ec; /* gray-4 */
+          --edge-strong: #d9d9e0; /* gray-6 */
+          --text: #1c2024; /* gray-12 */
+          --muted: #60646c; /* gray-11 */
+          --faint: #80838d; /* gray-10 */
+          --primary: #3e63dd; /* indigo-9 */
+          --on-primary: #ffffff;
+          --glow: rgba(62, 99, 221, 0.14);
           color-scheme: light;
         }
       }
@@ -139,8 +141,8 @@
         height: 46px;
         padding: 0 22px;
         border-radius: 12px;
-        background: var(--mint);
-        color: var(--mint-ink);
+        background: var(--primary);
+        color: var(--on-primary);
         font-weight: 500;
         font-size: 15px;
         box-shadow:
@@ -260,7 +262,7 @@
         min-width: 150px;
         border-radius: 34px;
         padding: 7px;
-        background: #050806;
+        background: #111113;
         box-shadow:
           0 0 0 1px var(--edge-strong),
           0 30px 80px rgba(0, 0, 0, 0.5);

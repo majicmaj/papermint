@@ -238,10 +238,6 @@
   border-radius: var(--radius-1);
 }
 
-.list-scroll > .demo-label {
-  padding: 4px 20px;
-}
-
 @container list-toolbar (max-width: 340px) {
   .list-head .demo-label {
     display: none;
