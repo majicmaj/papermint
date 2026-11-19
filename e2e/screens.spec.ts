@@ -21,7 +21,7 @@ for (const scheme of ['light', 'dark'] as const) {
     await page.goto(`/r/${doc.id}`);
     await expect(page.locator('.pane-title h1')).toBeVisible();
     await expect(
-      page.locator('.pane-body iframe, .pane-body pre, .pane-body img').first(),
+      page.locator('.pane-body iframe, .pane-body pre, .pane-body img, .pane-body canvas').first(),
     ).toBeVisible();
     await page.waitForTimeout(1200);
     await shot('record');

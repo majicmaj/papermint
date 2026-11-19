@@ -46,6 +46,9 @@ async function rendered(page: Page): Promise<string> {
       const type = (await fetch(src)).headers.get('content-type') ?? '';
       return `pdf:${type.split(';')[0]}`;
     }
+    // Phones draw PDF pages with pdf.js. A page counts once it has pixels.
+    const pages = [...(body?.querySelectorAll<HTMLCanvasElement>('canvas.pdf-page') ?? [])];
+    if (pages.length) return pages[0]!.width > 0 ? 'pdf:application/pdf' : 'pdf:pending';
     const img = body?.querySelector('img');
     if (img) return `image:${img.naturalWidth > 0 ? 'decoded' : 'broken'}`;
     const pre = body?.querySelector('pre');

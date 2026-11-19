@@ -5,11 +5,12 @@ import { forgetRecord, loadPreview, peekPreview } from '../api/preview-store';
 import type { FileKind } from '../domain/format';
 import { kindFromContentType } from '../domain/format';
 import { Icon } from '../icons/Icon';
+import { needsPdfRenderer, PdfPages } from './PdfPages';
 
 type Shown =
   | { state: 'loading' }
   | { state: 'text'; text: string }
-  | { state: 'file'; kind: FileKind; url: string }
+  | { state: 'file'; kind: FileKind; url: string; blob: Blob }
   | { state: 'failed' };
 
 /**
@@ -31,8 +32,9 @@ function useShown(src: string, sensitive: boolean): [Shown, () => void] {
       const kind = kindFromContentType(file.type);
       if (abort.signal.aborted) return;
       if (kind === 'text') return setShown({ state: 'text', text: await file.blob.text() });
-      url = URL.createObjectURL(file.blob.slice(0, file.blob.size, file.type));
-      setShown({ state: 'file', kind, url });
+      const blob = file.blob.slice(0, file.blob.size, file.type);
+      url = URL.createObjectURL(blob);
+      setShown({ state: 'file', kind, url, blob });
     })().catch(() => !abort.signal.aborted && setShown({ state: 'failed' }));
     return () => {
       abort.abort();
@@ -91,6 +93,9 @@ export function Preview({ doc, version, sensitive }: Props) {
         <img key={src} src={shown.url} alt={doc.title} decoding="async" onError={fail} />
       </div>
     );
+  }
+  if (shown.kind === 'pdf' && needsPdfRenderer()) {
+    return <PdfPages key={src} blob={shown.blob} title={doc.title} onFail={fail} />;
   }
   const frame = shown.kind === 'pdf' ? `${shown.url}#view=FitH&navpanes=0` : shown.url;
   return <iframe key={src} class="preview-frame" src={frame} title={doc.title} />;

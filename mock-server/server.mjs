@@ -33,6 +33,7 @@ const EXT = { 'application/pdf': 'pdf', 'image/jpeg': 'jpg', 'text/plain': 'txt'
 const TYPES = {
   '.html': 'text/html',
   '.js': 'text/javascript',
+  '.mjs': 'text/javascript',
   '.css': 'text/css',
   '.svg': 'image/svg+xml',
   '.png': 'image/png',

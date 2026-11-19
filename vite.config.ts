@@ -15,7 +15,21 @@ export default defineConfig({
     proxy,
   },
   preview: { host: '127.0.0.1', port: 4173, proxy },
-  build: { target: 'es2022', sourcemap: false, cssCodeSplit: false, assetsInlineLimit: 0 },
+  build: {
+    target: 'es2022',
+    sourcemap: false,
+    cssCodeSplit: false,
+    assetsInlineLimit: 0,
+    rollupOptions: {
+      // The pdf.js worker ships as .mjs. A plain .js name gets a JavaScript type from any host.
+      output: {
+        assetFileNames: (asset) =>
+          asset.names[0]?.endsWith('.mjs')
+            ? 'assets/pdf-worker-[hash].js'
+            : 'assets/[name]-[hash][extname]',
+      },
+    },
+  },
   test: {
     include: ['src/**/*.test.ts', '*.test.ts', 'mock-server/**/*.test.mjs'],
     environment: 'node',

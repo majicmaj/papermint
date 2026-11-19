@@ -242,3 +242,19 @@
   text-decoration: underline;
   text-underline-offset: 2px;
 }
+
+/* Pages drawn by pdf.js on phones, one under the other like a paper stack. */
+.pdf-pages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0 24px;
+}
+
+.pdf-page {
+  display: block;
+  flex: none;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
+}
