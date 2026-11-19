@@ -497,11 +497,14 @@
         margin: 0;
         translate: -50% -50%;
         rotate: var(--r);
+        /* One slow, calm exhale per change. Depth staggers it a little (--lag). */
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
         transition:
-          opacity 380ms ease,
-          filter 380ms ease,
-          scale 380ms cubic-bezier(0.2, 0.8, 0.2, 1),
-          rotate 380ms cubic-bezier(0.2, 0.8, 0.2, 1);
+          opacity 900ms var(--ease) var(--lag, 0ms),
+          filter 900ms var(--ease) var(--lag, 0ms),
+          scale 1100ms var(--ease) var(--lag, 0ms),
+          rotate 1100ms var(--ease) var(--lag, 0ms),
+          z-index 0ms linear 550ms;
         pointer-events: auto;
       }
       .paper .sheet {
@@ -511,7 +514,9 @@
         overflow: hidden;
         box-shadow:
           0 0 0 1px rgba(0, 0, 0, 0.08),
+          0 0 0 1px transparent,
           0 18px 40px var(--shadow);
+        transition: box-shadow 900ms cubic-bezier(0.22, 1, 0.36, 1);
         animation: drift var(--t, 9s) ease-in-out infinite;
         animation-delay: var(--dl, 0s);
       }
@@ -557,8 +562,8 @@
         white-space: nowrap;
         opacity: 0;
         transition:
-          opacity 260ms ease,
-          translate 260ms ease;
+          opacity 300ms ease,
+          translate 300ms ease;
       }
       .paper figcaption i {
         flex: none;
@@ -572,15 +577,22 @@
         text-overflow: ellipsis;
       }
       .cloud.filtering .paper {
-        opacity: 0.1;
-        filter: blur(3px) grayscale(0.6);
+        opacity: 0.16;
+        filter: blur(2.4px) grayscale(0.5);
       }
       .cloud.filtering .paper.match {
         opacity: 1;
-        filter: none;
-        scale: 1.16;
+        filter: blur(0px) grayscale(0);
+        scale: 1.14;
         rotate: calc(var(--r) * 0.4);
         z-index: 6;
+        /* Rise a beat after the others dim, and come forward at once. */
+        transition:
+          opacity 900ms var(--ease) calc(var(--lag, 0ms) + 140ms),
+          filter 900ms var(--ease) calc(var(--lag, 0ms) + 140ms),
+          scale 1100ms var(--ease) calc(var(--lag, 0ms) + 140ms),
+          rotate 1100ms var(--ease) calc(var(--lag, 0ms) + 140ms),
+          z-index 0ms;
       }
       .cloud .paper.match .sheet {
         box-shadow:
@@ -591,6 +603,7 @@
       .cloud .paper.match figcaption {
         opacity: 1;
         translate: -50% 0;
+        transition-delay: 600ms;
       }
       @keyframes drift {
         50% {
@@ -1390,7 +1403,8 @@
         }
       }
       .cloud .paper {
-        animation: pop 900ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        /* backwards, not both: a held fill would fight the opacity transitions above. */
+        animation: pop 1000ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
         animation-delay: var(--in, 0ms);
       }
       @keyframes pop {
@@ -2003,7 +2017,7 @@
       const cloud = document.getElementById('cloud');
       cloud.innerHTML = CLOUD.map(([id, x, y, z, r, mx, my], i) => {
         const rec = BY_ID.get(id);
-        return `<figure class="paper" data-id="${id}" data-z="${z}"${mx === undefined ? '' : ' data-m'} style="--x:${x}%;--y:${y}%;--r:${r}deg;--t:${8 + (i % 5)}s;--dl:${-i * 0.7}s;--in:${200 + i * 35}ms;${mx === undefined ? '' : `--mx:${mx}%;--my:${my}%`}"><span class="sheet"><img src="/media/docs/${id}.webp" alt="" width="360" height="466"></span><figcaption><i style="--c:${rec?.c ?? '#888'}"></i><span>${esc(rec?.t ?? '')}</span></figcaption></figure>`;
+        return `<figure class="paper" data-id="${id}" data-z="${z}"${mx === undefined ? '' : ' data-m'} style="--x:${x}%;--y:${y}%;--r:${r}deg;--t:${8 + (i % 5)}s;--dl:${-i * 0.7}s;--in:${200 + i * 35}ms;--lag:${(2 - z) * 60}ms;${mx === undefined ? '' : `--mx:${mx}%;--my:${my}%`}"><span class="sheet"><img src="/media/docs/${id}.webp" alt="" width="360" height="466"></span><figcaption><i style="--c:${rec?.c ?? '#888'}"></i><span>${esc(rec?.t ?? '')}</span></figcaption></figure>`;
       }).join('');
       const papers = [...cloud.querySelectorAll('.paper')];
 
@@ -2014,12 +2028,31 @@
       let shown = [];
       let active = 0;
 
+      /* The cloud changes once per settled query, never per letter, so it cannot flicker. */
+      let cloudKey = '';
+      function focusCloud(query) {
+        const hits = query.trim() ? find(query).map((r) => r.id) : [];
+        const ids = new Set(hits);
+        const key = query.trim()
+          ? papers
+              .filter((p) => ids.has(Number(p.dataset.id)))
+              .map((p) => p.dataset.id)
+              .join()
+          : '';
+        if (key === cloudKey && cloud.classList.contains('filtering') === !!query.trim()) return;
+        cloudKey = key;
+        cloud.classList.toggle('filtering', query.trim().length > 0);
+        for (const p of papers) p.classList.toggle('match', ids.has(Number(p.dataset.id)));
+      }
+      let settle = 0;
+      function focusCloudSoon(query) {
+        clearTimeout(settle);
+        settle = setTimeout(() => focusCloud(query), 220);
+      }
+
       function render(query, open) {
         shown = find(query).slice(0, 5);
         active = 0;
-        const ids = new Set(find(query).map((r) => r.id));
-        cloud.classList.toggle('filtering', query.trim().length > 0);
-        for (const p of papers) p.classList.toggle('match', ids.has(Number(p.dataset.id)));
         results.innerHTML = shown.length
           ? shown.map((r, i) => hitHtml(r, query, i === 0)).join('')
           : `<div class="none">No record matches “${esc(query)}”. The demo has 50.</div>`;
@@ -2051,12 +2084,15 @@
             render(input.value, false);
             await sleep(90);
           }
-          await sleep(2400);
+          if (!auto) break;
+          focusCloud(q);
+          await sleep(2800);
           for (let i = q.length - 1; i >= 0 && auto; i--) {
             input.value = q.slice(0, i);
             render(input.value, false);
             await sleep(35);
           }
+          /* The matches stay lit while the next word types, then hand over in one crossfade. */
           await sleep(400);
         }
       }
@@ -2066,11 +2102,13 @@
         form.classList.remove('live');
         input.value = '';
         render('', false);
+        focusCloud('');
       }
       input.addEventListener('pointerdown', takeOver);
       input.addEventListener('focus', takeOver);
       input.addEventListener('input', () => {
         render(input.value, true);
+        focusCloudSoon(input.value);
         const first = input.value.trim().split(/\s+/)[0];
         if (first) word.firstElementChild.textContent = first.slice(0, 14);
       });
@@ -2086,7 +2124,7 @@
       document.addEventListener('pointerdown', (e) => {
         if (!form.contains(e.target)) results.classList.remove('open');
       });
-      if (STILL) render('lease', false);
+      if (STILL) (render('lease', false), focusCloud('lease'));
       else setTimeout(heroLoop, 900);
 
       /* Keys: / searches, D opens the demo, S goes to self-hosting. */
