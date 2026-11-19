@@ -7,46 +7,70 @@
     <title>Papermint</title>
     <meta
       name="description"
-      content="A quiet, installable frontend for Paperless-ngx. Search, read and file your paperwork from one surface."
+      content="A fast, keyboard-first frontend for Paperless-ngx. Find any paper in one keystroke, on desktop and phone. Self-hosted and MIT licensed."
     />
-    <meta property="og:title" content="Papermint" />
-    <meta property="og:description" content="A quiet, installable frontend for Paperless-ngx." />
-    <meta property="og:image" content="https://papermint.hobbyhood.app/media/desktop-dark.webp" />
+    <meta property="og:title" content="Papermint — find any paper in one keystroke" />
+    <meta
+      property="og:description"
+      content="A fast, keyboard-first frontend for the Paperless-ngx you already run."
+    />
+    <meta property="og:image" content="https://papermint.hobbyhood.app/media/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#111113" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#fcfcfd" media="(prefers-color-scheme: light)" />
     <link rel="icon" href="/demo/favicon.png" type="image/png" />
     <link rel="apple-touch-icon" href="/demo/icons/apple-touch-icon.png" />
+    <link rel="preload" href="/media/inter.woff2" as="font" type="font/woff2" crossorigin />
     <style>
+      @font-face {
+        font-family: 'Inter';
+        src: url('/media/inter.woff2') format('woff2');
+        font-weight: 100 900;
+        font-display: swap;
+      }
       :root {
         /* Radix gray and indigo, dark: the same steps the app uses (src/styles/radix). */
         --bg: #111113; /* gray-1 */
+        --bg-2: #18191b; /* gray-2 */
         --surface: #18191b; /* gray-2 */
+        --raise: #212225; /* gray-3 */
         --edge: #272a2d; /* gray-4 */
         --edge-strong: #363a3f; /* gray-6 */
         --text: #edeef0; /* gray-12 */
         --muted: #b0b4ba; /* gray-11 */
-        --faint: #777b84; /* gray-10 */
+        --faint: #8b8d98; /* between gray-10 and gray-11: 5.6:1 on gray-1 */
         --primary: #3e63dd; /* indigo-9 */
+        --primary-hover: #5472e4; /* indigo-10 */
+        --accent: #9eb1ff; /* indigo-11 */
+        --accent-soft: rgba(62, 99, 221, 0.26);
         --on-primary: #ffffff;
-        --glow: rgba(62, 99, 221, 0.22); /* indigo-9 */
-        --app-bg: #111113;
-        --font:
-          ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        --glow: rgba(62, 99, 221, 0.32);
+        --shadow: rgba(0, 0, 0, 0.5);
+        --grid: rgba(255, 255, 255, 0.035);
+        --font: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
         color-scheme: dark;
       }
       @media (prefers-color-scheme: light) {
         :root {
-          --bg: #fcfcfd; /* gray-1 */
+          --bg: #fcfcfd;
+          --bg-2: #f9f9fb;
           --surface: #ffffff;
-          --edge: #e8e8ec; /* gray-4 */
-          --edge-strong: #d9d9e0; /* gray-6 */
-          --text: #1c2024; /* gray-12 */
-          --muted: #60646c; /* gray-11 */
-          --faint: #80838d; /* gray-10 */
-          --primary: #3e63dd; /* indigo-9 */
-          --on-primary: #ffffff;
-          --glow: rgba(62, 99, 221, 0.14);
-          --app-bg: #fcfcfd;
+          --raise: #f0f0f3;
+          --edge: #e8e8ec;
+          --edge-strong: #d9d9e0;
+          --text: #1c2024;
+          --muted: #60646c;
+          --faint: #60646c;
+          --primary: #3e63dd;
+          --primary-hover: #3358d4;
+          --accent: #3a5bc7; /* indigo-11 */
+          --accent-soft: rgba(62, 99, 221, 0.16);
+          --glow: rgba(62, 99, 221, 0.2);
+          --shadow: rgba(28, 32, 36, 0.16);
+          --grid: rgba(0, 0, 0, 0.04);
           color-scheme: light;
         }
       }
@@ -55,12 +79,14 @@
       }
       html {
         -webkit-text-size-adjust: 100%;
+        scroll-behavior: smooth;
       }
       body {
         margin: 0;
         background: var(--bg);
         color: var(--text);
-        font: 400 15px/1.6 var(--font);
+        font: 400 16px/1.6 var(--font);
+        font-feature-settings: 'cv11', 'ss01';
         -webkit-font-smoothing: antialiased;
         overflow-x: hidden;
       }
@@ -68,203 +94,591 @@
         color: inherit;
         text-decoration: none;
       }
+      img {
+        display: block;
+        max-width: 100%;
+      }
       .wrap {
-        width: min(1080px, 100% - 32px);
+        width: min(1180px, 100% - 32px);
         margin: 0 auto;
       }
+      kbd {
+        display: inline-grid;
+        place-items: center;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 5px;
+        border-radius: 5px;
+        font: 500 11px/1 var(--font);
+        color: inherit;
+        background: rgba(255, 255, 255, 0.14);
+        box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+      }
+      .quiet kbd,
+      .search kbd,
+      .top-links kbd {
+        background: var(--raise);
+        color: var(--muted);
+        box-shadow:
+          inset 0 0 0 1px var(--edge-strong),
+          inset 0 -1px 0 var(--edge-strong);
+      }
+      svg.i {
+        width: 16px;
+        height: 16px;
+        flex: none;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
 
-      /* Navigation */
-      nav {
+      /* Navigation: sticky, with the demo always one click or one key away. */
+      .top {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        backdrop-filter: saturate(1.4) blur(14px);
+        -webkit-backdrop-filter: saturate(1.4) blur(14px);
+        background: color-mix(in srgb, var(--bg) 72%, transparent);
+        border-bottom: 1px solid transparent;
+        transition: border-color 200ms ease;
+      }
+      .top.scrolled {
+        border-bottom-color: var(--edge);
+      }
+      .top .wrap {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        height: 64px;
-        font-size: 13px;
+        height: 60px;
       }
       .brand {
         display: flex;
         align-items: center;
         gap: 10px;
-        font-weight: 500;
-        font-size: 14px;
-        letter-spacing: -0.01em;
+        font-weight: 600;
+        font-size: 15px;
+        letter-spacing: -0.015em;
       }
       .brand img {
-        width: 24px;
-        height: 24px;
+        width: 26px;
+        height: 26px;
         border-radius: 7px;
         box-shadow: 0 0 0 1px var(--edge);
       }
-      .links {
+      .top-links {
         display: flex;
-        gap: 22px;
+        align-items: center;
+        gap: 6px;
+        font-size: 14px;
         color: var(--muted);
       }
-      .links a:hover {
+      .top-links > a:not(.btn) {
+        padding: 6px 10px;
+        border-radius: 8px;
+      }
+      .top-links > a:not(.btn):hover {
         color: var(--text);
+        background: var(--raise);
+      }
+
+      /* Buttons */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        height: 40px;
+        padding: 0 16px;
+        border-radius: 11px;
+        background: var(--primary);
+        color: var(--on-primary);
+        font-weight: 550;
+        font-size: 14px;
+        letter-spacing: -0.005em;
+        white-space: nowrap;
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.18),
+          0 8px 28px var(--glow);
+        transition:
+          background 160ms ease,
+          transform 160ms ease;
+      }
+      .btn:hover {
+        background: var(--primary-hover);
+      }
+      .btn:active {
+        transform: scale(0.98);
+      }
+      .btn.big {
+        height: 50px;
+        padding: 0 22px;
+        border-radius: 14px;
+        font-size: 16px;
+      }
+      .btn.quiet {
+        background: var(--surface);
+        color: var(--text);
+        box-shadow:
+          0 0 0 1px var(--edge-strong),
+          0 1px 0 var(--edge-strong);
+      }
+      .btn.quiet:hover {
+        background: var(--raise);
+      }
+      .top .btn {
+        height: 34px;
+        padding: 0 12px;
+        border-radius: 9px;
+        font-size: 13px;
+        margin-left: 6px;
       }
 
       /* Hero */
       .hero {
         position: relative;
+        min-height: min(920px, 100svh);
+        display: grid;
+        place-items: center;
+        padding: 72px 0 96px;
+        isolation: isolate;
+        overflow-x: clip;
+      }
+      .hero::before {
+        /* A faint drafting grid that fades at the edges. */
+        content: '';
+        position: absolute;
+        inset: -60px 0 0;
+        z-index: -2;
+        background:
+          linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 56px 56px,
+          linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 56px 56px;
+        mask: radial-gradient(ellipse 70% 60% at 50% 45%, #000 30%, transparent 75%);
+        -webkit-mask: radial-gradient(ellipse 70% 60% at 50% 45%, #000 30%, transparent 75%);
+      }
+      .hero-copy {
+        position: relative;
+        z-index: 5;
+        width: min(940px, 100% - 32px);
         text-align: center;
-        padding: 112px 0 64px;
+      }
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: 30px;
+        padding: 0 12px 0 6px;
+        border-radius: 99px;
+        background: color-mix(in srgb, var(--surface) 80%, transparent);
+        box-shadow: 0 0 0 1px var(--edge-strong);
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 500;
+        backdrop-filter: blur(6px);
+      }
+      .eyebrow b {
+        padding: 2px 8px;
+        border-radius: 99px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 600;
       }
       h1 {
-        margin: 0 auto;
-        max-width: 760px;
-        font-size: clamp(42px, 8.4vw, 84px);
-        line-height: 0.98;
-        font-weight: 450;
-        letter-spacing: -0.045em;
+        margin: 22px 0 0;
+        font-size: clamp(46px, 8.6vw, 104px);
+        line-height: 0.95;
+        font-weight: 720;
+        letter-spacing: -0.055em;
+        text-wrap: balance;
       }
-      h1 span {
+      h1 .word {
+        position: relative;
+        display: inline-block;
+        color: var(--accent);
+        white-space: nowrap;
+      }
+      h1 .word::after {
+        /* A highlighter stroke under the changing word. */
+        content: '';
+        position: absolute;
+        left: -0.06em;
+        right: -0.06em;
+        bottom: 0.04em;
+        height: 0.24em;
+        border-radius: 0.1em;
+        background: var(--accent-soft);
+        z-index: -1;
+      }
+      h1 .word span {
+        display: inline-block;
+        transition:
+          opacity 220ms ease,
+          transform 220ms ease,
+          filter 220ms ease;
+      }
+      h1 .word.out span {
+        opacity: 0;
+        transform: translateY(0.18em);
+        filter: blur(6px);
+      }
+      h1 .dim {
         color: var(--muted);
       }
       .lede {
         margin: 26px auto 0;
-        max-width: 470px;
+        max-width: 620px;
         color: var(--muted);
-        font-size: 16px;
-        font-weight: 300;
-        line-height: 1.6;
-      }
-      .actions {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 16px;
-        margin-top: 36px;
-      }
-      .cta {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        height: 46px;
-        padding: 0 22px;
-        border-radius: 12px;
-        background: var(--primary);
-        color: var(--on-primary);
-        font-weight: 500;
-        font-size: 15px;
-        box-shadow:
-          0 0 0 1px var(--edge-strong),
-          0 10px 40px var(--glow);
-        transition: transform 160ms ease;
-      }
-      .cta:hover {
-        transform: translateY(-1px);
-      }
-      .cta:active {
-        transform: translateY(0) scale(0.98);
-      }
-      .ghost {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        color: var(--muted);
-        font-size: 13px;
-      }
-      .ghost:hover {
-        color: var(--text);
-      }
-      .fine {
-        margin-top: 4px;
-        color: var(--faint);
-        font-size: 12px;
-      }
-      svg.i {
-        width: 16px;
-        height: 16px;
-        fill: none;
-        stroke: currentColor;
-        stroke-width: 1.75;
-        stroke-linecap: round;
-        stroke-linejoin: round;
+        font-size: 18px;
+        line-height: 1.55;
+        text-wrap: pretty;
       }
 
-      /* Floating paper tiles */
-      .tile {
-        position: absolute;
-        display: grid;
-        place-items: center;
-        width: 64px;
-        height: 64px;
+      /* The hero search: a real search over the fictional demo records. */
+      .search {
+        position: relative;
+        z-index: 10;
+        margin: 34px auto 0;
+        width: min(580px, 100%);
+        text-align: left;
+      }
+      .search label {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        height: 60px;
+        padding: 0 14px 0 20px;
         border-radius: 18px;
         background: var(--surface);
         box-shadow:
-          0 0 0 1px var(--edge),
-          0 12px 30px rgba(0, 0, 0, 0.28);
-        rotate: var(--r);
-        animation: float 7s ease-in-out infinite;
-        animation-delay: var(--d);
+          0 0 0 1px var(--edge-strong),
+          0 24px 60px var(--shadow),
+          0 0 0 6px color-mix(in srgb, var(--primary) 0%, transparent);
+        transition: box-shadow 200ms ease;
+        cursor: text;
       }
-      .tile svg {
-        width: 26px;
-        height: 26px;
+      .search label:focus-within,
+      .search.live label {
+        box-shadow:
+          0 0 0 1px var(--primary),
+          0 24px 60px var(--shadow),
+          0 0 0 6px var(--accent-soft);
+      }
+      .search svg {
+        width: 20px;
+        height: 20px;
+        flex: none;
         fill: none;
-        stroke: var(--c);
-        stroke-width: 1.6;
+        stroke: var(--muted);
+        stroke-width: 2;
         stroke-linecap: round;
-        stroke-linejoin: round;
       }
-      .tile b {
+      .search input {
+        flex: 1;
+        min-width: 0;
+        height: 100%;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        color: var(--text);
+        font: 450 18px/1 var(--font);
+        letter-spacing: -0.01em;
+      }
+      .search input::placeholder {
+        color: var(--faint);
+      }
+      .results {
         position: absolute;
-        right: -6px;
-        bottom: -6px;
-        padding: 2px 7px;
+        top: calc(100% + 8px);
+        left: 0;
+        right: 0;
+        z-index: 20;
+        padding: 6px;
+        border-radius: 16px;
+        background: var(--surface);
+        box-shadow:
+          0 0 0 1px var(--edge-strong),
+          0 30px 70px var(--shadow);
+        opacity: 0;
+        transform: translateY(-4px);
+        pointer-events: none;
+        transition:
+          opacity 160ms ease,
+          transform 160ms ease;
+      }
+      .results.open {
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+      }
+      .hit {
+        display: grid;
+        grid-template-columns: 10px 1fr auto;
+        gap: 2px 12px;
+        align-items: center;
+        padding: 10px 12px;
+        border-radius: 10px;
+        font-size: 14px;
+      }
+      .hit.on,
+      .results .hit:hover {
+        background: var(--raise);
+      }
+      .hit i {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--c);
+      }
+      .hit span {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-weight: 500;
+      }
+      .hit time {
+        color: var(--faint);
+        font-size: 12px;
+        font-variant-numeric: tabular-nums;
+      }
+      .hit small {
+        grid-column: 2 / 4;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .hit mark {
+        background: var(--accent-soft);
+        color: var(--text);
+        border-radius: 3px;
+        padding: 0 1px;
+      }
+      .results .none {
+        padding: 12px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 28px;
+      }
+      .install {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 22px;
+        color: var(--faint);
+        font: 400 13px/1.4 var(--mono);
+      }
+      .install b {
+        color: var(--muted);
+        font-weight: 500;
+      }
+
+      /* The cloud of paper around the hero. Depth comes from size, blur and opacity. */
+      .cloud {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+      }
+      .paper {
+        position: absolute;
+        left: var(--x);
+        top: var(--y);
+        width: var(--w);
+        margin: 0;
+        translate: -50% -50%;
+        rotate: var(--r);
+        transition:
+          opacity 380ms ease,
+          filter 380ms ease,
+          scale 380ms cubic-bezier(0.2, 0.8, 0.2, 1),
+          rotate 380ms cubic-bezier(0.2, 0.8, 0.2, 1);
+        pointer-events: auto;
+      }
+      .paper .sheet {
+        display: block;
+        border-radius: 4px;
+        background: #fff;
+        overflow: hidden;
+        box-shadow:
+          0 0 0 1px rgba(0, 0, 0, 0.08),
+          0 18px 40px var(--shadow);
+        animation: drift var(--t, 9s) ease-in-out infinite;
+        animation-delay: var(--dl, 0s);
+      }
+      .paper img {
+        width: 100%;
+        height: auto;
+      }
+      .paper[data-z='0'] {
+        --w: 92px;
+        opacity: 0.32;
+        filter: blur(1.6px);
+        z-index: 1;
+      }
+      .paper[data-z='1'] {
+        --w: 118px;
+        opacity: 0.62;
+        filter: blur(0.4px);
+        z-index: 2;
+      }
+      .paper[data-z='2'] {
+        --w: 146px;
+        opacity: 0.92;
+        z-index: 3;
+      }
+      .paper figcaption {
+        position: absolute;
+        left: 50%;
+        bottom: -12px;
+        translate: -50% 4px;
+        max-width: 200px;
+        padding: 4px 10px 4px 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
         border-radius: 99px;
         background: var(--surface);
-        box-shadow: 0 0 0 1px var(--edge);
-        color: var(--muted);
-        font: 500 10px/16px var(--font);
+        box-shadow:
+          0 0 0 1px var(--edge-strong),
+          0 8px 20px var(--shadow);
+        color: var(--text);
+        font-size: 11.5px;
+        font-weight: 550;
         white-space: nowrap;
+        opacity: 0;
+        transition:
+          opacity 260ms ease,
+          translate 260ms ease;
       }
-      @keyframes float {
+      .paper figcaption i {
+        flex: none;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--c);
+      }
+      .paper figcaption span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .cloud.filtering .paper {
+        opacity: 0.1;
+        filter: blur(3px) grayscale(0.6);
+      }
+      .cloud.filtering .paper.match {
+        opacity: 1;
+        filter: none;
+        scale: 1.16;
+        rotate: calc(var(--r) * 0.4);
+        z-index: 6;
+      }
+      .cloud .paper.match .sheet {
+        box-shadow:
+          0 0 0 2px var(--primary),
+          0 0 0 7px var(--accent-soft),
+          0 24px 60px var(--shadow);
+      }
+      .cloud .paper.match figcaption {
+        opacity: 1;
+        translate: -50% 0;
+      }
+      @keyframes drift {
         50% {
-          translate: 0 -10px;
+          transform: translateY(-9px) rotate(0.6deg);
         }
       }
 
-      /* Product shot */
+      /* Product stage */
       .stage {
         position: relative;
-        margin: 24px auto 0;
-        padding-bottom: 40px;
+        width: min(1180px, 100% - 32px);
+        margin: -24px auto 0;
+        padding-bottom: 48px;
+        isolation: isolate;
+        overflow-x: clip;
+        overflow-y: visible;
       }
       .stage::before {
+        /* Indigo light that rises behind the window. */
         content: '';
         position: absolute;
-        inset: -8% 10% 30%;
-        background: radial-gradient(closest-side, var(--glow), transparent);
-        filter: blur(30px);
+        left: 8%;
+        right: 8%;
+        top: -14%;
+        height: 70%;
         z-index: -1;
+        background: radial-gradient(50% 50% at 50% 60%, var(--glow), transparent 70%);
+        filter: blur(40px);
+      }
+      .shot {
+        position: relative;
+        padding-bottom: 6%;
       }
       .window {
         display: block;
+        width: 90%;
         border-radius: 14px;
         overflow: hidden;
         background: var(--surface);
         box-shadow:
           0 0 0 1px var(--edge-strong),
-          0 40px 120px rgba(0, 0, 0, 0.45);
-        transform-origin: 50% 0;
+          0 50px 120px var(--shadow);
+      }
+      .chrome {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        height: 38px;
+        padding: 0 14px;
+        border-bottom: 1px solid var(--edge);
+        background: var(--bg-2);
+      }
+      .chrome span {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--edge-strong);
+      }
+      .chrome code {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin: 0 auto;
+        padding: 3px 12px;
+        border-radius: 7px;
+        background: var(--raise);
+        color: var(--muted);
+        font: 400 12px/1.4 var(--mono);
+        transform: translateX(-20px);
+      }
+      .chrome code svg {
+        width: 11px;
+        height: 11px;
       }
       .window img,
       .phone img {
-        display: block;
         width: 100%;
         height: auto;
       }
       /* A current phone: titanium band, black bezel, camera island, side buttons. */
       .phone {
         position: absolute;
-        right: -28px;
+        right: 0;
         bottom: 0;
-        width: 21%;
-        min-width: 150px;
+        width: 20%;
+        min-width: 120px;
         container-type: inline-size;
-        filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.5));
+        filter: drop-shadow(0 40px 60px var(--shadow));
       }
       .device {
         position: relative;
@@ -289,7 +703,7 @@
         position: relative;
         overflow: hidden;
         border-radius: 11.8cqw;
-        background: var(--app-bg);
+        background: var(--bg);
       }
       .status {
         display: flex;
@@ -299,7 +713,6 @@
         padding: 1.6cqw 7.5cqw 0 10cqw;
         color: var(--text);
         font: 600 4.3cqw/1 var(--font);
-        letter-spacing: -0.01em;
       }
       .status svg {
         height: 3.3cqw;
@@ -355,168 +768,265 @@
         right: -0.7cqw;
         background: linear-gradient(90deg, #6b6e74, #2a2c30);
       }
-      .phone .screen img {
-        display: block;
-        width: 100%;
-        height: auto;
+      .strip {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        margin-top: 56px;
+        border-top: 1px solid var(--edge);
+        border-bottom: 1px solid var(--edge);
       }
-      @supports (animation-timeline: view()) {
-        .window {
-          animation: settle linear both;
-          animation-timeline: view();
-          animation-range: entry 0% cover 40%;
-        }
-        @keyframes settle {
-          from {
-            transform: perspective(1400px) rotateX(14deg) scale(0.94);
-            opacity: 0.6;
-          }
-          to {
-            transform: none;
-            opacity: 1;
-          }
-        }
+      .strip div {
+        padding: 22px 24px;
+        font-size: 15px;
+        color: var(--muted);
+      }
+      .strip div + div {
+        border-left: 1px solid var(--edge);
+      }
+      .strip b {
+        display: block;
+        margin-bottom: 2px;
+        color: var(--text);
+        font-weight: 600;
       }
 
       /* Sections */
-      .band {
-        border-top: 1px solid var(--edge);
-        padding: 88px 0;
-      }
-      .narrow {
-        width: min(760px, 100% - 32px);
-        margin: 0 auto;
+      section {
+        padding: 128px 0;
       }
       h2 {
         margin: 0;
-        font-size: clamp(26px, 3.6vw, 34px);
-        line-height: 1.1;
-        font-weight: 500;
-        letter-spacing: -0.035em;
+        font-size: clamp(34px, 5.2vw, 60px);
+        line-height: 1.02;
+        font-weight: 700;
+        letter-spacing: -0.045em;
+        text-wrap: balance;
       }
-      .band p.sub {
-        margin: 12px 0 0;
-        max-width: 470px;
-        color: var(--muted);
-        font-size: 14px;
-        font-weight: 300;
-      }
-      .row {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        margin-top: 28px;
-        border-radius: 12px;
-        box-shadow: 0 0 0 1px var(--edge-strong);
-        overflow: hidden;
-      }
-      .cell {
-        display: flex;
-        gap: 12px;
-        align-items: center;
-        padding: 16px 18px;
-        box-shadow: 0 0 0 0.5px var(--edge-strong);
-      }
-      .cell svg {
-        flex: none;
-        width: 18px;
-        height: 18px;
-        fill: none;
-        stroke: var(--muted);
-        stroke-width: 1.6;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-      }
-      .cell b {
-        display: block;
-        font-weight: 500;
-        font-size: 13px;
-      }
-      code,
-      .mono {
-        font:
-          400 11px/1.6 ui-monospace,
-          'SF Mono',
-          Menlo,
-          monospace;
+      h2 .dim {
         color: var(--faint);
       }
-      .checks {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px 24px;
-        margin: 0;
-        padding: 18px 0 0;
-        list-style: none;
+      .kicker {
+        display: block;
+        margin-bottom: 16px;
+        color: var(--accent);
+        font: 500 13px/1 var(--mono);
+        letter-spacing: 0.02em;
+      }
+      .sub {
+        margin: 20px 0 0;
+        max-width: 520px;
         color: var(--muted);
-        font-size: 12px;
-        font-weight: 300;
+        font-size: 17px;
+        text-wrap: pretty;
       }
-      .checks.col {
-        flex-direction: column;
-        gap: 12px;
-        font-size: 13px;
+      .center {
+        text-align: center;
       }
-      .checks li {
-        display: flex;
-        gap: 9px;
-        align-items: center;
-      }
-      .checks li::before {
-        content: '';
-        flex: none;
-        width: 12px;
-        height: 12px;
-        background: #3e63dd;
-        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E")
-          center / contain no-repeat;
-      }
-      .checks b {
-        color: var(--text);
-        font-weight: 500;
-      }
-      .split {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 48px;
-        align-items: center;
-        width: min(960px, 100% - 32px);
-        margin: 0 auto;
-      }
-      .split .sub {
-        margin-bottom: 4px;
+      .center .sub {
+        margin-left: auto;
+        margin-right: auto;
       }
 
-      /* Search palette mock */
-      .palette {
+      /* The wall of records */
+      .wall {
+        padding-bottom: 96px;
+        overflow: hidden;
+      }
+      .rows {
+        display: grid;
+        gap: 14px;
+        margin-top: 56px;
+        mask: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+        -webkit-mask: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+      }
+      .track {
+        display: flex;
+        gap: 14px;
+        width: max-content;
+        animation: slide var(--t) linear infinite;
+      }
+      .track.back {
+        animation-direction: reverse;
+      }
+      .rows:hover .track {
+        animation-play-state: paused;
+      }
+      @keyframes slide {
+        to {
+          transform: translateX(calc(-50% - 7px));
+        }
+      }
+      .rec {
+        display: grid;
+        grid-template-columns: 44px 1fr;
+        gap: 4px 14px;
+        align-items: center;
+        width: 300px;
+        padding: 12px 16px 12px 12px;
         border-radius: 14px;
+        background: var(--surface);
+        box-shadow: 0 0 0 1px var(--edge);
+        transition:
+          box-shadow 160ms ease,
+          transform 160ms ease;
+      }
+      .rec:hover {
+        box-shadow: 0 0 0 1px var(--primary);
+        transform: translateY(-2px);
+      }
+      .rec .thumb {
+        grid-row: span 2;
+        width: 44px;
+        height: 56px;
+        border-radius: 4px;
+        background: #fff;
+        overflow: hidden;
+        box-shadow: 0 0 0 1px var(--edge-strong);
+      }
+      .rec .thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top;
+      }
+      .rec .thumb.txt {
+        display: grid;
+        place-items: center;
+        background: var(--raise);
+        color: var(--faint);
+        font: 600 10px/1 var(--mono);
+      }
+      .rec > * {
+        min-width: 0;
+      }
+      .rec b {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-size: 14px;
+        font-weight: 550;
+        letter-spacing: -0.01em;
+      }
+      .rec small {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+        overflow: hidden;
+        color: var(--faint);
+        font-size: 12.5px;
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 1px 8px 1px 6px;
+        border-radius: 99px;
+        background: var(--raise);
+        color: var(--muted);
+      }
+      .pill::before {
+        content: '';
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--c);
+      }
+      .note {
+        margin-top: 36px;
+        color: var(--faint);
+        font: 400 13px/1.6 var(--mono);
+      }
+
+      /* Search section */
+      .split {
+        display: grid;
+        grid-template-columns: 1fr 1.05fr;
+        gap: 72px;
+        align-items: center;
+      }
+      .keys {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 22px 28px;
+        margin-top: 40px;
+      }
+      .keys div {
+        display: grid;
+        gap: 10px;
+        justify-items: start;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .caps {
+        display: flex;
+        gap: 6px;
+      }
+      .cap {
+        display: grid;
+        place-items: center;
+        min-width: 52px;
+        height: 52px;
+        padding: 0 12px;
+        border-radius: 12px;
+        background: linear-gradient(var(--raise), var(--surface));
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.07),
+          0 0 0 1px var(--edge-strong),
+          0 4px 0 var(--edge-strong),
+          0 10px 20px var(--shadow);
+        color: var(--text);
+        font: 550 20px/1 var(--font);
+        transition:
+          transform 90ms ease,
+          box-shadow 90ms ease;
+      }
+      .cap.down {
+        transform: translateY(3px);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.07),
+          0 0 0 1px var(--primary),
+          0 1px 0 var(--edge-strong),
+          0 0 24px var(--glow);
+        color: var(--accent);
+      }
+      .palette {
+        border-radius: 18px;
         background: var(--surface);
         box-shadow:
           0 0 0 1px var(--edge-strong),
-          0 24px 60px rgba(0, 0, 0, 0.35);
+          0 40px 100px var(--shadow);
         overflow: hidden;
-        font-size: 13px;
+        display: flex;
+        flex-direction: column;
+        height: 440px;
+      }
+      .palette .list {
+        flex: 1;
       }
       .palette .q {
         display: flex;
-        gap: 10px;
+        gap: 12px;
         align-items: center;
-        padding: 14px 16px;
+        height: 60px;
+        padding: 0 20px;
         border-bottom: 1px solid var(--edge);
-        font-size: 15px;
+        font-size: 18px;
+        font-weight: 450;
       }
       .palette .q svg {
-        width: 16px;
-        height: 16px;
+        width: 18px;
+        height: 18px;
         fill: none;
         stroke: var(--muted);
         stroke-width: 2;
         stroke-linecap: round;
       }
       .caret {
-        width: 1.5px;
-        height: 18px;
-        margin-left: -8px;
-        background: #3e63dd;
+        width: 2px;
+        height: 22px;
+        margin-left: -10px;
+        background: var(--primary);
         animation: blink 1.1s steps(1) infinite;
       }
       @keyframes blink {
@@ -525,171 +1035,314 @@
         }
       }
       .palette .label {
-        padding: 10px 16px 4px;
+        padding: 14px 20px 6px;
         color: var(--faint);
-        font-size: 11px;
-        font-weight: 500;
+        font-size: 12px;
+        font-weight: 550;
       }
-      .hit {
-        display: grid;
-        grid-template-columns: 10px 1fr auto;
-        gap: 4px 12px;
+      .palette .list {
+        padding: 0 8px 8px;
+      }
+      .palette .foot {
+        display: flex;
+        gap: 18px;
+        padding: 12px 20px;
+        border-top: 1px solid var(--edge);
+        color: var(--faint);
+        font-size: 12px;
+      }
+      .palette .foot kbd {
+        margin-right: 4px;
+        background: var(--raise);
+        color: var(--muted);
+      }
+
+      /* Versions */
+      .versions {
+        position: relative;
+        height: 440px;
+      }
+      .versions .doc {
+        position: absolute;
+        width: 260px;
+        height: auto;
+        border-radius: 5px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow:
+          0 0 0 1px rgba(0, 0, 0, 0.08),
+          0 30px 70px var(--shadow);
+      }
+      .versions .old {
+        left: 6%;
+        top: 30px;
+        rotate: -7deg;
+        filter: grayscale(1) brightness(0.9);
+        opacity: 0.7;
+      }
+      .versions .new {
+        left: 38%;
+        top: 60px;
+        rotate: 3deg;
+      }
+      .versions .tag {
+        position: absolute;
+        display: inline-flex;
         align-items: center;
-        margin: 0 6px;
-        padding: 9px 10px;
-        border-radius: 8px;
+        gap: 8px;
+        height: 32px;
+        padding: 0 12px;
+        border-radius: 99px;
+        background: var(--surface);
+        box-shadow:
+          0 0 0 1px var(--edge-strong),
+          0 10px 30px var(--shadow);
+        font-size: 13px;
+        font-weight: 550;
+        white-space: nowrap;
       }
-      .hit.on {
-        background: var(--edge);
-      }
-      .hit i {
+      .versions .tag i {
         width: 8px;
         height: 8px;
         border-radius: 50%;
         background: var(--c);
       }
-      .hit i.sq {
-        border-radius: 2px;
+      .versions .link {
+        position: absolute;
+        left: 22%;
+        top: 0;
+        color: var(--accent);
+        font: 500 13px/1 var(--mono);
       }
-      .hit small {
-        grid-column: 2 / 4;
+      .checks {
+        display: grid;
+        gap: 14px;
+        margin: 32px 0 0;
+        padding: 0;
+        list-style: none;
         color: var(--muted);
-        font-size: 12px;
-        font-weight: 300;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        font-size: 16px;
       }
-      .hit mark {
-        background: rgba(62, 99, 221, 0.28);
-        color: var(--text);
-        border-radius: 3px;
-        padding: 0 2px;
-      }
-      .palette .keys {
+      .checks li {
         display: flex;
-        gap: 16px;
-        margin-top: 6px;
-        padding: 10px 16px;
-        border-top: 1px solid var(--edge);
+        gap: 12px;
+        align-items: baseline;
+      }
+      .checks li::before {
+        content: '';
+        flex: none;
+        width: 14px;
+        height: 14px;
+        translate: 0 2px;
+        background: var(--accent);
+        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E")
+          center / contain no-repeat;
+      }
+      .checks b {
+        color: var(--text);
+        font-weight: 600;
+      }
+
+      /* Values trio */
+      .trio {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        margin-top: 64px;
+        border-radius: 20px;
+        box-shadow: 0 0 0 1px var(--edge-strong);
+        overflow: hidden;
+      }
+      .trio article {
+        position: relative;
+        text-align: left;
+        padding: 36px 32px 40px;
+        background: var(--surface);
+      }
+      .trio article + article {
+        border-left: 1px solid var(--edge-strong);
+      }
+      .trio .glyph {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        margin-bottom: 28px;
+        border-radius: 14px;
+        background: var(--accent-soft);
+        color: var(--accent);
+      }
+      .trio .glyph svg {
+        width: 24px;
+        height: 24px;
+      }
+      .trio h3 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 680;
+        letter-spacing: -0.03em;
+      }
+      .trio p {
+        margin: 10px 0 0;
+        color: var(--muted);
+        font-size: 15px;
+      }
+      .trio code {
+        display: inline-block;
+        margin-top: 20px;
         color: var(--faint);
-        font-size: 11px;
+        font: 400 12px/1.6 var(--mono);
       }
 
       /* Fork */
       .fork {
         display: grid;
-        grid-template-columns: 1.15fr 1fr;
-        gap: 16px;
-        margin-top: 32px;
+        grid-template-columns: 1fr 1.1fr;
+        gap: 64px;
+        align-items: center;
       }
-      .term,
-      .card {
-        border-radius: 12px;
-        background: var(--surface);
-        box-shadow: 0 0 0 1px var(--edge-strong);
+      .term {
+        border-radius: 16px;
+        background: #0b0b0d;
+        box-shadow:
+          0 0 0 1px var(--edge-strong),
+          0 40px 90px var(--shadow);
+        color: #edeef0;
+        overflow: hidden;
       }
       .term .bar {
         display: flex;
-        gap: 6px;
+        gap: 7px;
         align-items: center;
-        padding: 10px 12px;
-        border-bottom: 1px solid var(--edge);
+        height: 38px;
+        padding: 0 14px;
+        border-bottom: 1px solid #272a2d;
       }
       .term .bar span {
-        width: 9px;
-        height: 9px;
+        width: 10px;
+        height: 10px;
         border-radius: 50%;
-        background: var(--edge-strong);
+        background: #363a3f;
       }
       .term .bar code {
-        margin-left: auto;
-        margin-right: auto;
-        transform: translateX(-16px);
+        margin: 0 auto;
+        transform: translateX(-20px);
+        color: #8b8d98;
+        font: 400 12px var(--mono);
       }
       .term pre {
         margin: 0;
-        padding: 18px 18px 22px;
-        font:
-          400 12px/1.85 ui-monospace,
-          'SF Mono',
-          Menlo,
-          monospace;
-        color: var(--text);
+        padding: 22px 22px 26px;
+        font: 400 14px/1.9 var(--mono);
         white-space: pre-wrap;
       }
       .term .p {
-        color: #3e63dd;
+        color: #9eb1ff;
       }
       .term .ok {
-        color: var(--faint);
+        color: #8b8d98;
       }
       .term .url {
         color: #9eb1ff;
+        text-decoration: underline;
+        text-underline-offset: 3px;
       }
       .term .cur {
         display: inline-block;
-        width: 7px;
-        height: 14px;
-        vertical-align: -2px;
-        background: var(--text);
+        width: 8px;
+        height: 16px;
+        vertical-align: -3px;
+        background: #edeef0;
         animation: blink 1.1s steps(1) infinite;
       }
-      .card {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        gap: 24px;
-        padding: 22px;
-      }
-      .buttons {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        align-items: center;
-      }
-      .btn {
+      .copy {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        height: 34px;
-        padding: 0 14px;
-        border-radius: 9px;
-        background: var(--primary);
-        color: var(--on-primary);
-        font-size: 13px;
-        font-weight: 500;
-      }
-      .btn.quiet {
-        background: transparent;
-        color: var(--muted);
+        gap: 12px;
+        margin-top: 32px;
+        height: 46px;
+        padding: 0 8px 0 16px;
+        border-radius: 12px;
+        background: var(--surface);
         box-shadow: 0 0 0 1px var(--edge-strong);
+        font: 400 14px/1 var(--mono);
+        color: var(--muted);
       }
-      .btn.quiet:hover {
+      .copy .p {
+        color: var(--accent);
+      }
+      .copy button {
+        display: grid;
+        place-items: center;
+        width: 32px;
+        height: 32px;
+        border: 0;
+        border-radius: 8px;
+        background: var(--raise);
+        color: var(--muted);
+        cursor: pointer;
+      }
+      .copy button:hover {
         color: var(--text);
       }
+      .fork .buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 28px;
+      }
 
-      /* Closing call */
+      /* Closing */
       .close {
+        position: relative;
+        padding: 160px 0 150px;
         text-align: center;
-        padding: 120px 0 128px;
+        overflow: hidden;
+        isolation: isolate;
+      }
+      .close::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        bottom: -40%;
+        width: 900px;
+        height: 600px;
+        translate: -50% 0;
+        z-index: -1;
+        background: radial-gradient(closest-side, var(--glow), transparent);
+        filter: blur(30px);
+      }
+      .fan {
+        position: relative;
+        height: 170px;
+        margin: 0 auto 40px;
+        width: 360px;
+      }
+      .fan img {
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        width: 104px;
+        border-radius: 4px;
+        background: #fff;
+        box-shadow:
+          0 0 0 1px rgba(0, 0, 0, 0.08),
+          0 20px 40px var(--shadow);
+        margin-left: -52px;
+        transform-origin: 50% 130%;
+        rotate: var(--r);
+        transition: rotate 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .fan:hover img {
+        rotate: calc(var(--r) * 1.6);
       }
       .close h2 {
-        font-size: clamp(36px, 6vw, 60px);
-        line-height: 1;
-        letter-spacing: -0.045em;
+        font-size: clamp(48px, 9vw, 112px);
+        line-height: 0.94;
+        letter-spacing: -0.06em;
+        font-weight: 720;
       }
-      .close p.sub {
-        margin: 18px auto 30px;
-      }
-      .close .buttons {
-        justify-content: center;
-      }
-      .close .btn {
-        height: 44px;
-        padding: 0 20px;
-        font-size: 14px;
-        border-radius: 11px;
+      .close .actions {
+        margin-top: 40px;
       }
 
       footer {
@@ -699,11 +1352,11 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 14px;
+        gap: 16px;
         flex-wrap: wrap;
-        padding: 26px 0 34px;
+        padding: 28px 0 36px;
         color: var(--faint);
-        font-size: 12px;
+        font-size: 13px;
       }
       footer .who {
         display: flex;
@@ -711,419 +1364,819 @@
         align-items: center;
       }
       footer img {
-        width: 16px;
-        height: 16px;
+        width: 18px;
+        height: 18px;
         border-radius: 5px;
       }
-      footer .links {
-        color: var(--muted);
-        gap: 22px;
+      footer nav {
+        display: flex;
         flex-wrap: wrap;
+        gap: 8px 24px;
+        color: var(--muted);
+      }
+      footer nav a:hover {
+        color: var(--text);
       }
 
       /* Entrance */
       .rise {
-        animation: rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        animation: rise 800ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
         animation-delay: var(--d, 0ms);
       }
       @keyframes rise {
         from {
           opacity: 0;
-          transform: translateY(14px);
+          transform: translateY(16px);
+        }
+      }
+      .cloud .paper {
+        animation: pop 900ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        animation-delay: var(--in, 0ms);
+      }
+      @keyframes pop {
+        from {
+          opacity: 0;
+          scale: 0.85;
         }
       }
 
-      @media (max-width: 860px) {
-        .tile {
-          display: none;
-        }
-        .hero {
-          padding-top: 64px;
-        }
-        .phone {
-          right: -8px;
-          width: 30%;
-          min-width: 0;
-        }
+      @media (max-width: 980px) {
         .split,
         .fork {
           grid-template-columns: 1fr;
+          gap: 48px;
         }
-        .row {
-          grid-template-columns: repeat(2, 1fr);
+        .trio {
+          grid-template-columns: 1fr;
+        }
+        .trio article + article {
+          border-left: 0;
+          border-top: 1px solid var(--edge-strong);
+        }
+        .paper[data-z='2'] {
+          --w: 118px;
+        }
+        .paper[data-z='1'] {
+          --w: 96px;
         }
       }
-      @media (max-width: 600px) {
-        .window {
+      @media (max-width: 700px) {
+        section {
+          padding: 88px 0;
+        }
+        .hero {
+          min-height: 0;
+          padding: 236px 0 64px;
+          place-items: start center;
+        }
+        .cloud {
+          inset: 0 0 auto;
+          height: 260px;
+        }
+        .paper {
+          left: var(--mx, -999px);
+          top: var(--my, -999px);
+        }
+        .paper:not([data-m]) {
           display: none;
         }
-        .phone {
-          position: relative;
-          right: auto;
-          width: min(300px, 78%);
-          margin: 0 auto;
+        .paper[data-z] {
+          --w: 64px;
+        }
+        .paper[data-z='2'] {
+          --w: 80px;
+        }
+        .actions .btn.big {
+          flex: 1 1 0;
+          max-width: 200px;
+          padding: 0 14px;
+          font-size: 15px;
+        }
+        .install {
+          display: block;
+          text-wrap: balance;
+        }
+        .paper figcaption {
+          display: none;
+        }
+        .lede {
+          font-size: 16px;
+        }
+        .top-links > a.hide-s {
+          display: none;
         }
         .stage {
-          padding-bottom: 0;
+          margin-top: 8px;
         }
-        .links {
-          gap: 16px;
+        .window {
+          width: 100%;
+        }
+        .chrome code {
+          font-size: 10px;
+        }
+        .phone {
+          right: -6px;
+          bottom: -24px;
+          width: 34%;
+          min-width: 0;
+        }
+        .strip {
+          grid-template-columns: 1fr;
+          margin-top: 72px;
+        }
+        .strip div + div {
+          border-left: 0;
+          border-top: 1px solid var(--edge);
+        }
+        .rec {
+          width: 250px;
+        }
+        .palette {
+          height: 420px;
+        }
+        .versions {
+          height: 330px;
+        }
+        .versions .doc {
+          width: 180px;
+        }
+        .versions .new {
+          left: auto;
+          right: 4%;
+        }
+        .fan {
+          width: 280px;
+          height: 140px;
+        }
+        .fan img {
+          width: 84px;
+          margin-left: -42px;
+        }
+        .term pre {
+          font-size: 12px;
+        }
+        .copy {
+          font-size: 12px;
+        }
+      }
+      /* Touch screens have no keyboard to hint at. */
+      @media (hover: none) {
+        .btn kbd,
+        .search kbd {
+          display: none;
         }
       }
       @media (prefers-reduced-motion: reduce) {
         *,
-        *::before {
+        *::before,
+        *::after {
           animation: none !important;
           transition: none !important;
+        }
+        html {
+          scroll-behavior: auto;
         }
       }
     </style>
   </head>
   <body>
-    <div class="wrap">
-      <nav>
+    <header class="top" id="top">
+      <div class="wrap">
         <a class="brand" href="/"
-          ><img src="/demo/icons/icon-192.png" alt="" width="24" height="24" />Papermint</a
+          ><img src="/demo/icons/icon-192.png" alt="" width="26" height="26" />Papermint</a
         >
-        <div class="links">
-          <a href="/demo/">Demo</a>
+        <nav class="top-links" aria-label="Main">
+          <a class="hide-s" href="#search">Search</a>
+          <a class="hide-s" href="#self-host">Self-host</a>
           <a href="https://github.com/majicmaj/papermint">GitHub</a>
+          <a class="btn" href="/demo/">Open demo <kbd>D</kbd></a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="cloud" id="cloud" aria-hidden="true"></div>
+        <div class="hero-copy">
+          <span class="eyebrow rise"><b>New</b>A frontend for Paperless&#8209;ngx</span>
+          <h1 id="hero-title" class="rise" style="--d: 60ms">
+            Find the
+            <span class="word" id="word"><span>lease</span></span
+            ><br /><span class="dim">in one keystroke.</span>
+          </h1>
+          <p class="lede rise" style="--d: 120ms">
+            Papermint is a fast, keyboard-first face for the Paperless&#8209;ngx you already run.
+            Search every word in every scan, on your desk or your phone.
+          </p>
+          <form class="search rise" id="finder" style="--d: 180ms" action="/demo/" role="search">
+            <label>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="11" cy="11" r="7" />
+                <path d="M20 20l-4-4" />
+              </svg>
+              <input
+                id="q"
+                type="search"
+                autocomplete="off"
+                spellcheck="false"
+                placeholder="Search 50 fictional records"
+                aria-label="Search the demo records"
+                aria-controls="results"
+                aria-autocomplete="list"
+              />
+              <kbd>/</kbd>
+            </label>
+            <div class="results" id="results" role="listbox" aria-label="Matching records"></div>
+          </form>
+          <div class="actions rise" style="--d: 240ms">
+            <a class="btn big" href="/demo/">Open the demo <kbd>D</kbd></a>
+            <a class="btn big quiet" href="#self-host">Self-host it <kbd>S</kbd></a>
+          </div>
+          <div class="install rise" style="--d: 300ms">
+            <b>MIT</b> · works with your Paperless&#8209;ngx login · no new database
+          </div>
         </div>
-      </nav>
+      </section>
 
-      <header class="hero">
-        <a
-          class="tile"
-          href="/demo/"
-          style="--r: -8deg; --d: 0s; --c: #ffb224; top: 40px; left: 4%"
-          aria-label="Receipts"
-        >
-          <svg viewBox="0 0 24 24">
-            <path d="M6 3h12v18l-2.5-1.6L13 21l-2.5-1.6L8 21l-2-1.4z" />
-            <path d="M9 8h6M9 12h6M9 16h3" />
-          </svg>
-          <b>Receipts</b>
-        </a>
-        <a
-          class="tile"
-          href="/demo/"
-          style="--r: 6deg; --d: -2s; --c: #8e4ec6; top: 6px; left: 30%"
-          aria-label="Invoices"
-        >
-          <svg viewBox="0 0 24 24">
-            <path d="M14 3H7a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7z" />
-            <path d="M14 3v4h4M9 12h6M9 16h6" />
-          </svg>
-        </a>
-        <a
-          class="tile"
-          href="/demo/"
-          style="--r: -5deg; --d: -4s; --c: #0d74ce; top: 20px; right: 27%"
-          aria-label="Statements"
-        >
-          <svg viewBox="0 0 24 24">
-            <path d="M3 9l9-5 9 5" />
-            <path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20.5h18" />
-          </svg>
-        </a>
-        <a
-          class="tile"
-          href="/demo/"
-          style="--r: 9deg; --d: -1s; --c: #f76b15; top: 72px; right: 3%"
-          aria-label="Lease"
-        >
-          <svg viewBox="0 0 24 24">
-            <path d="M3 11l9-7 9 7" />
-            <path d="M5 10v10h14V10M10 20v-5h4v5" />
-          </svg>
-          <b>Lease</b>
-        </a>
-        <a
-          class="tile"
-          href="/demo/"
-          style="--r: 7deg; --d: -3s; --c: #e93d82; top: 330px; left: 10%"
-          aria-label="Health"
-        >
-          <svg viewBox="0 0 24 24">
-            <path
-              d="M12 20s-7.5-4.6-7.5-10.2A4.2 4.2 0 0 1 12 7.2a4.2 4.2 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20z"
-            />
-          </svg>
-        </a>
-        <a
-          class="tile"
-          href="/demo/"
-          style="--r: -7deg; --d: -5s; --c: #3e63dd; top: 320px; right: 9%"
-          aria-label="Insurance"
-        >
-          <svg viewBox="0 0 24 24">
-            <path d="M12 3l7.5 3v5.6c0 4.6-3.2 7.8-7.5 9.4-4.3-1.6-7.5-4.8-7.5-9.4V6z" />
-            <path d="M9 12l2 2 4-4" />
-          </svg>
-          <b>Signed</b>
-        </a>
-
-        <h1 class="rise">Your paperwork,<br /><span>finally calm.</span></h1>
-        <p class="lede rise" style="--d: 80ms">
-          A quiet, installable frontend for Paperless&#8209;ngx. Find, read and file everything from
-          one surface.
-        </p>
-        <div class="actions rise" style="--d: 160ms">
-          <a class="cta" href="/demo/"
-            >Open the demo
-            <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" /></svg
-          ></a>
-          <a class="ghost" href="https://github.com/majicmaj/papermint"
-            ><svg class="i" viewBox="0 0 24 24">
-              <path
-                d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"
-              /></svg
-            >Take the code, it is MIT</a
-          >
-          <div class="fine">Read only · 50 fictional records</div>
-        </div>
-      </header>
-
-      <section class="stage rise" style="--d: 260ms" aria-label="Papermint on desktop and phone">
-        <a class="window" href="/demo/">
-          <picture>
-            <source srcset="/media/desktop-light.webp" media="(prefers-color-scheme: light)" />
-            <img
-              src="/media/desktop-dark.webp"
-              width="2880"
-              height="1800"
-              alt="Papermint on desktop: areas and topics in the sidebar, records grouped by month."
-            />
-          </picture>
-        </a>
-        <div class="phone">
-          <div class="device">
-            <span class="side l" style="top: 18%; height: 5%"></span>
-            <span class="side l" style="top: 26%; height: 9%"></span>
-            <span class="side l" style="top: 37%; height: 9%"></span>
-            <span class="side r" style="top: 28%; height: 13%"></span>
-            <span class="side r" style="top: 58%; height: 7%"></span>
-            <div class="bezel">
-              <div class="screen">
-                <div class="status">
-                  <span>9:41</span>
-                  <span class="sys"
-                    ><svg viewBox="0 0 18 12">
-                      <rect x="0" y="8" width="3" height="4" rx="1" />
-                      <rect x="5" y="5.5" width="3" height="6.5" rx="1" />
-                      <rect x="10" y="3" width="3" height="9" rx="1" />
-                      <rect x="15" y="0" width="3" height="12" rx="1" /></svg
-                    ><svg viewBox="0 0 16 12">
-                      <path
-                        d="M8 2.6c2.4 0 4.6.9 6.2 2.4l1.3-1.4A10.9 10.9 0 0 0 8 .6 10.9 10.9 0 0 0 .5 3.6L1.8 5A9 9 0 0 1 8 2.6zm0 3.6c1.4 0 2.7.5 3.6 1.4l1.3-1.4A7.2 7.2 0 0 0 8 4.2c-1.9 0-3.6.7-4.9 2l1.3 1.4c1-.9 2.2-1.4 3.6-1.4zm0 3.4c-.6 0-1.2.2-1.6.6L8 12l1.6-1.8c-.4-.4-1-.6-1.6-.6z"
-                      /></svg
-                    ><svg viewBox="0 0 27 12">
-                      <rect
-                        x="0.5"
-                        y="0.5"
-                        width="23"
-                        height="11"
-                        rx="3.4"
-                        fill="none"
-                        stroke="currentColor"
-                        opacity="0.4"
-                      />
-                      <rect x="2" y="2" width="17" height="8" rx="2" />
-                      <rect x="24.7" y="4" width="1.6" height="4" rx="0.8" opacity="0.4" /></svg
-                  ></span>
+      <div class="stage" aria-label="Papermint on desktop and phone">
+        <div class="shot">
+          <a class="window" href="/demo/r/301">
+            <div class="chrome" aria-hidden="true">
+              <span></span><span></span><span></span>
+              <code
+                ><svg class="i" viewBox="0 0 24 24">
+                  <rect x="5" y="11" width="14" height="9" rx="2" />
+                  <path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg
+                >papers.your-server.lan/r/301</code
+              >
+            </div>
+            <picture>
+              <source srcset="/media/reader-light.webp" media="(prefers-color-scheme: light)" />
+              <img
+                src="/media/reader-dark.webp"
+                width="2160"
+                height="1350"
+                fetchpriority="high"
+                alt="Papermint on desktop: areas and topics on the left, records by month in the middle, and a lease open in the reader on the right."
+              />
+            </picture>
+          </a>
+          <div class="phone">
+            <div class="device">
+              <span class="side l" style="top: 18%; height: 5%"></span>
+              <span class="side l" style="top: 26%; height: 9%"></span>
+              <span class="side l" style="top: 37%; height: 9%"></span>
+              <span class="side r" style="top: 28%; height: 13%"></span>
+              <div class="bezel">
+                <div class="screen">
+                  <div class="status">
+                    <span>9:41</span>
+                    <span class="sys"
+                      ><svg viewBox="0 0 18 12">
+                        <rect x="0" y="8" width="3" height="4" rx="1" />
+                        <rect x="5" y="5.5" width="3" height="6.5" rx="1" />
+                        <rect x="10" y="3" width="3" height="9" rx="1" />
+                        <rect x="15" y="0" width="3" height="12" rx="1" /></svg
+                      ><svg viewBox="0 0 16 12">
+                        <path
+                          d="M8 2.6c2.4 0 4.6.9 6.2 2.4l1.3-1.4A10.9 10.9 0 0 0 8 .6 10.9 10.9 0 0 0 .5 3.6L1.8 5A9 9 0 0 1 8 2.6zm0 3.6c1.4 0 2.7.5 3.6 1.4l1.3-1.4A7.2 7.2 0 0 0 8 4.2c-1.9 0-3.6.7-4.9 2l1.3 1.4c1-.9 2.2-1.4 3.6-1.4zm0 3.4c-.6 0-1.2.2-1.6.6L8 12l1.6-1.8c-.4-.4-1-.6-1.6-.6z"
+                        /></svg
+                      ><svg viewBox="0 0 27 12">
+                        <rect
+                          x="0.5"
+                          y="0.5"
+                          width="23"
+                          height="11"
+                          rx="3.4"
+                          fill="none"
+                          stroke="currentColor"
+                          opacity="0.4"
+                        />
+                        <rect x="2" y="2" width="17" height="8" rx="2" />
+                        <rect x="24.7" y="4" width="1.6" height="4" rx="0.8" opacity="0.4" /></svg
+                    ></span>
+                  </div>
+                  <span class="island"></span>
+                  <picture>
+                    <source
+                      srcset="/media/sheet-light.webp"
+                      media="(prefers-color-scheme: light)"
+                    />
+                    <img
+                      src="/media/sheet-dark.webp"
+                      width="900"
+                      height="1827"
+                      loading="lazy"
+                      alt="Papermint on a phone: an invoice open in a sheet, with Download and Copy link at the bottom."
+                    />
+                  </picture>
+                  <span class="home-bar"></span>
                 </div>
-                <span class="island"></span>
-                <picture>
-                  <source srcset="/media/phone-light.webp" media="(prefers-color-scheme: light)" />
-                  <img
-                    src="/media/phone-dark.webp"
-                    width="1179"
-                    height="2394"
-                    alt="Papermint on a phone: one-line rows and a floating search bar."
-                  />
-                </picture>
-                <span class="home-bar"></span>
               </div>
+            </div>
+          </div>
+        </div>
+        <div class="strip">
+          <div><b>Keyboard first</b>Every action has a key. Search is one press.</div>
+          <div><b>Made for phones too</b>Install it. Sheets, swipes and a reader that fits.</div>
+          <div><b>Yours to run</b>Static files beside Paperless&#8209;ngx. MIT licensed.</div>
+        </div>
+      </div>
+
+      <section class="wall" aria-labelledby="wall-title">
+        <div class="wrap center">
+          <span class="kicker">The demo archive</span>
+          <h2 id="wall-title">
+            Fifty records. <span class="dim">Five years of somebody’s paperwork.</span>
+          </h2>
+          <p class="sub">
+            A freelance studio, an apartment, a car and a dentist. All of it fictional, all of it
+            open in the demo. Pick one.
+          </p>
+        </div>
+        <div class="rows" id="rows"></div>
+        <div class="wrap center note">
+          Areas, topics, status and versions are plain Paperless&#8209;ngx tags and fields.
+        </div>
+      </section>
+
+      <section id="search" aria-labelledby="search-title">
+        <div class="wrap split">
+          <div>
+            <span class="kicker">Search</span>
+            <h2 id="search-title">One key. <span class="dim">Every word in every scan.</span></h2>
+            <p class="sub">
+              Titles, the text Paperless read from each page, topics and commands, in one list.
+              Recent records show before you type.
+            </p>
+            <div class="keys" aria-hidden="true">
+              <div>
+                <span class="caps"
+                  ><span class="cap" data-key="k1">⌘</span
+                  ><span class="cap" data-key="k2">K</span></span
+                >Search anywhere
+              </div>
+              <div>
+                <span class="caps"
+                  ><span class="cap" data-key="j">J</span
+                  ><span class="cap" data-key="k">K</span></span
+                >Move through records
+              </div>
+              <div>
+                <span class="caps"><span class="cap" data-key="e">E</span></span
+                >Edit tags
+              </div>
+            </div>
+          </div>
+          <div class="palette" aria-hidden="true">
+            <div class="q">
+              <svg viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="7" />
+                <path d="M20 20l-4-4" />
+              </svg>
+              <span id="pq"></span><span class="caret"></span>
+            </div>
+            <div class="label">Records</div>
+            <div class="list" id="plist"></div>
+            <div class="foot">
+              <span><kbd>↵</kbd>open</span><span><kbd>↑↓</kbd>move</span
+              ><span><kbd>esc</kbd>close</span>
             </div>
           </div>
         </div>
       </section>
-    </div>
 
-    <section class="band">
-      <div class="narrow">
-        <h2>Bring your own Paperless</h2>
-        <p class="sub">
-          Papermint keeps nothing of its own. It reads the Paperless&#8209;ngx you already run, with
-          the tags, fields and login you already have.
-        </p>
-        <div class="row">
-          <div class="cell">
-            <svg viewBox="0 0 24 24">
-              <path d="M14 3H7a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7z" />
-              <path d="M14 3v4h4" />
-            </svg>
-            <div><b>Paperless-ngx</b><code>3.4 REST API</code></div>
+      <section aria-labelledby="versions-title">
+        <div class="wrap split">
+          <div class="versions" aria-hidden="true">
+            <span class="link">superseded by →</span>
+            <img
+              class="doc old"
+              src="/media/docs/301.webp"
+              alt=""
+              width="360"
+              height="466"
+              loading="lazy"
+            />
+            <span class="tag" style="--c: #8d8d8d; left: 2%; bottom: 8px"
+              ><i></i>Superseded · 2025</span
+            >
+            <img
+              class="doc new"
+              src="/media/docs/302.webp"
+              alt=""
+              width="360"
+              height="466"
+              loading="lazy"
+            />
+            <span class="tag" style="--c: #46a758; right: 4%; top: 22px"
+              ><i></i>Current · 2026</span
+            >
           </div>
-          <div class="cell">
-            <svg viewBox="0 0 24 24">
-              <rect x="4" y="4" width="7" height="7" rx="1.5" />
-              <circle cx="17" cy="17" r="3.5" />
-              <path d="M7.5 11v6.5H13.5" />
-            </svg>
-            <div><b>Areas &amp; topics</b><code>tag hierarchy</code></div>
-          </div>
-          <div class="cell">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 3l9 5-9 5-9-5z" />
-              <path d="M3 13l9 5 9-5" />
-            </svg>
-            <div><b>Versions</b><code>merge_as_versions</code></div>
-          </div>
-          <div class="cell">
-            <svg viewBox="0 0 24 24">
-              <path d="M9 7h11M9 12h11M9 17h11M4 7h.01M4 12h.01M4 17h.01" />
-            </svg>
-            <div><b>Custom fields</b><code>superseded by</code></div>
-          </div>
-          <div class="cell">
-            <svg viewBox="0 0 24 24">
-              <circle cx="11" cy="11" r="6" />
-              <path d="M20 20l-4.5-4.5" />
-            </svg>
-            <div><b>Full-text search</b><code>?query=</code></div>
-          </div>
-          <div class="cell">
-            <svg viewBox="0 0 24 24">
-              <rect x="5" y="11" width="14" height="9" rx="2" />
-              <path d="M8 11V8a4 4 0 0 1 8 0v3" />
-            </svg>
-            <div><b>Your login</b><code>same-origin session</code></div>
+          <div>
+            <span class="kicker">Versions</span>
+            <h2 id="versions-title">
+              Paper changes. <span class="dim">The archive keeps the thread.</span>
+            </h2>
+            <ul class="checks">
+              <li>
+                <span><b>Versions in one record.</b> A signed copy lands on top of its draft.</span>
+              </li>
+              <li>
+                <span><b>Superseded by.</b> Last year’s lease links to this year’s.</span>
+              </li>
+              <li>
+                <span><b>Current, superseded, signed.</b> One tap, kept as Paperless tags.</span>
+              </li>
+            </ul>
           </div>
         </div>
-        <ul class="checks">
-          <li>No new database.</li>
-          <li>No sync service.</li>
-          <li>No account with us.</li>
-        </ul>
-      </div>
-    </section>
+      </section>
 
-    <section class="band">
-      <div class="split">
-        <div class="palette" aria-hidden="true">
-          <div class="q">
-            <svg viewBox="0 0 24 24">
-              <circle cx="11" cy="11" r="6" />
-              <path d="M20 20l-4.5-4.5" /></svg
-            >dishwasher<span class="caret"></span>
+      <section aria-labelledby="yours-title">
+        <div class="wrap center">
+          <span class="kicker">Bring your own Paperless</span>
+          <h2 id="yours-title">Your server. <span class="dim">Your login. Your fork.</span></h2>
+          <div class="trio">
+            <article>
+              <span class="glyph"
+                ><svg class="i" viewBox="0 0 24 24">
+                  <rect x="3" y="4" width="18" height="7" rx="2" />
+                  <rect x="3" y="13" width="18" height="7" rx="2" />
+                  <path d="M7 7.5h.01M7 16.5h.01" /></svg
+              ></span>
+              <h3>Nothing new to run</h3>
+              <p>
+                Papermint reads the Paperless&#8209;ngx you already have. No database, no sync
+                service, no account with us.
+              </p>
+              <code>/api/ · same-origin session</code>
+            </article>
+            <article>
+              <span class="glyph"
+                ><svg class="i" viewBox="0 0 24 24">
+                  <rect x="7" y="2" width="10" height="20" rx="2.5" />
+                  <path d="M11 18h2" /></svg
+              ></span>
+              <h3>An app on your phone</h3>
+              <p>
+                Install it from the browser. The list, search and reader fit a thumb, and the shell
+                opens with no signal.
+              </p>
+              <code>PWA · offline shell</code>
+            </article>
+            <article>
+              <span class="glyph"
+                ><svg class="i" viewBox="0 0 24 24">
+                  <circle cx="6" cy="5" r="2" />
+                  <circle cx="18" cy="5" r="2" />
+                  <circle cx="12" cy="19" r="2" />
+                  <path d="M6 7v2a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7M12 12v5" /></svg
+              ></span>
+              <h3>Change anything</h3>
+              <p>
+                Preact and TypeScript, one config file, MIT. If a screen is not how you want it,
+                make it yours.
+              </p>
+              <code>config.json · dist/</code>
+            </article>
           </div>
-          <div class="label">Records</div>
-          <div class="hit on">
-            <i style="--c: #46a758"></i><span>Dishwasher warranty registration</span
-            ><code>Nov 29</code>
-            <small>Model KDW-450 Quiet Series · 2 years parts and labor</small>
-          </div>
-          <div class="hit">
-            <i style="--c: #46a758"></i><span>Receipt — dishwasher</span><code>Nov 28</code>
-            <small><mark>Dishwasher</mark> KDW-450 · Delivery and install</small>
-          </div>
-          <div class="hit">
-            <i style="--c: #f76b15"></i><span>Move-in inspection checklist</span><code>Jun 1</code>
-            <small>Kitchen: Good. Oven and <mark>dishwasher</mark> work.</small>
-          </div>
-          <div class="label">Topics</div>
-          <div class="hit">
-            <i class="sq" style="--c: #f76b15"></i><span>Home › Appliances</span><code>2</code>
-          </div>
-          <div class="keys"><span>↵ open</span><span>↑↓ move</span><span>esc close</span></div>
         </div>
-        <div>
-          <h2>One key to<br />find anything.</h2>
-          <p class="sub">
-            Press <kbd>⌘K</kbd> or <kbd>/</kbd>. Titles, words inside documents, topics and
-            commands, in one list.
-          </p>
-          <ul class="checks col">
-            <li>Searches the text Paperless read from each scan</li>
-            <li>Recent records before you type</li>
-            <li>Opens beside the list, or in a sheet on a phone</li>
-            <li>Every action has a key</li>
-          </ul>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="band">
-      <div class="narrow">
-        <h2 style="text-align: center">If you don’t like something, fork it.</h2>
-        <div class="fork">
-          <div class="term">
+      <section id="self-host" aria-labelledby="fork-title">
+        <div class="wrap fork">
+          <div>
+            <span class="kicker">Self-host</span>
+            <h2 id="fork-title">If you don’t like something, <span class="dim">fork it.</span></h2>
+            <p class="sub">
+              Run the demo on your machine in a minute. Point it at your server with one
+              config.json, then serve the build behind your proxy.
+            </p>
+            <div class="copy">
+              <span><span class="p">$</span> gh repo fork majicmaj/papermint --clone</span>
+              <button type="button" id="copy" aria-label="Copy the command">
+                <svg class="i" viewBox="0 0 24 24">
+                  <rect x="8" y="8" width="12" height="12" rx="2" />
+                  <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" />
+                </svg>
+              </button>
+            </div>
+            <div class="buttons">
+              <a class="btn" href="https://github.com/majicmaj/papermint/fork">Fork on GitHub</a>
+              <a class="btn quiet" href="https://github.com/majicmaj/papermint/blob/main/DEPLOY.md"
+                >Deploy guide</a
+              >
+            </div>
+          </div>
+          <div class="term" aria-label="Terminal session">
             <div class="bar"><span></span><span></span><span></span><code>~/code</code></div>
             <pre><span class="p">$</span> gh repo fork majicmaj/papermint --clone
 <span class="ok">✓ Cloned papermint into ./papermint</span>
 <span class="p">$</span> cd papermint &amp;&amp; npm ci
-<span class="ok">✓ packages installed</span>
+<span class="ok">✓ added 214 packages</span>
 <span class="p">$</span> npm run demo
 <span class="ok">▲ Papermint demo →</span> <span class="url">http://127.0.0.1:4673</span>
 <span class="p">$</span> <span class="cur"></span></pre>
           </div>
-          <div class="card">
-            <ul class="checks col" style="padding: 0">
-              <li>
-                <span><b>Change the UI.</b> Restyle every surface.</span>
-              </li>
-              <li>
-                <span><b>Point it at your server.</b> One config.json.</span>
-              </li>
-              <li>
-                <span><b>Ship your own build.</b> Serve dist/ behind your proxy.</span>
-              </li>
-            </ul>
-            <div>
-              <div class="mono" style="margin-bottom: 12px">MIT licensed · Preact + TypeScript</div>
-              <div class="buttons">
-                <a class="btn" href="https://github.com/majicmaj/papermint/fork">Fork on GitHub</a>
-                <a class="btn quiet" href="https://github.com/majicmaj/papermint"
-                  >Browse source ↗</a
-                >
-              </div>
-            </div>
+        </div>
+      </section>
+
+      <section class="close" aria-labelledby="close-title">
+        <div class="wrap">
+          <div class="fan" aria-hidden="true">
+            <img src="/media/docs/121.webp" alt="" style="--r: -24deg; z-index: 1" loading="lazy" />
+            <img src="/media/docs/211.webp" alt="" style="--r: -12deg; z-index: 2" loading="lazy" />
+            <img src="/media/docs/114.webp" alt="" style="--r: 24deg; z-index: 1" loading="lazy" />
+            <img src="/media/docs/141.webp" alt="" style="--r: 12deg; z-index: 2" loading="lazy" />
+            <img src="/media/docs/301.webp" alt="" style="--r: 0deg; z-index: 3" loading="lazy" />
+          </div>
+          <h2 id="close-title">Your paperwork,<br /><span class="dim">finally calm.</span></h2>
+          <div class="actions">
+            <a class="btn big" href="/demo/">Open the demo <kbd>D</kbd></a>
+            <a class="btn big quiet" href="https://github.com/majicmaj/papermint">Star on GitHub</a>
           </div>
         </div>
-      </div>
-    </section>
-
-    <section class="band close">
-      <div class="narrow">
-        <h2>Your paperwork deserves<br />better than a folder.</h2>
-        <p class="sub" style="margin-left: auto; margin-right: auto">
-          Papermint is free and open source. Point it at your Paperless, install it, and let the
-          archive get out of your way.
-        </p>
-        <div class="buttons">
-          <a class="btn" href="/demo/">Open the demo</a>
-          <a class="btn quiet" href="https://github.com/majicmaj/papermint/blob/main/DEPLOY.md"
-            >Self-host</a
-          >
-        </div>
-      </div>
-    </section>
+      </section>
+    </main>
 
     <footer>
       <div class="wrap">
         <span class="who"
-          ><img src="/demo/icons/icon-192.png" alt="" width="16" height="16" />© 2026 Papermint ·
-          MIT licensed</span
+          ><img src="/demo/icons/icon-192.png" alt="" width="18" height="18" />© 2026 Papermint ·
+          MIT · built for Paperless&#8209;ngx</span
         >
-        <div class="links">
+        <nav aria-label="Footer">
           <a href="https://github.com/majicmaj/papermint">GitHub</a>
           <a href="/demo/">Demo</a>
           <a href="https://github.com/majicmaj/papermint/blob/main/DEPLOY.md">Self-host</a>
           <a href="https://github.com/majicmaj/papermint/issues">Issues</a>
           <a href="https://docs.paperless-ngx.com/">Paperless-ngx</a>
-        </div>
+        </nav>
       </div>
     </footer>
+
+    <script>
+      /* records:start */
+      // prettier-ignore
+      const RECORDS = [{"id":101,"t":"Articles of organization","d":"2024-02-12","g":"Company","c":"#6e56cf","s":"Current","x":"Office of the Secretary of State Corporation Division 255 Capitol Way Salem Grove, OR 97002 Articles of Organization — Limited Liability Company Entity name Fernhill Studio LLC Registry number 2024-118430 Principal office 418 Alder Street, Apt 3B, Maple Falls, OR 97000 Registered agent Riley Chen, 418 Alder Street, Apt 3B, Maple Falls, OR 97000 Management Member-managed Duration Perpetual Purpose Graphic design, bran","k":"doc"},{"id":102,"t":"EIN assignment notice","d":"2024-02-20","g":"Company","c":"#6e56cf","s":"Current","x":"Fernhill Studio LLC 418 Alder Street, Apt 3B Maple Falls, OR 97000 February 20, 2024 Fernhill Studio LLC 418 Alder Street, Apt 3B Maple Falls, OR 97000 Employer identification number: 00-0000417 This notice records the employer identification number assigned to Fernhill Studio LLC. Use this number on federal tax forms, bank applications and contractor forms. The company files as a single-member LLC. The owner reports","k":"doc"},{"id":103,"t":"Operating agreement","d":"2024-03-04","g":"Company","c":"#6e56cf","s":"Current","x":"Fernhill Studio LLC 418 Alder Street, Apt 3B Maple Falls, OR 97000 Operating Agreement of Fernhill Studio LLC This Operating Agreement is made on March 4, 2024, by Riley Chen, the sole member of Fernhill Studio LLC, a limited liability company. 1. Formation The company was formed by filing articles of organization on February 12, 2024. The member agrees to the terms of this agreement for the operation of the company.","k":"doc"},{"id":104,"t":"Annual report 2025","d":"2025-02-03","g":"Company","c":"#6e56cf","s":"Current","x":"Office of the Secretary of State Corporation Division 255 Capitol Way Salem Grove, OR 97002 Annual Report — Limited Liability Company Entity name Fernhill Studio LLC Registry number 2024-118430 Report year 2025 Status Active Principal office 418 Alder Street, Apt 3B, Maple Falls, OR 97000 Member Riley Chen Fee $100.00 (paid) The next annual report is due on the anniversary of the filing date.","k":"doc"},{"id":105,"t":"Annual report 2026","d":"2026-02-09","g":"Company","c":"#6e56cf","s":"Current","x":"Office of the Secretary of State Corporation Division 255 Capitol Way Salem Grove, OR 97002 Annual Report — Limited Liability Company Entity name Fernhill Studio LLC Registry number 2024-118430 Report year 2026 Status Active Principal office 418 Alder Street, Apt 3B, Maple Falls, OR 97000 Member Riley Chen Fee $100.00 (paid) The next annual report is due on the anniversary of the filing date.","k":"doc"},{"id":106,"t":"General liability certificate","d":"2026-01-15","g":"Company","c":"#6e56cf","s":"Current","x":"Hearthstone Insurance 820 Commerce Drive Salem Grove, OR 97002 (555) 010-8820 Certificate of Liability Insurance Insured Fernhill Studio LLC Policy number HS-GL-55-20817 Coverage Commercial general liability Each occurrence $1,000,000 General aggregate $2,000,000 Policy period Jan 15, 2026 – Jan 15, 2027 Certificate holder Larkspur Coffee Co. This certificate is for information only. It does not change the policy ter","k":"doc"},{"id":111,"t":"Services agreement — Larkspur Coffee","d":"2026-01-20","g":"Clients","c":"#12a594","s":"Current","x":"Fernhill Studio LLC 418 Alder Street, Apt 3B Maple Falls, OR 97000 Design Services Agreement This agreement starts on January 20, 2026, between Fernhill Studio LLC (\"Studio\") and Larkspur Coffee Co. (\"Client\"). 1. Services Studio provides design work that Client requests in writing: menu boards, packaging labels, cup sleeves, signs and social media graphics. For each request, Studio sends an estimate. Work starts whe","k":"doc"},{"id":112,"t":"Statement of work — Orchard Street Books","d":"2026-05-06","g":"Clients","c":"#12a594","s":"Current","x":"Fernhill Studio LLC 418 Alder Street, Apt 3B Maple Falls, OR 97000 Statement of Work — Identity Refresh This statement of work is made on May 6, 2026, between Fernhill Studio LLC and Orchard Street Books. 1. Scope Studio designs a new logo and visual identity for the bookshop, and these items: six shelf talker templates, an event poster template and a gift card. 2. Timeline Logo sketches: May 22, 2026. Final logo: Ju","k":"doc"},{"id":113,"t":"Kickoff notes — Orchard Street Books","d":"2026-05-08","g":"Clients","c":"#12a594","s":"Current","x":"Kickoff — Orchard Street Books May 8, 2026, at the shop People: Dana (owner), Marcus (events), Riley - They want the new look before the summer reading program (June 20). - Keep the green. The old fox drawing goes. - Deliverables: logo, shelf talkers, event poster template, gift card. - Dana sends photos of the shop front by Friday. - First round of logo sketches: May 22. Next: send the moodboard on Monday.","k":"txt"},{"id":114,"t":"Invoice FS-2026-014 — Larkspur Coffee","d":"2026-06-30","g":"Clients","c":"#12a594","s":"Current","x":"Fernhill Studio LLC 418 Alder Street, Apt 3B Maple Falls, OR 97000 Invoice FS-2026-014 June 30, 2026 Due: July 30, 2026 Bill to Larkspur Coffee Co. 77 Harbor Road Port Wren, OR 97001 DESCRIPTION QTY RATE AMOUNT Seasonal menu boards (3 designs) 3 $420.00 $1,260.00 Cup sleeve illustration 1 $650.00 $650.00 Revisions (hours) 4 $85.00 $340.00 Total $2,250.00 Pay by bank transfer to Fernhill Studio LLC, account ••••2093, ","k":"doc"},{"id":115,"t":"Invoice FS-2026-015 — Orchard Street Books","d":"2026-07-15","g":"Clients","c":"#12a594","s":"Current","x":"Fernhill Studio LLC 418 Alder Street, Apt 3B Maple Falls, OR 97000 Invoice FS-2026-015 July 15, 2026 Due: August 14, 2026 Bill to Orchard Street Books 12 Orchard Street Maple Falls, OR 97000 DESCRIPTION QTY RATE AMOUNT Logo and identity — phase 1 (50%) 1 $2,400.00 $2,400.00 Shelf talker templates 6 $75.00 $450.00 Total $2,850.00 Pay by bank transfer to Fernhill Studio LLC, account ••••2093, or by check. Thank you for","k":"doc"},{"id":116,"t":"Invoice FS-2026-018 — Tidewater Yoga","d":"2026-08-29","g":"Clients","c":"#12a594","s":"Current","x":"Fernhill Studio LLC 418 Alder Street, Apt 3B Maple Falls, OR 97000 Invoice FS-2026-018 August 29, 2026 Due: September 28, 2026 Bill to Tidewater Yoga 904 Beach Loop Port Wren, OR 97001 DESCRIPTION QTY RATE AMOUNT Class schedule poster 1 $380.00 $380.00 Social media templates 8 $60.00 $480.00 Photo retouching (hours) 3 $85.00 $255.00 Total $1,115.00 Pay by bank transfer to Fernhill Studio LLC, account ••••2093, or by ","k":"doc"},{"id":117,"t":"Invoice FS-2026-021 — Orchard Street Books","d":"2026-09-30","g":"Clients","c":"#12a594","s":"Current","x":"Fernhill Studio LLC 418 Alder Street, Apt 3B Maple Falls, OR 97000 Invoice FS-2026-021 September 30, 2026 Due: October 30, 2026 Bill to Orchard Street Books 12 Orchard Street Maple Falls, OR 97000 DESCRIPTION QTY RATE AMOUNT Logo and identity — phase 2 (50%) 1 $2,400.00 $2,400.00 Event poster template 1 $450.00 $450.00 Gift card design 1 $300.00 $300.00 Total $3,150.00 Pay by bank transfer to Fernhill Studio LLC, acc","k":"doc"},{"id":118,"t":"Invoice FS-2026-024 — Larkspur Coffee","d":"2026-10-31","g":"Clients","c":"#12a594","s":"Current","x":"Fernhill Studio LLC 418 Alder Street, Apt 3B Maple Falls, OR 97000 Invoice FS-2026-024 October 31, 2026 Due: November 30, 2026 Bill to Larkspur Coffee Co. 77 Harbor Road Port Wren, OR 97001 DESCRIPTION QTY RATE AMOUNT Holiday packaging labels 4 $310.00 $1,240.00 Gift box illustration 1 $720.00 $720.00 Total $1,960.00 Pay by bank transfer to Fernhill Studio LLC, account ••••2093, or by check. Thank you for your busine","k":"doc"},{"id":121,"t":"Business checking statement — June 2026","d":"2026-06-30","g":"Business banking","c":"#0d74ce","s":"Current","x":"Cedar Valley Credit Union 200 Main Street Maple Falls, OR 97000 (555) 010-2200 Statement June 2026 Fernhill Studio LLC 418 Alder Street, Apt 3B Maple Falls, OR 97000 Account Business checking ••••2093 Opening balance $6,420.18 Deposits $1,240.00 Withdrawals −$1,968.79 Closing balance $5,691.39 DATE DESCRIPTION AMOUNT BALANCE 06/01 The Loft Coworking — membership −$185.00 $6,235.18 06/02 Inkwell Cloud Tools — monthly ","k":"doc"},{"id":122,"t":"Business checking statement — July 2026","d":"2026-07-31","g":"Business banking","c":"#0d74ce","s":"Current","x":"Cedar Valley Credit Union 200 Main Street Maple Falls, OR 97000 (555) 010-2200 Statement July 2026 Fernhill Studio LLC 418 Alder Street, Apt 3B Maple Falls, OR 97000 Account Business checking ••••2093 Opening balance $5,691.39 Deposits $2,250.00 Withdrawals −$1,981.79 Closing balance $5,959.60 DATE DESCRIPTION AMOUNT BALANCE 07/01 The Loft Coworking — membership −$185.00 $5,506.39 07/02 Inkwell Cloud Tools — monthly ","k":"doc"},{"id":123,"t":"Business checking statement — August 2026","d":"2026-08-31","g":"Business banking","c":"#0d74ce","s":"Current","x":"Cedar Valley Credit Union 200 Main Street Maple Falls, OR 97000 (555) 010-2200 Statement August 2026 Fernhill Studio LLC 418 Alder Street, Apt 3B Maple Falls, OR 97000 Account Business checking ••••2093 Opening balance $5,959.60 Deposits $2,850.00 Withdrawals −$1,971.79 Closing balance $6,837.81 DATE DESCRIPTION AMOUNT BALANCE 08/01 The Loft Coworking — membership −$185.00 $5,774.60 08/02 Inkwell Cloud Tools — monthl","k":"doc"},{"id":124,"t":"Business checking statement — September 2026","d":"2026-09-30","g":"Business banking","c":"#0d74ce","s":"Current","x":"Cedar Valley Credit Union 200 Main Street Maple Falls, OR 97000 (555) 010-2200 Statement September 2026 Fernhill Studio LLC 418 Alder Street, Apt 3B Maple Falls, OR 97000 Account Business checking ••••2093 Opening balance $6,837.81 Deposits $1,115.00 Withdrawals −$1,931.79 Closing balance $6,021.02 DATE DESCRIPTION AMOUNT BALANCE 09/01 The Loft Coworking — membership −$185.00 $6,652.81 09/02 Inkwell Cloud Tools — mon","k":"doc"},{"id":125,"t":"Business checking statement — October 2026","d":"2026-10-31","g":"Business banking","c":"#0d74ce","s":"Current","x":"Cedar Valley Credit Union 200 Main Street Maple Falls, OR 97000 (555) 010-2200 Statement October 2026 Fernhill Studio LLC 418 Alder Street, Apt 3B Maple Falls, OR 97000 Account Business checking ••••2093 Opening balance $6,021.02 Deposits $6,750.00 Withdrawals −$1,977.79 Closing balance $10,793.23 DATE DESCRIPTION AMOUNT BALANCE 10/01 The Loft Coworking — membership −$185.00 $5,836.02 10/02 Inkwell Cloud Tools — mont","k":"doc"},{"id":131,"t":"Receipt — studio monitor","d":"2026-03-14","g":"Expenses","c":"#ffb224","s":"Current","x":"BRIGHTLINE ELECTRONICS 880 Market Street Maple Falls, OR 97000 03/14/2026 14:22 27\" 4K monitor $429.99 Monitor arm $89.00 USB-C cable 2 m $19.99 SUBTOTAL $538.98 TAX $0.00 TOTAL $538.98 VISA ****4417 APPROVED THANK YOU Sample receipt · fictional data","k":"doc"},{"id":132,"t":"Coworking membership — October","d":"2026-10-01","g":"Expenses","c":"#ffb224","s":"Current","x":"The Loft Coworking 21 Mill Street, 2nd floor Maple Falls, OR 97000 Invoice LOFT-10-2026-0388 October 1, 2026 Due: Paid by card on file Bill to Fernhill Studio LLC 418 Alder Street, Apt 3B Maple Falls, OR 97000 DESCRIPTION QTY RATE AMOUNT Flex desk membership — October 1 $185.00 $185.00 Meeting room (hours) 2 $15.00 $30.00 Total $215.00","k":"doc"},{"id":133,"t":"Design software — annual plan","d":"2026-04-02","g":"Expenses","c":"#ffb224","s":"Current","x":"Inkwell Cloud Tools 500 Example Avenue San Mateo Bay, CA 94000 Invoice VCT-778120 April 2, 2026 Due: Paid by card on file Bill to Fernhill Studio LLC 418 Alder Street, Apt 3B Maple Falls, OR 97000 DESCRIPTION QTY RATE AMOUNT Creative suite — annual, 1 seat 1 $659.88 $659.88 Font library add-on 1 $96.00 $96.00 Total $755.88","k":"doc"},{"id":134,"t":"Receipt — printing proofs","d":"2026-09-12","g":"Expenses","c":"#ffb224","s":"Current","x":"MILL STREET PRINT SHOP 19 Mill Street Maple Falls, OR 97000 09/12/2026 10:05 Poster proof 18x24 $24.00 Card stock samples $12.50 Gift card proofs (10) $18.00 SUBTOTAL $54.50 TAX $0.00 TOTAL $54.50 Debit ****0921 APPROVED THANK YOU Sample receipt · fictional data","k":"doc"},{"id":141,"t":"Form 1099-NEC — Larkspur Coffee (2025)","d":"2026-01-28","g":"Business tax","c":"#e5484d","s":"Current","x":"Larkspur Coffee Co. 77 Harbor Road Port Wren, OR 97001 Nonemployee compensation — 2025 (recipient copy) Payer Larkspur Coffee Co. Recipient Fernhill Studio LLC Recipient TIN XX-XXX0417 Nonemployee compensation $8,640.00 Federal income tax withheld $0.00 Tax year 2025 Report this income on your tax return. The payer also files this information.","k":"doc"},{"id":142,"t":"Estimated tax payment — Q3 2026","d":"2026-09-15","g":"Business tax","c":"#e5484d","s":"Current","x":"Greenleaf Tax Services 31 Willow Lane, Suite 2 Maple Falls, OR 97000 (555) 010-3131 Estimated tax payment confirmation Taxpayer Riley Chen Period Third quarter 2026 Federal payment $2,150.00 State payment $640.00 Paid on September 15, 2026 Confirmation GL-Q3-26-58172 The next payment is due January 15, 2027.","k":"doc"},{"id":143,"t":"Quarterly profit and loss — Q3 2026","d":"2026-10-06","g":"Business tax","c":"#e5484d","s":"Current","x":"Fernhill Studio LLC 418 Alder Street, Apt 3B Maple Falls, OR 97000 Profit and loss — July to September 2026 Client income $14,860.00 Software and subscriptions −$271.16 Coworking −$615.00 Printing and supplies −$212.40 Equipment −$0.00 Insurance −$94.00 Net profit $13,667.44 Prepared from the business checking account. Not audited.","k":"doc"},{"id":201,"t":"2025 tax return summary","d":"2026-04-08","g":"Taxes","c":"#dc3e42","s":"Current","x":"Greenleaf Tax Services 31 Willow Lane, Suite 2 Maple Falls, OR 97000 (555) 010-3131 2025 individual tax return — summary Taxpayer Riley Chen Filing status Single Business income (net) $54,912.00 Self-employment tax $7,758.00 Student loan interest deduction $612.00 Taxable income $37,904.00 Total federal tax $12,140.00 Estimated payments made $11,600.00 Balance due $540.00 State balance due $118.00 E-filed April 8, 20","k":"doc"},{"id":202,"t":"Student loan interest statement (2025)","d":"2026-01-24","g":"Taxes","c":"#dc3e42","s":"Current","x":"Summit Student Loans PO Box 7400 Lakeport, NV 89000 Student loan interest statement — 2025 Borrower Riley Chen Account ••••5530 Interest received in 2025 $612.48 Principal balance at year end $9,884.10 You may be able to deduct this interest. Ask your tax preparer.","k":"doc"},{"id":211,"t":"Annual physical — visit summary","d":"2026-03-03","g":"Health","c":"#e93d82","s":"Current","x":"Maple Falls Family Clinic 55 Birch Avenue Maple Falls, OR 97000 (555) 010-3355 March 3, 2026 Riley Chen 418 Alder Street, Apt 3B Maple Falls, OR 97000 After-visit summary Thank you for your visit today with Dr. Amara Osei for your yearly physical. Vitals: blood pressure 118/76, pulse 64, weight 152 lb. Your exam was normal. We ordered routine blood tests. Results will be in your patient portal in 3 to 5 days. Next st","k":"doc"},{"id":212,"t":"Lab results — lipid panel","d":"2026-03-07","g":"Health","c":"#e93d82","s":"Current","x":"Maple Falls Family Clinic 55 Birch Avenue Maple Falls, OR 97000 (555) 010-3355 Laboratory report Patient Riley Chen Collected March 4, 2026 Total cholesterol 182 mg/dL (under 200) HDL 61 mg/dL (40 or more) LDL 104 mg/dL (under 130) Triglycerides 86 mg/dL (under 150) Glucose, fasting 88 mg/dL (70–99) All results are in the reference range.","k":"doc"},{"id":213,"t":"Dental cleaning — explanation of benefits","d":"2026-05-19","g":"Health","c":"#e93d82","s":"Current","x":"Bluebird Mutual Health PO Box 3300 Salem Grove, OR 97002 (555) 010-3300 Explanation of benefits — this is not a bill Member Riley Chen Provider Birch Avenue Dental Service date May 2, 2026 Billed $245.00 Plan discount −$61.00 Plan paid −$184.00 You owe $0.00 Preventive dental care is covered at 100% in network.","k":"doc"},{"id":214,"t":"Eyeglass prescription","d":"2026-08-11","g":"Health","c":"#e93d82","s":"Current","x":"Clearview Optometry 8 Birch Avenue Maple Falls, OR 97000 Spectacle prescription Patient Riley Chen Right eye (OD) SPH −1.75 CYL −0.50 AXIS 180 Left eye (OS) SPH −1.50 CYL −0.25 AXIS 170 Pupil distance 62 mm Valid until August 11, 2028 Dr. Lena Park, OD","k":"doc"},{"id":215,"t":"Vaccination record","d":"2025-10-21","g":"Health","c":"#e93d82","s":"Current","x":"Maple Falls Family Clinic 55 Birch Avenue Maple Falls, OR 97000 (555) 010-3355 Immunization record Patient Riley Chen Influenza Oct 21, 2025 COVID-19 (2025–26) Oct 21, 2025 Tdap Jun 4, 2017 Hepatitis B series Complete MMR Complete Bring this record to your next visit.","k":"doc"},{"id":221,"t":"Health plan — summary of benefits 2026","d":"2025-12-02","g":"Insurance","c":"#3e63dd","s":"Current","x":"Bluebird Mutual Health PO Box 3300 Salem Grove, OR 97002 (555) 010-3300 Summary of benefits — Bluebird Silver 2500 Member Riley Chen Member ID BBM-448-21907 Plan year Jan 1 – Dec 31, 2026 Deductible $2,500 Out-of-pocket maximum $7,000 Primary care visit $30 copay Specialist visit $60 copay Generic drugs $10 copay This summary is not a contract. The policy has the full terms.","k":"doc"},{"id":222,"t":"Renter's insurance policy 2025","d":"2025-04-01","g":"Insurance","c":"#3e63dd","s":"Superseded","x":"Hearthstone Insurance 820 Commerce Drive Salem Grove, OR 97002 (555) 010-8820 Renter's insurance — declarations page Named insured Riley Chen Policy number HS-R-30-11842 Policy period Apr 1, 2025 – Apr 1, 2026 Personal property $25,000 Liability $100,000 Deductible $500 Premium $168.00 a year Location: 418 Alder Street, Apt 3B.","k":"doc"},{"id":223,"t":"Renter's insurance policy 2026","d":"2026-03-28","g":"Insurance","c":"#3e63dd","s":"Current","x":"Hearthstone Insurance 820 Commerce Drive Salem Grove, OR 97002 (555) 010-8820 Renter's insurance — declarations page Named insured Riley Chen Policy number HS-R-30-11842 Policy period Apr 1, 2026 – Apr 1, 2027 Personal property $30,000 Liability $100,000 Deductible $500 Premium $184.00 a year Location: 418 Alder Street, Apt 3B. Personal property limit raised at renewal.","k":"doc"},{"id":231,"t":"Auto insurance ID card","d":"2026-06-01","g":"Vehicle","c":"#978365","s":"Current","x":"Pinecrest Auto Insurance Proof of insurance · PO Box 610 · Salem Grove, OR 97002 · (555) 010-0610 Insured Riley Chen Policy PC-A-77-30451 Vehicle 2019 Subaru Crosstrek VIN JF2GT0000K0000417 Effective Jun 1, 2026 – Dec 1, 2026 Keep this card in the vehicle. Sample card · fictional data.","k":"doc"},{"id":232,"t":"Vehicle registration renewal","d":"2026-07-09","g":"Vehicle","c":"#978365","s":"Current","x":"Motor Vehicle Services 1905 Lana Avenue Salem Grove, OR 97002 Registration renewal receipt Owner Riley Chen Plate FERN 417 Vehicle 2019 Subaru Crosstrek Valid until July 31, 2028 Fee $186.00 (paid) Put the new sticker on the rear plate.","k":"doc"},{"id":233,"t":"Service record — 60,000 mile","d":"2026-09-22","g":"Vehicle","c":"#978365","s":"Current","x":"Northgate Auto Care 1500 North Road Maple Falls, OR 97000 (555) 010-1500 Invoice RO-48821 September 22, 2026 Due: Paid Bill to Riley Chen 418 Alder Street, Apt 3B Maple Falls, OR 97000 DESCRIPTION QTY RATE AMOUNT Oil and filter change 1 $79.95 $79.95 Tire rotation 1 $29.95 $29.95 Engine air filter 1 $34.50 $34.50 Brake inspection 1 $0.00 $0.00 Total $144.40 Odometer: 60,212 mi. Next service at 66,000 mi.","k":"doc"},{"id":241,"t":"Passport renewal receipt","d":"2025-08-18","g":"Identity","c":"#7c66dc","s":"Current","x":"Passport Services Application acceptance receipt Passport renewal — application received Applicant Riley Chen Application locator R-25-0081774 Service Routine, by mail Fee $130.00 (check 1204) Received August 18, 2025 Track the status online with the application locator.","k":"doc"},{"id":301,"t":"Apartment lease 2025–2026","d":"2025-05-20","g":"Lease","c":"#f76b15","s":"Superseded","x":"Alder Court Properties 400 Alder Street, Office 1 Maple Falls, OR 97000 (555) 010-4400 Residential Lease Agreement This lease is made on May 20, 2025, between Alder Court Properties and Riley Chen. 1. Premises Alder Court Properties (\"Landlord\") rents to Riley Chen (\"Tenant\") the apartment at 418 Alder Street, Apt 3B, Maple Falls, OR 97000, with one parking space (number 14) and one storage locker. 2. Term The lease ","k":"doc"},{"id":302,"t":"Lease renewal 2026–2027","d":"2026-05-18","g":"Lease","c":"#f76b15","s":"Current","x":"Alder Court Properties 400 Alder Street, Office 1 Maple Falls, OR 97000 (555) 010-4400 Lease Renewal Agreement This renewal is made on May 18, 2026, between Alder Court Properties and Riley Chen. It continues the lease of May 20, 2025, with the changes below. All other terms stay the same. 1. Premises Alder Court Properties (\"Landlord\") rents to Riley Chen (\"Tenant\") the apartment at 418 Alder Street, Apt 3B, Maple F","k":"doc"},{"id":303,"t":"Move-in inspection checklist","d":"2025-06-01","g":"Lease","c":"#f76b15","s":"Current","x":"Alder Court Properties 400 Alder Street, Office 1 Maple Falls, OR 97000 (555) 010-4400 Move-in condition report — 418 Alder Street, Apt 3B Entry and hall Good. Small scuff by the door. Kitchen Good. Oven and dishwasher work. Living room Good. Blinds complete. Bedroom Good. Nail holes on the west wall. Bathroom Good. Grout stain near the tub. Smoke detectors Tested. Both work. Keys given 2 door keys, 1 mailbox key Sig","k":"doc"},{"id":311,"t":"Electric bill — August 2026","d":"2026-08-24","g":"Utilities","c":"#ffc53d","s":"Current","x":"Maple Falls Power & Light PO Box 1180 Maple Falls, OR 97000 (555) 010-1180 Account 30-11842-02 August 2026 Riley Chen 418 Alder Street, Apt 3B Maple Falls, OR 97000 Amount due $58.34 Due by September 14, 2026 Usage: 412 kWh CHARGE AMOUNT Basic charge $11.25 Energy (412 kWh) $44.99 Public purpose charge $2.10 Total $58.34 Autopay is on for this account. We will charge your card on file on the due date.","k":"doc"},{"id":312,"t":"Electric bill — September 2026","d":"2026-09-24","g":"Utilities","c":"#ffc53d","s":"Current","x":"Maple Falls Power & Light PO Box 1180 Maple Falls, OR 97000 (555) 010-1180 Account 30-11842-02 September 2026 Riley Chen 418 Alder Street, Apt 3B Maple Falls, OR 97000 Amount due $52.91 Due by October 15, 2026 Usage: 368 kWh CHARGE AMOUNT Basic charge $11.25 Energy (368 kWh) $39.56 Public purpose charge $2.10 Total $52.91 Autopay is on for this account. We will charge your card on file on the due date.","k":"doc"},{"id":313,"t":"Electric bill — October 2026","d":"2026-10-24","g":"Utilities","c":"#ffc53d","s":"Current","x":"Maple Falls Power & Light PO Box 1180 Maple Falls, OR 97000 (555) 010-1180 Account 30-11842-02 October 2026 Riley Chen 418 Alder Street, Apt 3B Maple Falls, OR 97000 Amount due $63.70 Due by November 14, 2026 Usage: 455 kWh CHARGE AMOUNT Basic charge $11.25 Energy (455 kWh) $50.35 Public purpose charge $2.10 Total $63.70 Autopay is on for this account. We will charge your card on file on the due date.","k":"doc"},{"id":314,"t":"Internet bill — October 2026","d":"2026-10-05","g":"Utilities","c":"#ffc53d","s":"Current","x":"Riverline Fiber 1 Riverline Way Port Wren, OR 97001 (555) 010-7700 Account RF-0071-4471 October 2026 Riley Chen 418 Alder Street, Apt 3B Maple Falls, OR 97000 Amount due $50.00 Due by October 25, 2026 Usage: Fiber 500 CHARGE AMOUNT Fiber 500 Mbps $55.00 Router rental $0.00 Paperless billing credit −$5.00 Total $50.00 Autopay is on for this account. We will charge your card on file on the due date.","k":"doc"},{"id":315,"t":"Wi-Fi and router notes","d":"2025-06-03","g":"Utilities","c":"#ffc53d","s":"Current","x":"Home network Router: in the hall closet, top shelf. Network name: alder-3b (the password is in the password manager, not here). Admin page: http://192.168.1.1 Support: Riverline Fiber, (555) 010-7700, account RF-0071-4471. If the internet stops: 1. Unplug the router for 30 seconds. 2. Check the green light on the fiber box in the closet. 3. Call support if the light is red.","k":"txt"},{"id":321,"t":"Dishwasher warranty registration","d":"2025-11-29","g":"Appliances","c":"#46a758","s":"Current","x":"Kestrel Home Appliances Customer care (555) 010-9090 Product registration confirmation Owner Riley Chen Model KDW-450 Quiet Series Serial number KH25-118-90441 Purchased November 28, 2025 Warranty 2 years parts and labor Ends November 28, 2027 Keep the purchase receipt with this registration.","k":"doc"},{"id":322,"t":"Receipt — dishwasher","d":"2025-11-28","g":"Appliances","c":"#46a758","s":"Current","x":"HARBOR HOME SUPPLY 3400 Harbor Road Port Wren, OR 97001 11/28/2025 16:48 Dishwasher KDW-450 $649.00 Delivery and install $99.00 Haul-away of old unit $25.00 SUBTOTAL $773.00 TAX $0.00 TOTAL $773.00 VISA ****4417 APPROVED THANK YOU Sample receipt · fictional data","k":"doc"}];
+      /* records:end */
+
+      const BY_ID = new Map(RECORDS.map((r) => [r.id, r]));
+      const STILL = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const sleep = (ms) => new Promise((done) => setTimeout(done, ms));
+      const esc = (s) =>
+        s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+      const MONTHS = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ');
+      const day = (iso) => {
+        const [y, m, d] = iso.split('-').map(Number);
+        return `${MONTHS[m - 1]} ${d}, ${y}`;
+      };
+      const tokens = (text) =>
+        text
+          .toLowerCase()
+          .split(/[^a-z0-9]+/)
+          .filter(Boolean);
+      const hay = new Map(RECORDS.map((r) => [r.id, tokens(`${r.t} ${r.g} ${r.s} ${r.x}`)]));
+      const titles = new Map(RECORDS.map((r) => [r.id, tokens(r.t)]));
+      const has = (list, w) => list.some((t) => t.startsWith(w));
+
+      /** Records with a word that starts with each word of the query. Title hits rank first. */
+      function find(query) {
+        const words = tokens(query);
+        if (!words.length) return [];
+        const inTitle = (r) => Number(words.every((w) => has(titles.get(r.id), w)));
+        return RECORDS.filter((r) => words.every((w) => has(hay.get(r.id), w))).sort(
+          (a, b) => inTitle(b) - inTitle(a) || b.d.localeCompare(a.d),
+        );
+      }
+
+      function mark(text, query) {
+        let out = esc(text);
+        for (const w of tokens(query)) {
+          out = out.replace(new RegExp(`(^|[^a-z0-9])(${w})`, 'ig'), '$1<mark>$2</mark>');
+        }
+        return out;
+      }
+
+      /** A short line of document text around the first word of the query. */
+      function snippet(r, query) {
+        const w = tokens(query)[0] ?? '';
+        const found = new RegExp(`(^|[^a-z0-9])${w}`, 'i').exec(r.x);
+        const at = found ? found.index + found[1].length : -1;
+        if (at < 0 || has(titles.get(r.id), w)) return r.g ? `${r.g} · ${r.s || 'Record'}` : '';
+        const from = Math.max(0, at - 28);
+        return (from ? '…' : '') + r.x.slice(from, at + 60).trim() + '…';
+      }
+
+      function hitHtml(r, query, on) {
+        return `<a class="hit${on ? ' on' : ''}" href="/demo/r/${r.id}" role="option"><i style="--c:${r.c}"></i><span>${mark(r.t, query)}</span><time>${day(r.d)}</time><small>${mark(snippet(r, query), query)}</small></a>`;
+      }
+
+      /* Hero cloud: [record, x%, y%, depth, tilt, mobile x%, mobile y%] */
+      const CLOUD = [
+        [121, 4, 16, 0, -8],
+        [301, 14, 18, 1, 6, 12, 30],
+        [211, 27, 9, 0, -4],
+        [131, 7, 40, 2, -6, 30, 52],
+        [114, 17, 58, 1, 5],
+        [141, 3, 64, 1, 7, 52, 26],
+        [322, 13, 76, 2, -5],
+        [233, 25, 88, 0, 8],
+        [212, 5, 92, 0, -3],
+        [231, 16, 96, 1, 4, 74, 56],
+        [122, 73, 9, 0, 7],
+        [302, 86, 18, 1, -6, 90, 32],
+        [213, 97, 26, 0, 5],
+        [321, 92, 44, 2, 6, 8, 58],
+        [222, 83, 58, 1, -7],
+        [134, 97, 66, 0, -5],
+        [303, 87, 76, 2, 4, 36, 18],
+        [116, 76, 90, 1, -8],
+        [201, 94, 92, 1, 5],
+        [311, 66, 97, 0, -4, 66, 14],
+        [142, 40, 6, 0, 3],
+        [223, 60, 6, 0, -6, 95, 62],
+        [115, 36, 98, 0, -5],
+        [241, 54, 99, 0, 6],
+      ];
+      const cloud = document.getElementById('cloud');
+      cloud.innerHTML = CLOUD.map(([id, x, y, z, r, mx, my], i) => {
+        const rec = BY_ID.get(id);
+        return `<figure class="paper" data-id="${id}" data-z="${z}"${mx === undefined ? '' : ' data-m'} style="--x:${x}%;--y:${y}%;--r:${r}deg;--t:${8 + (i % 5)}s;--dl:${-i * 0.7}s;--in:${200 + i * 35}ms;${mx === undefined ? '' : `--mx:${mx}%;--my:${my}%`}"><span class="sheet"><img src="/media/docs/${id}.webp" alt="" width="360" height="466"></span><figcaption><i style="--c:${rec?.c ?? '#888'}"></i><span>${esc(rec?.t ?? '')}</span></figcaption></figure>`;
+      }).join('');
+      const papers = [...cloud.querySelectorAll('.paper')];
+
+      const form = document.getElementById('finder');
+      const input = document.getElementById('q');
+      const results = document.getElementById('results');
+      const word = document.getElementById('word');
+      let shown = [];
+      let active = 0;
+
+      function render(query, open) {
+        shown = find(query).slice(0, 5);
+        active = 0;
+        const ids = new Set(find(query).map((r) => r.id));
+        cloud.classList.toggle('filtering', query.trim().length > 0);
+        for (const p of papers) p.classList.toggle('match', ids.has(Number(p.dataset.id)));
+        results.innerHTML = shown.length
+          ? shown.map((r, i) => hitHtml(r, query, i === 0)).join('')
+          : `<div class="none">No record matches “${esc(query)}”. The demo has 50.</div>`;
+        results.classList.toggle('open', open && query.trim().length > 0);
+      }
+
+      function move(step) {
+        if (!shown.length) return;
+        active = (active + step + shown.length) % shown.length;
+        results.querySelectorAll('.hit').forEach((h, i) => h.classList.toggle('on', i === active));
+      }
+
+      /* The hero types its own queries until a person takes over. */
+      const LOOP = ['lease', 'receipt', 'warranty', '1099', 'invoice'];
+      let auto = !STILL;
+      async function setWord(text) {
+        word.classList.add('out');
+        await sleep(200);
+        word.firstElementChild.textContent = text;
+        word.classList.remove('out');
+      }
+      async function heroLoop() {
+        form.classList.add('live');
+        for (let n = 0; auto; n++) {
+          const q = LOOP[n % LOOP.length];
+          if (n) await setWord(q);
+          for (let i = 1; i <= q.length && auto; i++) {
+            input.value = q.slice(0, i);
+            render(input.value, false);
+            await sleep(90);
+          }
+          await sleep(2400);
+          for (let i = q.length - 1; i >= 0 && auto; i--) {
+            input.value = q.slice(0, i);
+            render(input.value, false);
+            await sleep(35);
+          }
+          await sleep(400);
+        }
+      }
+      function takeOver() {
+        if (!auto) return;
+        auto = false;
+        form.classList.remove('live');
+        input.value = '';
+        render('', false);
+      }
+      input.addEventListener('pointerdown', takeOver);
+      input.addEventListener('focus', takeOver);
+      input.addEventListener('input', () => {
+        render(input.value, true);
+        const first = input.value.trim().split(/\s+/)[0];
+        if (first) word.firstElementChild.textContent = first.slice(0, 14);
+      });
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') (e.preventDefault(), move(1));
+        if (e.key === 'ArrowUp') (e.preventDefault(), move(-1));
+        if (e.key === 'Escape') (input.blur(), results.classList.remove('open'));
+      });
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        location.href = shown[active] ? `/demo/r/${shown[active].id}` : '/demo/';
+      });
+      document.addEventListener('pointerdown', (e) => {
+        if (!form.contains(e.target)) results.classList.remove('open');
+      });
+      if (STILL) render('lease', false);
+      else setTimeout(heroLoop, 900);
+
+      /* Keys: / searches, D opens the demo, S goes to self-hosting. */
+      document.addEventListener('keydown', (e) => {
+        if (e.metaKey || e.ctrlKey || e.altKey) return;
+        const t = e.target;
+        if (t instanceof HTMLInputElement || t instanceof HTMLTextAreaElement) return;
+        if (e.key === '/') (e.preventDefault(), input.focus());
+        else if (e.key === 'd' || e.key === 'D') location.href = '/demo/';
+        else if (e.key === 's' || e.key === 'S')
+          document.getElementById('self-host').scrollIntoView();
+      });
+
+      /* The wall: three rows of every record, moving at different speeds. */
+      const rows = document.getElementById('rows');
+      const card = (r) =>
+        `<a class="rec" href="/demo/r/${r.id}"><span class="thumb${r.k === 'txt' ? ' txt' : ''}">${r.k === 'txt' ? 'TXT' : `<img src="/media/docs/${r.id}.webp" alt="" loading="lazy" width="360" height="466">`}</span><b>${esc(r.t)}</b><small><span class="pill" style="--c:${r.c}">${esc(r.g)}</span>${day(r.d)}</small></a>`;
+      const thirds = [0, 1, 2].map((k) => RECORDS.filter((_, i) => i % 3 === k));
+      rows.innerHTML = thirds
+        .map(
+          (list, k) =>
+            `<div class="track${k === 1 ? ' back' : ''}" style="--t:${[70, 84, 62][k]}s">${[...list, ...list].map(card).join('')}</div>`,
+        )
+        .join('');
+      rows.querySelectorAll('.track').forEach((t) =>
+        [...t.children].slice(t.children.length / 2).forEach((c) => {
+          c.setAttribute('aria-hidden', 'true');
+          c.tabIndex = -1;
+        }),
+      );
+
+      /* The palette types queries when it is on screen, and presses its keys. */
+      const pq = document.getElementById('pq');
+      const plist = document.getElementById('plist');
+      const caps = (name) => document.querySelector(`.cap[data-key="${name}"]`);
+      async function press(...names) {
+        names.forEach((n) => caps(n)?.classList.add('down'));
+        await sleep(180);
+        names.forEach((n) => caps(n)?.classList.remove('down'));
+      }
+      function palette(query, on = 0) {
+        pq.textContent = query;
+        const list = query ? find(query).slice(0, 5) : RECORDS.slice(0, 5);
+        plist.innerHTML = list.map((r, i) => hitHtml(r, query, i === on)).join('');
+      }
+      palette('');
+      let paletteOn = false;
+      let paletteRun = 0;
+      async function paletteLoop() {
+        const run = ++paletteRun;
+        const live = () => paletteOn && run === paletteRun;
+        const Q = ['dishwasher', 'rent', 'lab results', 'checking'];
+        for (let n = 0; live(); n++) {
+          const q = Q[n % Q.length];
+          await press('k1', 'k2');
+          palette('');
+          await sleep(500);
+          for (let i = 1; i <= q.length && live(); i++) {
+            palette(q.slice(0, i));
+            await sleep(85);
+          }
+          await sleep(900);
+          for (let i = 1; i <= 2 && live(); i++) {
+            await press('j');
+            palette(q, i);
+            await sleep(700);
+          }
+          await sleep(1400);
+        }
+      }
+      if (!STILL) {
+        new IntersectionObserver(([entry]) => {
+          const was = paletteOn;
+          paletteOn = entry.isIntersecting;
+          if (paletteOn && !was) paletteLoop();
+        }).observe(document.querySelector('.palette'));
+      } else palette('dishwasher');
+
+      /* Copy the fork command. */
+      document.getElementById('copy').addEventListener('click', async (e) => {
+        try {
+          await navigator.clipboard.writeText('gh repo fork majicmaj/papermint --clone');
+          e.currentTarget.style.color = 'var(--accent)';
+        } catch {}
+      });
+
+      const nav = document.getElementById('top');
+      addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 8), {
+        passive: true,
+      });
+    </script>
   </body>
 </html>

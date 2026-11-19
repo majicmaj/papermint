@@ -8,13 +8,14 @@ import { join } from 'node:path';
 const APP_BASE = process.env.PAPERMINT_APP_BASE ?? '/';
 const APP_ROOT = APP_BASE.replace(/\/+$/, '');
 const LANDING = process.env.PAPERMINT_LANDING ?? null;
-const MEDIA = /^\/media\/[a-z0-9-]+\.(webp|png|jpg|svg)$/;
+const MEDIA = /^\/media\/(?:docs\/)?[a-z0-9-]+\.(webp|png|jpg|svg|woff2)$/;
 const TYPES = {
   html: 'text/html; charset=utf-8',
   webp: 'image/webp',
   png: 'image/png',
   jpg: 'image/jpeg',
   svg: 'image/svg+xml',
+  woff2: 'font/woff2',
   txt: 'text/plain',
 };
 
