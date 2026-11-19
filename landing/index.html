@@ -7,7 +7,7 @@
     <title>Papermint</title>
     <meta
       name="description"
-      content="A fast, keyboard-first frontend for Paperless-ngx. Find any paper in one keystroke, on desktop and phone. Self-hosted and MIT licensed."
+      content="A fast, keyboard-first frontend for Paperless-ngx. Self-hosted and MIT licensed."
     />
     <meta property="og:title" content="Papermint — find any paper in one keystroke" />
     <meta
@@ -269,7 +269,7 @@
         align-items: center;
         gap: 8px;
         height: 30px;
-        padding: 0 12px 0 6px;
+        padding: 0 14px;
         border-radius: 99px;
         background: color-mix(in srgb, var(--surface) 80%, transparent);
         box-shadow: 0 0 0 1px var(--edge-strong);
@@ -277,14 +277,6 @@
         font-size: 13px;
         font-weight: 500;
         backdrop-filter: blur(6px);
-      }
-      .eyebrow b {
-        padding: 2px 8px;
-        border-radius: 99px;
-        background: var(--accent-soft);
-        color: var(--accent);
-        font-size: 12px;
-        font-weight: 600;
       }
       h1 {
         margin: 22px 0 0;
@@ -294,14 +286,19 @@
         letter-spacing: -0.055em;
         text-wrap: balance;
       }
+      /* A fixed blank: the hidden sizer holds the widest word, and the live word sits on
+         top of it, so the headline never reflows when the word changes. */
       h1 .word {
         position: relative;
         display: inline-block;
         color: var(--accent);
         white-space: nowrap;
       }
+      h1 .word .sizer {
+        visibility: hidden;
+      }
       h1 .word::after {
-        /* A highlighter stroke under the changing word. */
+        /* A highlighter stroke under the whole blank, so a short word reads as filled in. */
         content: '';
         position: absolute;
         left: -0.06em;
@@ -312,14 +309,19 @@
         background: var(--accent-soft);
         z-index: -1;
       }
-      h1 .word span {
-        display: inline-block;
+      h1 .word .live {
+        position: absolute;
+        inset: -0.1em 0 -0.2em;
+        padding: 0.1em 0 0.2em;
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
         transition:
           opacity 220ms ease,
           transform 220ms ease,
           filter 220ms ease;
       }
-      h1 .word.out span {
+      h1 .word.out .live {
         opacity: 0;
         transform: translateY(0.18em);
         filter: blur(6px);
@@ -333,7 +335,7 @@
         color: var(--muted);
         font-size: 18px;
         line-height: 1.55;
-        text-wrap: pretty;
+        text-wrap: balance;
       }
 
       /* The hero search: a real search over the fictional demo records. */
@@ -1572,15 +1574,17 @@
       <section class="hero" aria-labelledby="hero-title">
         <div class="cloud" id="cloud" aria-hidden="true"></div>
         <div class="hero-copy">
-          <span class="eyebrow rise"><b>New</b>A frontend for Paperless&#8209;ngx</span>
+          <span class="eyebrow rise">A frontend for Paperless&#8209;ngx</span>
           <h1 id="hero-title" class="rise" style="--d: 60ms">
             Find the
-            <span class="word" id="word"><span>lease</span></span
+            <span class="word" id="word"
+              ><span class="sizer" aria-hidden="true">warranty</span
+              ><span class="live">lease</span></span
             ><br /><span class="dim">in one keystroke.</span>
           </h1>
           <p class="lede rise" style="--d: 120ms">
-            Papermint is a fast, keyboard-first face for the Paperless&#8209;ngx you already run.
-            Search every word in every scan, on your desk or your phone.
+            Fast, keyboard-first search for the Paperless&#8209;ngx you already run. On desktop and
+            phone.
           </p>
           <form class="search rise" id="finder" style="--d: 180ms" action="/demo/" role="search">
             <label>
@@ -1593,7 +1597,7 @@
                 type="search"
                 autocomplete="off"
                 spellcheck="false"
-                placeholder="Search 50 fictional records"
+                placeholder="Search the sample records"
                 aria-label="Search the demo records"
                 aria-controls="results"
                 aria-autocomplete="list"
@@ -1607,7 +1611,7 @@
             <a class="btn big quiet" href="#self-host">Self-host it <kbd>S</kbd></a>
           </div>
           <div class="install rise" style="--d: 300ms">
-            <b>MIT</b> · works with your Paperless&#8209;ngx login · no new database
+            <b>MIT</b> · uses your Paperless&#8209;ngx login
           </div>
         </div>
       </section>
@@ -1621,7 +1625,7 @@
                 ><svg class="i" viewBox="0 0 24 24">
                   <rect x="5" y="11" width="14" height="9" rx="2" />
                   <path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg
-                >papers.your-server.lan/r/301</code
+                >paperless.example.com</code
               >
             </div>
             <picture>
@@ -1691,27 +1695,19 @@
           </div>
         </div>
         <div class="strip">
-          <div><b>Keyboard first</b>Every action has a key. Search is one press.</div>
-          <div><b>Made for phones too</b>Install it. Sheets, swipes and a reader that fits.</div>
-          <div><b>Yours to run</b>Static files beside Paperless&#8209;ngx. MIT licensed.</div>
+          <div><b>Keyboard first</b>Every action has a key.</div>
+          <div><b>Phone ready</b>Install it like an app.</div>
+          <div><b>Yours to run</b>Your server. MIT licensed.</div>
         </div>
       </div>
 
       <section class="wall" aria-labelledby="wall-title">
         <div class="wrap center">
           <span class="kicker">The demo archive</span>
-          <h2 id="wall-title">
-            Fifty records. <span class="dim">Five years of somebody’s paperwork.</span>
-          </h2>
-          <p class="sub">
-            A freelance studio, an apartment, a car and a dentist. All of it fictional, all of it
-            open in the demo. Pick one.
-          </p>
+          <h2 id="wall-title">Fifty records. <span class="dim">All of them made up.</span></h2>
+          <p class="sub">Pick one to open it in the demo.</p>
         </div>
         <div class="rows" id="rows"></div>
-        <div class="wrap center note">
-          Areas, topics, status and versions are plain Paperless&#8209;ngx tags and fields.
-        </div>
       </section>
 
       <section id="search" aria-labelledby="search-title">
@@ -1719,10 +1715,7 @@
           <div>
             <span class="kicker">Search</span>
             <h2 id="search-title">One key. <span class="dim">Every word in every scan.</span></h2>
-            <p class="sub">
-              Titles, the text Paperless read from each page, topics and commands, in one list.
-              Recent records show before you type.
-            </p>
+            <p class="sub">Titles, scanned text and commands in one list.</p>
             <div class="keys" aria-hidden="true">
               <div>
                 <span class="caps"
@@ -1789,18 +1782,16 @@
           </div>
           <div>
             <span class="kicker">Versions</span>
-            <h2 id="versions-title">
-              Paper changes. <span class="dim">The archive keeps the thread.</span>
-            </h2>
+            <h2 id="versions-title">Paper changes. <span class="dim">Papermint keeps up.</span></h2>
             <ul class="checks">
               <li>
-                <span><b>Versions in one record.</b> A signed copy lands on top of its draft.</span>
+                <span><b>One record.</b> A signed copy sits on top of its draft.</span>
               </li>
               <li>
-                <span><b>Superseded by.</b> Last year’s lease links to this year’s.</span>
+                <span><b>Linked.</b> Last year’s lease points to this year’s.</span>
               </li>
               <li>
-                <span><b>Current, superseded, signed.</b> One tap, kept as Paperless tags.</span>
+                <span><b>One tap.</b> Mark a record current or superseded.</span>
               </li>
             </ul>
           </div>
@@ -1810,7 +1801,7 @@
       <section aria-labelledby="yours-title">
         <div class="wrap center">
           <span class="kicker">Bring your own Paperless</span>
-          <h2 id="yours-title">Your server. <span class="dim">Your login. Your fork.</span></h2>
+          <h2 id="yours-title">Your server. <span class="dim">Your login. Your code.</span></h2>
           <div class="trio">
             <article>
               <span class="glyph"
@@ -1820,11 +1811,7 @@
                   <path d="M7 7.5h.01M7 16.5h.01" /></svg
               ></span>
               <h3>Nothing new to run</h3>
-              <p>
-                Papermint reads the Paperless&#8209;ngx you already have. No database, no sync
-                service, no account with us.
-              </p>
-              <code>/api/ · same-origin session</code>
+              <p>Works with the Paperless&#8209;ngx you have. No new database, no account.</p>
             </article>
             <article>
               <span class="glyph"
@@ -1833,11 +1820,7 @@
                   <path d="M11 18h2" /></svg
               ></span>
               <h3>An app on your phone</h3>
-              <p>
-                Install it from the browser. The list, search and reader fit a thumb, and the shell
-                opens with no signal.
-              </p>
-              <code>PWA · offline shell</code>
+              <p>Install it from the browser. Search and read with one thumb.</p>
             </article>
             <article>
               <span class="glyph"
@@ -1848,11 +1831,7 @@
                   <path d="M6 7v2a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7M12 12v5" /></svg
               ></span>
               <h3>Change anything</h3>
-              <p>
-                Preact and TypeScript, one config file, MIT. If a screen is not how you want it,
-                make it yours.
-              </p>
-              <code>config.json · dist/</code>
+              <p>Preact and TypeScript, MIT licensed. Make it yours.</p>
             </article>
           </div>
         </div>
@@ -1862,11 +1841,8 @@
         <div class="wrap fork">
           <div>
             <span class="kicker">Self-host</span>
-            <h2 id="fork-title">If you don’t like something, <span class="dim">fork it.</span></h2>
-            <p class="sub">
-              Run the demo on your machine in a minute. Point it at your server with one
-              config.json, then serve the build behind your proxy.
-            </p>
+            <h2 id="fork-title">Want it different? <span class="dim">Fork it.</span></h2>
+            <p class="sub">Run the demo in a minute. Then point it at your server.</p>
             <div class="copy">
               <span><span class="p">$</span> gh repo fork majicmaj/papermint --clone</span>
               <button type="button" id="copy" aria-label="Copy the command">
@@ -1884,13 +1860,13 @@
             </div>
           </div>
           <div class="term" aria-label="Terminal session">
-            <div class="bar"><span></span><span></span><span></span><code>~/code</code></div>
+            <div class="bar"><span></span><span></span><span></span><code>terminal</code></div>
             <pre><span class="p">$</span> gh repo fork majicmaj/papermint --clone
 <span class="ok">✓ Cloned papermint into ./papermint</span>
 <span class="p">$</span> cd papermint &amp;&amp; npm ci
-<span class="ok">✓ added 214 packages</span>
+<span class="ok">✓ installed</span>
 <span class="p">$</span> npm run demo
-<span class="ok">▲ Papermint demo →</span> <span class="url">http://127.0.0.1:4673</span>
+<span class="ok">▲ Papermint demo is running</span>
 <span class="p">$</span> <span class="cur"></span></pre>
           </div>
         </div>
@@ -1918,7 +1894,7 @@
       <div class="wrap">
         <span class="who"
           ><img src="/demo/icons/icon-192.png" alt="" width="18" height="18" />© 2026 Papermint ·
-          MIT · built for Paperless&#8209;ngx</span
+          MIT</span
         >
         <nav aria-label="Footer">
           <a href="https://github.com/majicmaj/papermint">GitHub</a>
@@ -2025,6 +2001,7 @@
       const input = document.getElementById('q');
       const results = document.getElementById('results');
       const word = document.getElementById('word');
+      const live = word.querySelector('.live');
       let shown = [];
       let active = 0;
 
@@ -2055,7 +2032,7 @@
         active = 0;
         results.innerHTML = shown.length
           ? shown.map((r, i) => hitHtml(r, query, i === 0)).join('')
-          : `<div class="none">No record matches “${esc(query)}”. The demo has 50.</div>`;
+          : `<div class="none">No match for “${esc(query)}”.</div>`;
         results.classList.toggle('open', open && query.trim().length > 0);
       }
 
@@ -2071,7 +2048,7 @@
       async function setWord(text) {
         word.classList.add('out');
         await sleep(200);
-        word.firstElementChild.textContent = text;
+        live.textContent = text;
         word.classList.remove('out');
       }
       async function heroLoop() {
@@ -2110,7 +2087,7 @@
         render(input.value, true);
         focusCloudSoon(input.value);
         const first = input.value.trim().split(/\s+/)[0];
-        if (first) word.firstElementChild.textContent = first.slice(0, 14);
+        if (first) live.textContent = first.slice(0, 14);
       });
       input.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowDown') (e.preventDefault(), move(1));
