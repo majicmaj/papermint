@@ -45,6 +45,7 @@
         --primary-hover: #5472e4; /* indigo-10 */
         --accent: #9eb1ff; /* indigo-11 */
         --accent-soft: rgba(62, 99, 221, 0.26);
+        --brush: rgba(62, 99, 221, 0.5);
         --on-primary: #ffffff;
         --glow: rgba(62, 99, 221, 0.32);
         --shadow: rgba(0, 0, 0, 0.5);
@@ -68,6 +69,7 @@
           --primary-hover: #3358d4;
           --accent: #3a5bc7; /* indigo-11 */
           --accent-soft: rgba(62, 99, 221, 0.16);
+          --brush: rgba(62, 99, 221, 0.24);
           --glow: rgba(62, 99, 221, 0.2);
           --shadow: rgba(28, 32, 36, 0.16);
           --grid: rgba(0, 0, 0, 0.04);
@@ -297,17 +299,24 @@
       h1 .word .sizer {
         visibility: hidden;
       }
-      h1 .word::after {
-        /* A highlighter stroke under the whole blank, so a short word reads as filled in. */
-        content: '';
+      /* A brush stroke under the word. JS sizes it to the ink and grows it letter by letter,
+         so it reads as drawn while the word is written. */
+      h1 .word .brush {
         position: absolute;
-        left: -0.06em;
-        right: -0.06em;
-        bottom: 0.04em;
-        height: 0.24em;
-        border-radius: 0.1em;
-        background: var(--accent-soft);
+        left: -0.05em;
+        bottom: 0.02em;
+        width: 100%;
+        height: 0.42em;
         z-index: -1;
+        overflow: visible;
+        fill: var(--brush);
+        transform-origin: 0 50%;
+        transform: translateX(var(--bx, 0px)) scaleX(var(--bs, 0)) rotate(-0.8deg);
+        transition: transform 300ms cubic-bezier(0.3, 0.7, 0.2, 1);
+      }
+      h1 .word.lift .brush {
+        transition-duration: 320ms;
+        transition-timing-function: cubic-bezier(0.6, 0, 0.8, 0.4);
       }
       h1 .word .live {
         position: absolute;
@@ -1416,6 +1425,18 @@
         }
       }
 
+      h1 .m-br {
+        display: none;
+      }
+      @media (max-width: 700px) {
+        /* Phones: the word gets its own line, centered, so the blank never leaves a gap. */
+        h1 .m-br {
+          display: inline;
+        }
+        h1 .word .live {
+          text-align: center;
+        }
+      }
       @media (max-width: 980px) {
         .split,
         .fork {
@@ -1577,9 +1598,53 @@
           <span class="eyebrow rise">A frontend for Paperless&#8209;ngx</span>
           <h1 id="hero-title" class="rise" style="--d: 60ms">
             Find the
+            <br class="m-br" />
             <span class="word" id="word"
               ><span class="sizer" aria-hidden="true">warranty</span
-              ><span class="live">lease</span></span
+              ><span class="live"><span class="ink">lease</span></span
+              ><svg
+                class="brush"
+                viewBox="0 0 400 40"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+              >
+                <filter id="dry" x="-4%" y="-40%" width="108%" height="180%">
+                  <feTurbulence
+                    type="fractalNoise"
+                    baseFrequency="0.015 0.4"
+                    numOctaves="2"
+                    seed="4"
+                    result="n"
+                  />
+                  <feDisplacementMap
+                    in="SourceGraphic"
+                    in2="n"
+                    scale="6"
+                    xChannelSelector="R"
+                    yChannelSelector="G"
+                    result="d"
+                  />
+                  <feTurbulence
+                    type="fractalNoise"
+                    baseFrequency="0.003 0.55"
+                    numOctaves="1"
+                    seed="9"
+                    result="s"
+                  />
+                  <feColorMatrix
+                    in="s"
+                    type="matrix"
+                    values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1.3 1.55"
+                    result="streak"
+                  />
+                  <feComposite in="d" in2="streak" operator="in" />
+                </filter>
+                <g filter="url(#dry)">
+                  <path
+                    d="M6 24C30 15 90 12 160 13S320 10 384 12C394 12.5 398 17 395 22S380 30 360 30C280 31 200 33 120 33S30 36 12 34C3 33 1 28 6 24Z"
+                  />
+                  <path d="M18 31C120 27 260 26 386 23L388 27C260 31 120 34 18 35Z" opacity="0.6" />
+                </g></svg></span
             ><br /><span class="dim">in one keystroke.</span>
           </h1>
           <p class="lede rise" style="--d: 120ms">
@@ -2002,6 +2067,18 @@
       const results = document.getElementById('results');
       const word = document.getElementById('word');
       const live = word.querySelector('.live');
+      const ink = word.querySelector('.ink');
+      const brush = word.querySelector('.brush');
+      /* Write text into the blank and stretch the brush to the ink, clamped to the blank. */
+      function write(text) {
+        ink.textContent = text;
+        const full = live.clientWidth;
+        const w = text ? Math.min(ink.offsetWidth, full) : 0;
+        const left = text ? Math.max(0, ink.offsetLeft) : 0;
+        const em = parseFloat(getComputedStyle(word).fontSize);
+        word.style.setProperty('--bx', `${left}px`);
+        word.style.setProperty('--bs', full ? String((w + (w ? 0.1 * em : 0)) / full) : '0');
+      }
       let shown = [];
       let active = 0;
 
@@ -2045,25 +2122,29 @@
       /* The hero types its own queries until a person takes over. */
       const LOOP = ['lease', 'receipt', 'warranty', '1099', 'invoice'];
       let auto = !STILL;
-      async function setWord(text) {
-        word.classList.add('out');
-        await sleep(200);
-        live.textContent = text;
-        word.classList.remove('out');
+      /* Lift the old word: the ink fades and the brush pulls back to its start. */
+      async function lift() {
+        word.classList.add('out', 'lift');
+        word.style.setProperty('--bs', '0');
+        await sleep(340);
+        ink.textContent = '';
+        word.classList.remove('out', 'lift');
       }
       async function heroLoop() {
         form.classList.add('live');
         for (let n = 0; auto; n++) {
           const q = LOOP[n % LOOP.length];
-          if (n) await setWord(q);
           for (let i = 1; i <= q.length && auto; i++) {
             input.value = q.slice(0, i);
+            if (n) write(input.value);
             render(input.value, false);
             await sleep(90);
           }
           if (!auto) break;
           focusCloud(q);
           await sleep(2800);
+          if (!auto) break;
+          void lift();
           for (let i = q.length - 1; i >= 0 && auto; i--) {
             input.value = q.slice(0, i);
             render(input.value, false);
@@ -2087,7 +2168,7 @@
         render(input.value, true);
         focusCloudSoon(input.value);
         const first = input.value.trim().split(/\s+/)[0];
-        if (first) live.textContent = first.slice(0, 14);
+        if (first) write(first.slice(0, 14));
       });
       input.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowDown') (e.preventDefault(), move(1));
@@ -2101,6 +2182,9 @@
       document.addEventListener('pointerdown', (e) => {
         if (!form.contains(e.target)) results.classList.remove('open');
       });
+      /* The first stroke draws under "lease" once the font is in, so it fits the real glyphs. */
+      document.fonts.ready.then(() => setTimeout(() => write(ink.textContent), STILL ? 0 : 500));
+      addEventListener('resize', () => write(ink.textContent));
       if (STILL) (render('lease', false), focusCloud('lease'));
       else setTimeout(heroLoop, 900);
 
